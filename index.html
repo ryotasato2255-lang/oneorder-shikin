@@ -368,81 +368,82 @@
     header, .action-bar, .input-col, .no-print { display: none !important; }
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 
-    @page { size: A4 portrait; margin: 12mm 12mm 10mm 12mm; }
+    @page { size: A4 portrait; margin: 8mm 8mm 8mm 8mm; }
 
-    html, body { font-size: 10px !important; background: white !important; }
+    html, body { font-size: 8.5px !important; background: white !important; }
     .container { padding: 0 !important; max-width: 100% !important; }
     .main-grid { grid-template-columns: 1fr !important; gap: 0 !important; }
     .panel { box-shadow: none !important; border-radius: 0 !important; }
     .output-col { width: 100% !important; }
 
-    /* タイトル */
-    .output-top { padding: 10px 16px !important; }
-    .plan-title { font-size: 16px !important; margin-bottom: 2px !important; }
-    .plan-subtitle { font-size: 9px !important; }
-    .plan-meta { margin-top: 6px !important; gap: 10px !important; }
-    .plan-meta-item, .plan-meta-item strong { font-size: 9px !important; }
-    .plan-date { font-size: 9px !important; }
+    /* タイトル：コンパクト */
+    .output-top { padding: 6px 12px !important; }
+    .plan-title { font-size: 13px !important; margin-bottom: 1px !important; }
+    .plan-subtitle { font-size: 7.5px !important; }
+    .plan-meta { margin-top: 4px !important; gap: 8px !important; }
+    .plan-meta-item, .plan-meta-item strong { font-size: 7.5px !important; }
+    .plan-date { font-size: 7.5px !important; top: 8px !important; right: 12px !important; }
+    .output-top::before { display: none !important; }
 
     /* サマリーバー */
-    .totals-bar { padding: 6px 14px !important; gap: 14px !important; flex-wrap: nowrap !important; }
-    .total-item .label { font-size: 8px !important; }
-    .total-item .amount { font-size: 11px !important; }
-    .total-sep { height: 26px !important; }
+    .totals-bar { padding: 4px 12px !important; gap: 10px !important; flex-wrap: nowrap !important; }
+    .total-item .label { font-size: 7px !important; }
+    .total-item .amount { font-size: 9.5px !important; }
+    .total-sep { height: 20px !important; }
 
-    /* テーブル */
+    /* ── テーブル共通：極限圧縮 ── */
     .tables-print-wrap { display: block !important; }
-    .table-section { padding: 0 0 4px !important; break-inside: avoid; }
-    .table-section-title { padding: 5px 14px !important; font-size: 10px !important; }
-    thead th { padding: 4px 10px !important; font-size: 9px !important; }
-    tbody td { padding: 3px 10px !important; font-size: 9.5px !important; }
-    .subtotal-row td { padding: 4px 10px !important; font-size: 9.5px !important; }
-    .tax-row td { padding: 3px 10px !important; font-size: 9px !important; }
-    .total-row td { padding: 4px 10px !important; font-size: 10px !important; }
-    .total-row td.right { font-size: 11px !important; }
+    .table-section { padding: 0 0 2px !important; break-inside: avoid; }
+    .table-section-title { padding: 3px 10px !important; font-size: 8px !important; }
+    thead th { padding: 2px 6px !important; font-size: 7.5px !important; }
+    tbody td { padding: 2px 6px !important; font-size: 8px !important; line-height: 1.3 !important; }
+    tbody td.備考 { max-width: 120px !important; font-size: 7.5px !important; }
+    .subtotal-row td { padding: 2px 6px !important; font-size: 8px !important; }
+    .tax-row td { padding: 2px 6px !important; font-size: 7.5px !important; }
+    .total-row td { padding: 3px 6px !important; font-size: 8.5px !important; }
+    .total-row td.right { font-size: 9.5px !important; }
 
-    /* ── 1ページ目：A（請負）＋B（諸費用）＋C（その他）＋D（実費） ── */
-    /* D（実費精算）のあとで改ページ */
+    /* ── 1ページ目終了：Dのあとで改ページ ── */
     #landSection { break-before: page !important; }
 
-    /* ── 2ページ目：E（土地）＋総合計＋支払条件＋特記事項＋ローン ── */
-    #landSection,
-    div[style*="background:linear-gradient(135deg,var(--accent)"],
-    .payment-schedule,
-    .notes-box,
-    .loan-section { break-inside: avoid; }
+    /* ── 2ページ目：E+総合計+支払条件+特記事項+ローン ── */
+    #landSection { break-inside: avoid; }
 
     /* 総合計バナー */
     div[style*="background:linear-gradient(135deg,var(--accent)"] {
-      padding: 10px 16px !important;
+      padding: 7px 12px !important; break-inside: avoid;
     }
-    #superGrandTotal { font-size: 20px !important; }
-    #grandBreakdown { gap: 5px !important; margin-top: 8px !important; }
-    #grandBreakdown > div { padding: 4px 8px !important; font-size: 9px !important; }
+    #superGrandTotal { font-size: 16px !important; }
+    #grandBreakdown { gap: 3px !important; margin-top: 5px !important; }
+    #grandBreakdown > div { padding: 3px 5px !important; font-size: 7.5px !important; }
 
     /* 支払条件 */
-    .payment-schedule { padding: 10px 16px !important; }
-    .payment-title { font-size: 10px !important; margin-bottom: 6px !important; }
-    .payment-grid { gap: 6px !important; grid-template-columns: repeat(4,1fr) !important; }
-    .payment-item { padding: 7px !important; }
-    .payment-item .phase { font-size: 8.5px !important; }
-    .payment-item .pct { font-size: 9px !important; }
-    .payment-item .amt { font-size: 11px !important; margin-top: 3px !important; }
+    .payment-schedule { padding: 6px 12px !important; break-inside: avoid; }
+    .payment-title { font-size: 8.5px !important; margin-bottom: 4px !important; }
+    .payment-grid { gap: 4px !important; grid-template-columns: repeat(4,1fr) !important; }
+    .payment-item { padding: 5px !important; }
+    .payment-item .phase { font-size: 7px !important; margin-bottom: 1px !important; }
+    .payment-item .pct { font-size: 7.5px !important; }
+    .payment-item .amt { font-size: 9px !important; margin-top: 2px !important; }
 
     /* 特記事項 */
-    .notes-box { padding: 8px 16px !important; font-size: 9px !important; }
-    .notes-box p { margin-bottom: 3px !important; }
+    .notes-box { padding: 5px 12px !important; font-size: 7.5px !important; break-inside: avoid; }
+    .notes-box p { margin-bottom: 2px !important; }
+    .notes-box > div { font-size: 8.5px !important; margin-bottom: 3px !important; }
 
-    /* ローンシミュレーター（白ベース・コンパクト） */
-    .loan-section { padding: 8px 14px !important; background: #f9f6f0 !important; }
-    .loan-section * { font-size: 8.5px !important; color: var(--ink) !important; }
-    #loanMonthly { font-size: 13px !important; color: var(--accent2) !important; }
-    #loanTotal { font-size: 10px !important; color: var(--ink) !important; }
-    #loanInterest { font-size: 10px !important; color: #c0392b !important; }
+    /* ローンシミュレーター */
+    .loan-section { padding: 6px 12px !important; background: #f9f6f0 !important; break-inside: avoid; }
+    .loan-section > div:first-child { font-size: 9px !important; margin-bottom: 6px !important; }
+    .loan-section * { font-size: 7.5px !important; color: var(--ink) !important; }
+    #loanMonthly { font-size: 12px !important; color: var(--accent2) !important; }
+    #loanTotal { font-size: 8.5px !important; color: var(--ink) !important; }
+    #loanInterest { font-size: 8.5px !important; color: #c0392b !important; }
     .loan-section select, .loan-section input[type="number"],
     .loan-section button, #customRateRow { display: none !important; }
-    #loanResult { display: block !important; background: white !important; border: 1px solid var(--line) !important; }
-    #loanResult > div { gap: 6px !important; padding: 8px !important; }
+    #loanResult { display: block !important; background: white !important;
+      border: 1px solid var(--line) !important; }
+    #loanResult > div { gap: 4px !important; padding: 6px !important; }
+    .loan-section > div:last-child { font-size: 7px !important; margin-top: 4px !important; }
   }
 </style>
 </head>
