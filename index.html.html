@@ -1,0 +1,1988 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ONEORDER 資金リスト作成ツール</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --paper: #f5f2ec;
+    --accent: #8b1a1a;
+    --accent2: #c0392b;
+    --gold: #b8960c;
+    --mid: #6b6b6b;
+    --line: #d4cec4;
+    --light: #ece8e0;
+    --white: #ffffff;
+    --shadow: 0 2px 12px rgba(26,26,46,0.10);
+    --shadow-lg: 0 8px 32px rgba(26,26,46,0.15);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    font-size: 13px;
+  }
+
+  /* === HEADER === */
+  header {
+    background: var(--ink);
+    color: white;
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.3);
+    position: sticky; top: 0; z-index: 100;
+  }
+  header .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+    color: #e8d5b0;
+  }
+  header .logo span { color: var(--accent2); font-size: 14px; display: block; font-family: 'Noto Sans JP', sans-serif; letter-spacing: 0; margin-top: 2px; }
+  header .tagline { font-size: 11px; color: #aaa; margin-left: auto; }
+
+  /* === LAYOUT === */
+  .container { max-width: 1280px; margin: 0 auto; padding: 24px 20px; }
+  .main-grid { display: grid; grid-template-columns: 320px 1fr; gap: 20px; align-items: start; }
+  @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
+
+  /* === PANELS === */
+  .panel {
+    background: white;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .panel-header {
+    background: var(--ink);
+    color: white;
+    padding: 12px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .panel-header .num {
+    background: var(--accent2);
+    color: white;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0;
+  }
+  .panel-body { padding: 16px; }
+
+  /* === FORM === */
+  .form-section { margin-bottom: 18px; }
+  .section-title {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 4px;
+    margin-bottom: 10px;
+  }
+  .form-row { margin-bottom: 8px; display: flex; flex-direction: column; gap: 3px; }
+  label { font-size: 11px; color: var(--mid); font-weight: 500; }
+  input[type="text"], input[type="number"], select {
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 12px;
+    color: var(--ink);
+    background: var(--paper);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+  input:focus, select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(139,26,26,0.08);
+    background: white;
+  }
+  .inline-row { display: flex; gap: 8px; }
+  .inline-row input, .inline-row select { flex: 1; }
+  .unit { font-size: 11px; color: var(--mid); align-self: center; white-space: nowrap; }
+
+  /* === STEPPER (±ボタン) === */
+  .stepper-wrap { display: flex; flex-direction: column; gap: 4px; }
+  .stepper-row { display: flex; align-items: center; gap: 0; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; background: var(--paper); }
+  .stepper-row input {
+    flex: 1; border: none; background: transparent;
+    padding: 6px 8px; font-size: 13px; font-weight: 600;
+    text-align: center; color: var(--ink); outline: none;
+    font-family: 'Noto Sans JP', sans-serif;
+  }
+  .stepper-row input:focus { background: white; }
+  .step-btn {
+    width: 30px; height: 32px; border: none; background: #eee;
+    color: var(--ink); font-size: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s; flex-shrink: 0; line-height: 1;
+    font-weight: 300;
+  }
+  .step-btn:hover { background: var(--accent); color: white; }
+  .step-btn:active { background: var(--accent2); }
+  .stepper-hint { font-size: 10px; color: var(--mid); display: flex; gap: 12px; flex-wrap: wrap; }
+  .stepper-hint span { display: flex; align-items: center; gap: 3px; }
+  .stepper-hint strong { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  /* 直接入力フィールド */
+  .direct-input-row { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
+  .direct-input-row input {
+    flex: 1; padding: 5px 8px; border: 1px dashed var(--line); border-radius: 4px;
+    font-family: 'Noto Sans JP', sans-serif; font-size: 12px; color: var(--ink);
+    background: white; outline: none;
+  }
+  .direct-input-row input:focus { border-color: var(--accent); border-style: solid; }
+  .direct-input-row label { font-size: 10px; color: var(--mid); white-space: nowrap; }
+
+  /* 坪換算バッジ */
+  .tsubo-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #f0ece4; border: 1px solid var(--line);
+    border-radius: 4px; padding: 3px 8px; margin-top: 2px;
+    font-size: 11px; color: var(--mid);
+  }
+  .tsubo-badge strong { color: var(--accent); font-size: 12px; }
+
+  /* 主体工事：坪単価×延床 */
+  .main-work-calc {
+    background: #fdf8f2;
+    border: 1px solid #e8d9c0;
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-top: 4px;
+    font-size: 11px;
+  }
+  .main-work-calc .calc-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 4px; }
+  .main-work-calc .calc-eq { color: var(--mid); font-size: 13px; }
+  .main-work-calc .calc-result { font-size: 15px; font-weight: 700; color: var(--accent2); margin-top: 4px; }
+  .main-work-calc label { color: var(--mid); font-size: 10px; margin-bottom: 1px; }
+
+  /* === CHECKBOX GROUP === */
+  .check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+  .check-item {
+    display: flex; align-items: center; gap: 6px;
+    padding: 5px 8px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    cursor: pointer;
+    background: var(--paper);
+    transition: all 0.15s;
+    font-size: 11px;
+  }
+  .check-item:hover { border-color: var(--accent); background: #fdf5f5; }
+  .check-item input[type="checkbox"] { accent-color: var(--accent); width: 13px; height: 13px; }
+  .check-item.checked { background: #fdf0f0; border-color: var(--accent2); color: var(--accent); }
+
+  /* === OUTPUT PANEL === */
+  .output-top {
+    background: linear-gradient(135deg, var(--ink) 0%, #2c2c4e 100%);
+    color: white;
+    padding: 20px 24px 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .output-top::before {
+    content: '';
+    position: absolute;
+    right: -20px; top: -20px;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .plan-title { font-family: 'DM Serif Display', serif; font-size: 20px; color: #e8d5b0; margin-bottom: 4px; }
+  .plan-subtitle { font-size: 11px; color: #aaa; }
+  .plan-meta { display: flex; gap: 16px; margin-top: 12px; flex-wrap: wrap; }
+  .plan-meta-item { font-size: 11px; color: #ccc; }
+  .plan-meta-item strong { color: #e8d5b0; }
+  .plan-date { position: absolute; right: 20px; top: 16px; font-size: 11px; color: #888; }
+
+  /* === SUMMARY TOTALS === */
+  .totals-bar {
+    background: #f9f6f0;
+    border-bottom: 1px solid var(--line);
+    padding: 14px 24px;
+    display: flex; gap: 24px; flex-wrap: wrap;
+    align-items: center;
+  }
+  .total-item { text-align: center; }
+  .total-item .label { font-size: 10px; color: var(--mid); }
+  .total-item .amount {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .total-item .amount.accent { color: var(--accent2); }
+  .total-item .amount.gold { color: var(--gold); }
+  .total-sep { width: 1px; background: var(--line); height: 36px; }
+
+  /* === TABLE === */
+  .table-section { padding: 0 0 16px; }
+  .section-A { background: #1a3a5c; }
+  .section-B { background: #0d3348; }
+  .section-C { background: #1a1a1a; }
+  .section-D { background: #6b1010; }
+  .section-E { background: #1a2a1a; }
+
+  .table-section-title {
+    padding: 10px 20px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #ffffff;
+    display: flex; align-items: center; gap: 8px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  }
+
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    background: #f0ece4;
+    padding: 7px 12px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    color: #3a3a3a;
+    border-bottom: 2px solid var(--line);
+    white-space: nowrap;
+  }
+  thead th.right { text-align: right; }
+  tbody tr { border-bottom: 1px solid #f0ece4; transition: background 0.1s; }
+  tbody tr:hover { background: #fdf8f2; }
+  tbody td { padding: 7px 12px; font-size: 12px; vertical-align: middle; }
+  tbody td.right { text-align: right; font-variant-numeric: tabular-nums; }
+  tbody td.item-name { font-weight: 500; }
+  tbody td.備考 { color: var(--mid); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; }
+  .subtotal-row td { background: #f5f0e8; font-weight: 700; border-top: 2px solid var(--line); }
+  .subtotal-row td.right { color: var(--ink); }
+  .tax-row td { background: #f9f6f0; color: var(--mid); font-size: 11px; }
+  .total-row td { background: var(--ink); color: white; font-weight: 700; font-size: 13px; }
+  .total-row td.right { color: #e8d5b0; font-size: 15px; }
+  .grand-row td { background: var(--accent); color: white; font-weight: 700; font-size: 14px; }
+  .grand-row td.right { color: white; font-size: 16px; }
+  .tag {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 600;
+    background: #e8f5e9;
+    color: #388e3c;
+    margin-left: 4px;
+  }
+  .tag.red { background: #fce4ec; color: #c62828; }
+  .zero { color: #ccc; }
+
+  /* === PAYMENT SCHEDULE === */
+  .payment-schedule {
+    margin: 0;
+    padding: 16px 20px;
+    background: #fdf8f0;
+    border-top: 1px solid var(--line);
+  }
+  .payment-title { font-size: 11px; font-weight: 700; color: var(--ink); margin-bottom: 10px; }
+  .payment-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .payment-item {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 10px;
+    text-align: center;
+  }
+  .payment-item .phase { font-size: 10px; color: var(--mid); margin-bottom: 3px; }
+  .payment-item .pct { font-size: 12px; font-weight: 700; color: var(--ink); }
+  .payment-item .amt { font-size: 13px; font-weight: 700; color: var(--accent2); margin-top: 3px; }
+
+  /* === NOTES === */
+  .notes-box {
+    margin: 0;
+    padding: 14px 20px;
+    background: #fff8f0;
+    border-top: 1px solid #f0e0cc;
+    font-size: 11px;
+    color: var(--mid);
+  }
+  .notes-box p { margin-bottom: 4px; }
+  .notes-box p::before { content: '※'; margin-right: 4px; color: var(--accent); }
+
+  /* === PRINT BTN === */
+  .action-bar {
+    padding: 12px 20px;
+    background: var(--paper);
+    border-top: 1px solid var(--line);
+    display: flex; gap: 10px; justify-content: flex-end;
+  }
+  .btn {
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-primary:hover { background: var(--accent2); box-shadow: 0 4px 12px rgba(139,26,26,0.3); }
+  .btn-outline { background: transparent; border: 1px solid var(--line); color: var(--ink); }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  @media print {
+    header, .action-bar, .input-col, .no-print { display: none !important; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+    @page { size: A4 portrait; margin: 7mm 7mm 7mm 7mm; }
+
+    html, body { font-size: 7.5px !important; background: white !important; width: 196mm; }
+    .container { padding: 0 !important; max-width: 100% !important; }
+    .main-grid { grid-template-columns: 1fr !important; gap: 0 !important; }
+    .panel { box-shadow: none !important; border-radius: 0 !important; }
+    .output-col { width: 100% !important; }
+
+    /* タイトル */
+    .output-top { padding: 5px 10px !important; }
+    .plan-title { font-size: 12px !important; margin-bottom: 1px !important; }
+    .plan-subtitle { font-size: 7px !important; }
+    .plan-meta { margin-top: 4px !important; gap: 8px !important; }
+    .plan-meta-item, .plan-meta-item strong { font-size: 7px !important; }
+    .plan-date { font-size: 7px !important; }
+
+    /* サマリーバー */
+    .totals-bar { padding: 4px 10px !important; gap: 8px !important; flex-wrap: nowrap !important; }
+    .total-item .label { font-size: 6.5px !important; }
+    .total-item .amount { font-size: 9px !important; }
+    .total-sep { height: 20px !important; }
+
+    /* テーブル全体：2カラムレイアウト */
+    .tables-print-wrap {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 0 8px !important;
+    }
+    .table-section { padding: 0 0 3px !important; break-inside: avoid; }
+    .table-section-title { padding: 3px 8px !important; font-size: 7.5px !important; }
+    thead th { padding: 2px 6px !important; font-size: 6.5px !important; }
+    tbody td { padding: 2px 6px !important; font-size: 7px !important; }
+    .subtotal-row td, .tax-row td { padding: 2px 6px !important; font-size: 6.5px !important; }
+    .total-row td { padding: 3px 6px !important; font-size: 7.5px !important; }
+    .total-row td.right { font-size: 8.5px !important; }
+
+    /* 総合計バナー */
+    div[style*="background:linear-gradient(135deg,var(--accent)"] { padding: 5px 10px !important; }
+    #superGrandTotal { font-size: 14px !important; }
+    #grandBreakdown { gap: 3px !important; margin-top: 5px !important; }
+    #grandBreakdown > div { padding: 2px 4px !important; font-size: 6.5px !important; }
+
+    /* 支払条件・特記事項・ローン */
+    .payment-schedule { padding: 5px 10px !important; }
+    .payment-title { font-size: 7.5px !important; margin-bottom: 5px !important; }
+    .payment-grid { gap: 4px !important; grid-template-columns: repeat(4,1fr) !important; }
+    .payment-item { padding: 4px !important; }
+    .payment-item .phase { font-size: 6.5px !important; }
+    .payment-item .pct { font-size: 7px !important; }
+    .payment-item .amt { font-size: 8.5px !important; margin-top: 2px !important; }
+    .notes-box { padding: 4px 10px !important; font-size: 7px !important; }
+    .notes-box p { margin-bottom: 2px !important; }
+
+    /* ローンシミュレーター */
+    .loan-section { padding: 5px 10px !important; break-inside: avoid; }
+    .loan-section * { font-size: 7px !important; }
+    #loanMonthly { font-size: 11px !important; }
+    #loanTotal, #loanInterest { font-size: 8px !important; }
+    .loan-section select, .loan-section input[type="number"],
+    .loan-section button, #customRateRow { display: none !important; }
+    #loanResult { display: block !important; }
+    #loanResult > div { gap: 4px !important; padding: 6px !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    MITSUBISHI ESTATE HOME
+    <span>三菱地所ホーム　資金リスト作成ツール</span>
+  </div>
+  <div class="tagline">ONEORDER / ORDER GRAN / SMART ORDER</div>
+</header>
+
+<div class="container">
+  <div class="main-grid">
+
+    <!-- ===== LEFT INPUT COLUMN ===== -->
+    <div class="input-col">
+
+      <!-- 基本情報 -->
+      <div class="panel" style="margin-bottom:14px;">
+        <div class="panel-header"><div class="num">1</div> 基本情報</div>
+        <div class="panel-body">
+          <div class="form-section">
+            <div class="section-title">計画名・担当</div>
+            <div class="form-row">
+              <label>顧客名（計画名）</label>
+              <input type="text" id="customerName" placeholder="例：中野区本町2N" oninput="update()">
+            </div>
+            <div class="form-row">
+              <label>担当者名</label>
+              <input type="text" id="staffName" placeholder="例：佐藤 亮太" oninput="update()">
+            </div>
+            <div class="form-row">
+              <label>事業部</label>
+              <select id="division" onchange="update()">
+                <option value="第二営業部">第二営業部</option>
+                <option value="第一営業部">第一営業部</option>
+                <option value="第三営業部">第三営業部</option>
+                <option value="第四営業部">第四営業部</option>
+                <option value="関西事業部">関西事業部</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>資金リスト種別</label>
+              <select id="listType" onchange="update()">
+                <option value="概算">【概算】資金リスト</option>
+                <option value="確定">資金リスト（確定）</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="section-title">建物仕様</div>
+            <div class="form-row">
+              <label>建物タイプ</label>
+              <select id="buildingType" onchange="update()">
+                <option value="ONE ORDER">ONE ORDER</option>
+                <option value="SMART ORDER Fit">SMART ORDER Fit</option>
+                <option value="SMART ORDER">SMART ORDER</option>
+                <option value="ORDER GRAN">ORDER GRAN</option>
+                <option value="The Park Maison">The Park Maison</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>構造</label>
+              <select id="structure" onchange="update()">
+                <option value="木造枠組壁工法（2×NEXT構法）">木造枠組壁工法（2×NEXT構法）</option>
+                <option value="木造枠組壁工法（2×4工法）">木造枠組壁工法（2×4工法）</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>防火・耐火</label>
+              <select id="fireResist" onchange="update()">
+                <option value="耐火">耐火</option>
+                <option value="準耐火（60分）">準耐火（60分）</option>
+                <option value="準耐火（45分）" selected>準耐火（45分）</option>
+                <option value="省令準耐火">省令準耐火</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>建物保証</label>
+              <select id="warranty" onchange="update()">
+                <option value="長期50年保証（ロングサポート50）">長期50年保証</option>
+                <option value="長期30年保証（ロングサポート30）">長期30年保証</option>
+                <option value="１０年保証">１０年保証</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>耐震性能</label>
+              <select id="seismic" onchange="update()">
+                <option value="耐震等級３相当">耐震等級３相当</option>
+                <option value="耐震等級２相当">耐震等級２相当</option>
+                <option value="耐震等級１相当">耐震等級１相当</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>空調</label>
+              <select id="aircon" onchange="update()">
+                <option value="全館空調システム「エアロテック」">全館空調 エアロテック</option>
+                <option value="全館空調システム「エアロテックFIT」">全館空調 エアロテックFIT</option>
+                <option value="個別空調">個別空調</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>制度</label>
+              <select id="seido" onchange="update()">
+                <option value="長期優良住宅">長期優良住宅</option>
+                <option value="低炭素住宅">低炭素住宅</option>
+                <option value="住宅性能評価">住宅性能評価</option>
+                <option value="">なし</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 面積 -->
+      <div class="panel" style="margin-bottom:14px;">
+        <div class="panel-header"><div class="num">2</div> 敷地・面積情報</div>
+        <div class="panel-body">
+          <div class="form-section">
+            <div class="form-row">
+              <label>敷地面積</label>
+              <div class="inline-row"><input type="number" id="siteArea" placeholder="200" oninput="update()"><span class="unit">㎡</span></div>
+              <div class="tsubo-badge" id="siteTsubo" style="display:none">= <strong id="siteTsuboVal">—</strong> 坪</div>
+            </div>
+            <div class="form-row">
+              <label>建築面積</label>
+              <div class="inline-row"><input type="number" id="buildArea" placeholder="100" oninput="update()"><span class="unit">㎡</span></div>
+              <div class="tsubo-badge" id="buildTsubo" style="display:none">= <strong id="buildTsuboVal">—</strong> 坪</div>
+            </div>
+            <div class="form-row">
+              <label>１階床面積</label>
+              <div class="inline-row"><input type="number" id="floor1" placeholder="100" oninput="update()"><span class="unit">㎡</span></div>
+              <div class="tsubo-badge" id="f1Tsubo" style="display:none">= <strong id="f1TsuboVal">—</strong> 坪</div>
+            </div>
+            <div class="form-row">
+              <label>２階床面積</label>
+              <div class="inline-row"><input type="number" id="floor2" placeholder="100" oninput="update()"><span class="unit">㎡</span></div>
+              <div class="tsubo-badge" id="f2Tsubo" style="display:none">= <strong id="f2TsuboVal">—</strong> 坪</div>
+            </div>
+            <div class="form-row">
+              <label>３階床面積</label>
+              <div class="inline-row"><input type="number" id="floor3" placeholder="100" oninput="update()"><span class="unit">㎡</span></div>
+              <div class="tsubo-badge" id="f3Tsubo" style="display:none">= <strong id="f3TsuboVal">—</strong> 坪</div>
+            </div>
+            <div class="form-row">
+              <label>地下床面積</label>
+              <div class="inline-row"><input type="number" id="floorB" placeholder="0" oninput="update()"><span class="unit">㎡</span></div>
+            </div>
+            <div class="form-row">
+              <label>ガレージ床面積</label>
+              <div class="inline-row"><input type="number" id="floorG" placeholder="0" oninput="update()"><span class="unit">㎡</span></div>
+              <div class="tsubo-badge" id="fGTsubo" style="display:none">= <strong id="fGTsuboVal">—</strong> 坪</div>
+            </div>
+            <div class="form-row">
+              <label>バルコニー床面積</label>
+              <div class="inline-row"><input type="number" id="floorBal" placeholder="0" oninput="update()"><span class="unit">㎡</span></div>
+            </div>
+            <div class="form-row">
+              <label>PH（ペントハウス）</label>
+              <div class="inline-row"><input type="number" id="floorPH" placeholder="0" oninput="update()"><span class="unit">㎡</span></div>
+            </div>
+            <!-- 延床合計バッジ -->
+            <div style="margin-top:8px; padding:8px 10px; background:#f0ece4; border-radius:5px; font-size:11px; color:var(--mid);">
+              法定延床（自動）: <strong id="totalFloorDisp" style="color:var(--ink)">—</strong> ㎡ ＝ <strong id="totalTsuboDisp" style="color:var(--accent)">—</strong> 坪
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 工事費用 -->
+      <div class="panel" style="margin-bottom:14px;">
+        <div class="panel-header"><div class="num">3</div> 工事費用</div>
+        <div class="panel-body">
+          <div class="form-section">
+            <div class="section-title">請負工事</div>
+
+            <!-- 主体工事：坪単価×延床 -->
+            <div class="form-row">
+              <label>主体工事費　（延床坪数 × 坪単価）</label>
+              <div class="main-work-calc">
+                <div class="calc-row">
+                  <div style="flex:1">
+                    <label>延床坪数（②より自動）</label>
+                    <div class="stepper-row" style="background:#f5f2ec">
+                      <input type="number" id="mainTsubo" value="0" step="0.01" readonly style="background:#f5f2ec;color:var(--mid);cursor:default;text-align:center">
+                      <span style="padding:0 6px;font-size:11px;color:var(--mid);align-self:center;flex-shrink:0">坪</span>
+                    </div>
+                  </div>
+                  <div class="calc-eq" style="margin-top:16px">×</div>
+                  <div style="flex:1">
+                    <label>坪単価</label>
+                    <div class="stepper-row">
+                      <button class="step-btn" onclick="step('tsuboPrice',-100000)">－</button>
+                      <input type="number" id="tsuboPrice" value="1100000" step="100000" oninput="update()">
+                      <button class="step-btn" onclick="step('tsuboPrice',100000)">＋</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="stepper-hint" style="margin-bottom:4px">
+                  <span>坪単価：<strong id="tsupoPriceDisp">1,100,000円</strong></span>
+                  <span>10万単位</span>
+                </div>
+                <div class="calc-result" id="mainWorkResult">主体工事費: —</div>
+                <!-- 主体工事費を直接指定（正確な金額がわかる場合） -->
+                <div style="margin-top:8px;padding:6px 8px;background:#f0ece4;border-radius:4px">
+                  <div style="font-size:10px;color:var(--mid);margin-bottom:4px">📌 正確な金額がわかる場合は直接入力（坪×単価より優先）</div>
+                  <div class="direct-input-row">
+                    <label>主体工事費を直接入力：</label>
+                    <input type="number" id="mainWorkDirect" placeholder="例: 35800000" onchange="applyMainDirect()">
+                    <span style="font-size:10px;color:var(--mid)">円</span>
+                  </div>
+                  <div style="font-size:10px;color:var(--mid);margin-top:3px" id="mainWorkDirectStatus"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 付帯工事 -->
+            <div class="form-row" style="margin-top:10px">
+              <label>付帯工事費（屋外給排水・電気ガス等）</label>
+              <div class="stepper-wrap">
+                <div class="stepper-row">
+                  <button class="step-btn" onclick="step('subWork',-100000)">－</button>
+                  <input type="number" id="subWork" value="2500000" step="100000" oninput="update()">
+                  <button class="step-btn" onclick="step('subWork',100000)">＋</button>
+                </div>
+                <div class="direct-input-row">
+                  <label>直接入力：</label>
+                  <input type="number" id="subWorkDirect" placeholder="例: 2800000" onchange="applyDirect('subWork','subWorkDirect')">
+                  <span style="font-size:10px;color:var(--mid)">円</span>
+                </div>
+                <div class="stepper-hint"><span>現在: <strong id="subWorkDisp">2,500,000円</strong></span><span>10万単位 / 直接入力可</span></div>
+              </div>
+            </div>
+
+            <!-- スマートエネルギー機器工事 -->
+            <div class="form-row">
+              <label>スマートエネルギー機器工事（エアロテック等）</label>
+              <div class="stepper-wrap">
+                <div class="stepper-row">
+                  <button class="step-btn" onclick="step('energyWork',-100000)">－</button>
+                  <input type="number" id="energyWork" value="3000000" step="100000" oninput="update()">
+                  <button class="step-btn" onclick="step('energyWork',100000)">＋</button>
+                </div>
+                <div class="direct-input-row">
+                  <label>直接入力：</label>
+                  <input type="number" id="energyWorkDirect" placeholder="例: 3200000" onchange="applyDirect('energyWork','energyWorkDirect')">
+                  <span style="font-size:10px;color:var(--mid)">円</span>
+                </div>
+                <div class="stepper-hint"><span>現在: <strong id="energyWorkDisp">3,000,000円</strong></span><span>10万単位 / 直接入力可</span></div>
+              </div>
+            </div>
+
+            <!-- 太陽光発電工事 -->
+            <div class="form-row">
+              <label>太陽光発電工事</label>
+              <div class="stepper-wrap">
+                <div class="stepper-row">
+                  <button class="step-btn" onclick="step('solarWork',-100000)">－</button>
+                  <input type="number" id="solarWork" value="0" step="100000" oninput="update()">
+                  <button class="step-btn" onclick="step('solarWork',100000)">＋</button>
+                </div>
+                <div class="direct-input-row">
+                  <label>直接入力：</label>
+                  <input type="number" id="solarWorkDirect" placeholder="例: 1500000" onchange="applyDirect('solarWork','solarWorkDirect')">
+                  <span style="font-size:10px;color:var(--mid)">円</span>
+                </div>
+                <div class="stepper-hint"><span>現在: <strong id="solarWorkDisp">0円</strong></span><span>10万単位 / 直接入力可 / 0円なら非表示</span></div>
+              </div>
+            </div>
+
+            <!-- HOMETACT工事 -->
+            <div class="form-row">
+              <label>HOME TACT工事</label>
+              <div class="stepper-wrap">
+                <div class="stepper-row">
+                  <button class="step-btn" onclick="step('homeTactWork',-100000)">－</button>
+                  <input type="number" id="homeTactWork" value="0" step="100000" oninput="update()">
+                  <button class="step-btn" onclick="step('homeTactWork',100000)">＋</button>
+                </div>
+                <div class="direct-input-row">
+                  <label>直接入力：</label>
+                  <input type="number" id="homeTactWorkDirect" placeholder="例: 500000" onchange="applyDirect('homeTactWork','homeTactWorkDirect')">
+                  <span style="font-size:10px;color:var(--mid)">円</span>
+                </div>
+                <div class="stepper-hint"><span>現在: <strong id="homeTactWorkDisp">0円</strong></span><span>10万単位 / 直接入力可 / 0円なら非表示</span></div>
+              </div>
+            </div>
+
+            <!-- 地下工事 -->
+            <div class="form-row">
+              <label>地下工事</label>
+              <div class="stepper-wrap">
+                <div class="stepper-row">
+                  <button class="step-btn" onclick="step('chikaWork',-1000000)">－</button>
+                  <input type="number" id="chikaWork" value="0" step="1000000" oninput="update()">
+                  <button class="step-btn" onclick="step('chikaWork',1000000)">＋</button>
+                </div>
+                <div class="direct-input-row">
+                  <label>直接入力：</label>
+                  <input type="number" id="chikaWorkDirect" placeholder="例: 5000000" onchange="applyDirect('chikaWork','chikaWorkDirect')">
+                  <span style="font-size:10px;color:var(--mid)">円</span>
+                </div>
+                <div class="stepper-hint"><span>現在: <strong id="chikaWorkDisp">0円</strong></span><span>100万単位 / 直接入力可 / 0円なら非表示</span></div>
+              </div>
+            </div>
+
+            <!-- 擁壁工事 -->
+            <div class="form-row">
+              <label>擁壁工事</label>
+              <div class="stepper-wrap">
+                <div class="stepper-row">
+                  <button class="step-btn" onclick="step('yohekiWork',-1000000)">－</button>
+                  <input type="number" id="yohekiWork" value="0" step="1000000" oninput="update()">
+                  <button class="step-btn" onclick="step('yohekiWork',1000000)">＋</button>
+                </div>
+                <div class="direct-input-row">
+                  <label>直接入力：</label>
+                  <input type="number" id="yohekiWorkDirect" placeholder="例: 3000000" onchange="applyDirect('yohekiWork','yohekiWorkDirect')">
+                  <span style="font-size:10px;color:var(--mid)">円</span>
+                </div>
+                <div class="stepper-hint"><span>現在: <strong id="yohekiWorkDisp">0円</strong></span><span>100万単位 / 直接入力可 / 0円なら非表示</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="section-title">その他工事費用</div>
+
+            <!-- 外構工事 -->
+            <div class="form-row">
+              <label>外構工事費用</label>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                <label style="display:flex;align-items:center;gap:4px;font-size:11px;cursor:pointer">
+                  <input type="checkbox" id="extUndecided" onchange="toggleUndecided('extWork','extUndecided','extWorkDisp')" checked>
+                  調査後確定（未定）
+                </label>
+              </div>
+              <div class="stepper-wrap" id="extWorkWrap" style="opacity:0.4;pointer-events:none">
+                <div class="stepper-row">
+                  <button class="step-btn" onclick="stepExtWork(-1000000)">－</button>
+                  <input type="number" id="extWork" value="0" step="1000000" oninput="update()">
+                  <button class="step-btn" onclick="stepExtWork(1000000)">＋</button>
+                </div>
+                <div class="direct-input-row">
+                  <label>直接入力：</label>
+                  <input type="number" id="extWorkDirect" placeholder="例: 4500000" onchange="applyDirect('extWork','extWorkDirect')">
+                  <span style="font-size:10px;color:var(--mid)">円</span>
+                </div>
+                <div class="stepper-hint"><span>現在: <strong id="extWorkDisp">0円</strong></span><span>100万単位 / 直接入力可</span></div>
+              </div>
+            </div>
+
+            <!-- 地盤改良工事 -->
+            <div class="form-row">
+              <label>地盤改良工事</label>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                <label style="display:flex;align-items:center;gap:4px;font-size:11px;cursor:pointer">
+                  <input type="checkbox" id="groundUndecided" onchange="toggleUndecided('groundWork','groundUndecided','groundWorkDisp')" checked>
+                  調査後確定（未定）
+                </label>
+              </div>
+              <div class="stepper-wrap" id="groundWorkWrap" style="opacity:0.4;pointer-events:none">
+                <div class="stepper-row">
+                  <button class="step-btn" onclick="step('groundWork',-1000000)">－</button>
+                  <input type="number" id="groundWork" value="0" step="1000000" oninput="update()">
+                  <button class="step-btn" onclick="step('groundWork',1000000)">＋</button>
+                </div>
+                <div class="direct-input-row">
+                  <label>直接入力：</label>
+                  <input type="number" id="groundWorkDirect" placeholder="例: 800000" onchange="applyDirect('groundWork','groundWorkDirect')">
+                  <span style="font-size:10px;color:var(--mid)">円</span>
+                </div>
+                <div class="stepper-hint"><span>現在: <strong id="groundWorkDisp">0円</strong></span><span>100万単位 / 直接入力可</span></div>
+              </div>
+            </div>
+
+            <!-- インテリア工事 -->
+            <div class="form-row">
+              <label>インテリア工事</label>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                <label style="display:flex;align-items:center;gap:4px;font-size:11px;cursor:pointer">
+                  <input type="checkbox" id="interiorUndecided" onchange="toggleUndecided('interiorWork','interiorUndecided','interiorWorkDisp')" checked>
+                  調査後確定（未定）
+                </label>
+              </div>
+              <div class="stepper-wrap" id="interiorWorkWrap" style="opacity:0.4;pointer-events:none">
+                <div class="stepper-row">
+                  <button class="step-btn" onclick="step('interiorWork',-100000)">－</button>
+                  <input type="number" id="interiorWork" value="0" step="100000" oninput="update()">
+                  <button class="step-btn" onclick="step('interiorWork',100000)">＋</button>
+                </div>
+                <div class="direct-input-row">
+                  <label>直接入力：</label>
+                  <input type="number" id="interiorWorkDirect" placeholder="例: 1200000" onchange="applyDirect('interiorWork','interiorWorkDirect')">
+                  <span style="font-size:10px;color:var(--mid)">円</span>
+                </div>
+                <div class="stepper-hint"><span>現在: <strong id="interiorWorkDisp">0円</strong></span><span>10万単位 / 直接入力可</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="section-title">実費精算項目</div>
+
+            <!-- 火災保険料 -->
+            <div class="form-row">
+              <label>火災保険料（概算5年）</label>
+              <div class="stepper-wrap">
+                <div class="stepper-row">
+                  <button class="step-btn" onclick="step('fireIns',-10000)">－</button>
+                  <input type="number" id="fireIns" value="70000" step="10000" oninput="update()">
+                  <button class="step-btn" onclick="step('fireIns',10000)">＋</button>
+                </div>
+                <div class="direct-input-row">
+                  <label>直接入力：</label>
+                  <input type="number" id="fireInsDirect" placeholder="例: 85000" onchange="applyDirect('fireIns','fireInsDirect')">
+                  <span style="font-size:10px;color:var(--mid)">円</span>
+                </div>
+                <div class="stepper-hint"><span>現在: <strong id="fireInsDisp">70,000円</strong></span><span>1万単位 / 直接入力可</span></div>
+              </div>
+            </div>
+
+            <!-- 登記費用 -->
+            <div class="form-row">
+              <label>登記費用（表示・保存登記）</label>
+              <div class="stepper-wrap">
+                <div class="stepper-row">
+                  <button class="step-btn" onclick="step('registration',-10000)">－</button>
+                  <input type="number" id="registration" value="400000" step="10000" oninput="update()">
+                  <button class="step-btn" onclick="step('registration',10000)">＋</button>
+                </div>
+                <div class="direct-input-row">
+                  <label>直接入力：</label>
+                  <input type="number" id="registrationDirect" placeholder="例: 420000" onchange="applyDirect('registration','registrationDirect')">
+                  <span style="font-size:10px;color:var(--mid)">円</span>
+                </div>
+                <div class="stepper-hint"><span>現在: <strong id="registrationDisp">400,000円</strong></span><span>1万単位 / 直接入力可</span></div>
+              </div>
+            </div>
+
+            <!-- 祭事費用 -->
+            <div class="form-row">
+              <label>祭事費用（地鎮祭・上棟式等）</label>
+              <div class="stepper-wrap">
+                <div class="stepper-row">
+                  <button class="step-btn" onclick="step('matsuri',-10000)">－</button>
+                  <input type="number" id="matsuri" value="0" step="10000" oninput="update()">
+                  <button class="step-btn" onclick="step('matsuri',10000)">＋</button>
+                </div>
+                <div class="direct-input-row">
+                  <label>直接入力：</label>
+                  <input type="number" id="matsuriDirect" placeholder="例: 150000" onchange="applyDirect('matsuri','matsuriDirect')">
+                  <span style="font-size:10px;color:var(--mid)">円</span>
+                </div>
+                <div class="stepper-hint"><span>現在: <strong id="matsuriDisp">0円</strong></span><span>1万単位 / 直接入力可</span></div>
+              </div>
+            </div>
+
+            <!-- 仮住まい費用 -->
+            <div class="form-row">
+              <label>仮住まい費用（建替え時等）</label>
+              <div class="stepper-wrap">
+                <div class="stepper-row">
+                  <button class="step-btn" onclick="step('kariZumai',-10000)">－</button>
+                  <input type="number" id="kariZumai" value="0" step="10000" oninput="update()">
+                  <button class="step-btn" onclick="step('kariZumai',10000)">＋</button>
+                </div>
+                <div class="direct-input-row">
+                  <label>直接入力：</label>
+                  <input type="number" id="kariZumaiDirect" placeholder="例: 600000" onchange="applyDirect('kariZumai','kariZumaiDirect')">
+                  <span style="font-size:10px;color:var(--mid)">円</span>
+                </div>
+                <div class="stepper-hint"><span>現在: <strong id="kariZumaiDisp">0円</strong></span><span>1万単位 / 直接入力可</span></div>
+              </div>
+            </div>
+
+            <!-- 家電・家具費用 -->
+            <div class="form-row">
+              <label>家電・家具費用</label>
+              <div class="stepper-wrap">
+                <div class="stepper-row">
+                  <button class="step-btn" onclick="step('kaden',-10000)">－</button>
+                  <input type="number" id="kaden" value="0" step="10000" oninput="update()">
+                  <button class="step-btn" onclick="step('kaden',10000)">＋</button>
+                </div>
+                <div class="direct-input-row">
+                  <label>直接入力：</label>
+                  <input type="number" id="kadenDirect" placeholder="例: 500000" onchange="applyDirect('kaden','kadenDirect')">
+                  <span style="font-size:10px;color:var(--mid)">円</span>
+                </div>
+                <div class="stepper-hint"><span>現在: <strong id="kadenDisp">0円</strong></span><span>1万単位 / 直接入力可</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 土地費用 -->
+      <div class="panel" style="margin-bottom:14px;">
+        <div class="panel-header"><div class="num">5</div> 土地費用</div>
+        <div class="panel-body">
+          <div class="form-section">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+              <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;font-weight:600">
+                <input type="checkbox" id="landOwned" onchange="toggleLandOwned()" style="width:14px;height:14px;accent-color:var(--accent)">
+                土地は既に所有（土地費用を含めない）
+              </label>
+            </div>
+            <div id="landInputArea">
+              <div class="form-row">
+                <label>土地購入費用</label>
+                <div class="stepper-wrap">
+                  <div class="stepper-row">
+                    <button class="step-btn" onclick="step('landPrice',-1000000)">－</button>
+                    <input type="number" id="landPrice" value="0" step="1000000" oninput="update()">
+                    <button class="step-btn" onclick="step('landPrice',1000000)">＋</button>
+                  </div>
+                  <div class="direct-input-row">
+                    <label>直接入力：</label>
+                    <input type="number" id="landPriceDirect" placeholder="例: 48500000" onchange="applyDirect('landPrice','landPriceDirect')">
+                    <span style="font-size:10px;color:var(--mid)">円</span>
+                  </div>
+                  <div class="stepper-hint"><span>現在: <strong id="landPriceDisp">0円</strong></span><span>100万単位 / 直接入力可</span></div>
+                </div>
+              </div>
+              <div class="form-row">
+                <label>不動産仲介手数料（概算）</label>
+                <div class="stepper-wrap">
+                  <div class="stepper-row">
+                    <button class="step-btn" onclick="step('landAgent',-100000)">－</button>
+                    <input type="number" id="landAgent" value="0" step="100000" oninput="update()">
+                    <button class="step-btn" onclick="step('landAgent',100000)">＋</button>
+                  </div>
+                  <div class="direct-input-row">
+                    <label>直接入力：</label>
+                    <input type="number" id="landAgentDirect" placeholder="例: 1650000" onchange="applyDirect('landAgent','landAgentDirect')">
+                    <span style="font-size:10px;color:var(--mid)">円</span>
+                  </div>
+                  <div class="stepper-hint"><span>現在: <strong id="landAgentDisp">0円</strong></span><span>10万単位 / 直接入力可</span></div>
+                </div>
+              </div>
+              <div class="form-row">
+                <label>その他土地関連費用（印紙・登記等）</label>
+                <div class="stepper-wrap">
+                  <div class="stepper-row">
+                    <button class="step-btn" onclick="step('landOther',-100000)">－</button>
+                    <input type="number" id="landOther" value="0" step="100000" oninput="update()">
+                    <button class="step-btn" onclick="step('landOther',100000)">＋</button>
+                  </div>
+                  <div class="direct-input-row">
+                    <label>直接入力：</label>
+                    <input type="number" id="landOtherDirect" placeholder="例: 350000" onchange="applyDirect('landOther','landOtherDirect')">
+                    <span style="font-size:10px;color:var(--mid)">円</span>
+                  </div>
+                  <div class="stepper-hint"><span>現在: <strong id="landOtherDisp">0円</strong></span><span>10万単位 / 直接入力可</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 諸費用チェック -->
+      <div class="panel" style="margin-bottom:14px;">
+        <div class="panel-header"><div class="num">4</div> 諸費用・申請手数料チェック</div>
+        <div class="panel-body">
+          <div class="form-section">
+            <div class="section-title">印紙代</div>
+            <div class="form-row">
+              <label>印紙代（請負総額による）</label>
+              <select id="inshiDai" onchange="update()">
+                <option value="0">電子契約（0円）</option>
+                <option value="10000">10,000円（1千万超〜5千万以下）</option>
+                <option value="30000">30,000円（5千万超〜1億以下）</option>
+                <option value="60000">60,000円（1億超〜5億以下）</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-section">
+            <div class="section-title">設計料</div>
+            <div class="form-row">
+              <label>設計料率</label>
+              <select id="designRate" onchange="update()">
+                <option value="0.025">2.5%（標準）</option>
+                <option value="0.03">3.0%（BIM等）</option>
+              </select>
+            </div>
+            <div style="font-size:10px; color:var(--mid); margin-top:4px; padding:6px 8px; background:#f9f6f0; border-radius:4px; line-height:1.6">
+              設計料 ＝ 工事費合計（主体＋付帯＋エネルギー）× <strong id="designRateDisp">2.5%</strong><br>
+              監理費 ＝ 工事費合計 × 0.5%（固定）<br>
+              設計料: <strong id="designFeeDisp" style="color:var(--accent2)">—</strong><br>
+              監理費: <strong id="superviseFeeDisp" style="color:var(--accent2)">—</strong>
+            </div>
+          </div>
+          <div class="form-section">
+            <div class="section-title">調査・測量費</div>
+            <div class="check-grid" id="surveyChecks">
+              <label class="check-item" id="lbl_敷地調査費"><input type="checkbox" id="chk_敷地調査費" value="35000" onchange="toggleCheck(this)" checked> 敷地調査費<br><span style="font-size:10px;color:#888">35,000円</span></label>
+              <label class="check-item" id="lbl_現況測量費"><input type="checkbox" id="chk_現況測量費" value="50000" onchange="toggleCheck(this)" checked> 現況測量費<br><span style="font-size:10px;color:#888">50,000円</span></label>
+              <label class="check-item" id="lbl_地盤調査料"><input type="checkbox" id="chk_地盤調査料" value="30000" onchange="toggleCheck(this)" checked> 地盤調査料<br><span style="font-size:10px;color:#888">30,000円</span></label>
+              <label class="check-item" id="lbl_ボーリング調査"><input type="checkbox" id="chk_ボーリング調査" value="250000" onchange="toggleCheck(this)"> ボーリング調査<br><span style="font-size:10px;color:#888">250,000円</span></label>
+              <label class="check-item" id="lbl_三成分コーン"><input type="checkbox" id="chk_三成分コーン" value="130000" onchange="toggleCheck(this)"> 三成分コーン貫入試験<br><span style="font-size:10px;color:#888">130,000円</span></label>
+              <label class="check-item" id="lbl_家屋調査"><input type="checkbox" id="chk_家屋調査" value="50000" onchange="toggleCheck(this)"> 家屋調査<br><span style="font-size:10px;color:#888">50,000円〜</span></label>
+            </div>
+          </div>
+          <div class="form-section">
+            <div class="section-title">申請手数料</div>
+            <div class="check-grid">
+              <label class="check-item" id="lbl_建築確認申請2F"><input type="checkbox" id="chk_建築確認申請2F" value="231000" onchange="toggleCheck(this)" checked> 建築確認申請（2F）<br><span style="font-size:10px;color:#888">231,000円</span></label>
+              <label class="check-item" id="lbl_建築確認申請3F"><input type="checkbox" id="chk_建築確認申請3F" value="251000" onchange="toggleCheck(this)"> 建築確認申請（3F）<br><span style="font-size:10px;color:#888">251,000円</span></label>
+              <label class="check-item" id="lbl_長期優良住宅申請"><input type="checkbox" id="chk_長期優良住宅申請" value="150000" onchange="toggleCheck(this)" checked> 長期優良住宅申請<br><span style="font-size:10px;color:#888">150,000円</span></label>
+              <label class="check-item" id="lbl_低炭素住宅申請"><input type="checkbox" id="chk_低炭素住宅申請" value="100000" onchange="toggleCheck(this)"> 低炭素住宅申請<br><span style="font-size:10px;color:#888">100,000円</span></label>
+              <label class="check-item" id="lbl_設計住宅性能評価"><input type="checkbox" id="chk_設計住宅性能評価" value="120000" onchange="toggleCheck(this)"> 設計住宅性能評価<br><span style="font-size:10px;color:#888">120,000円</span></label>
+              <label class="check-item" id="lbl_建設住宅性能評価"><input type="checkbox" id="chk_建設住宅性能評価" value="120000" onchange="toggleCheck(this)"> 建設住宅性能評価<br><span style="font-size:10px;color:#888">120,000円</span></label>
+              <label class="check-item" id="lbl_省エネ基準適合確認"><input type="checkbox" id="chk_省エネ基準適合確認" value="30000" onchange="toggleCheck(this)" checked> 省エネ基準適合確認<br><span style="font-size:10px;color:#888">30,000円</span></label>
+              <label class="check-item" id="lbl_フラット35申請"><input type="checkbox" id="chk_フラット35申請" value="70000" onchange="toggleCheck(this)"> フラット35申請<br><span style="font-size:10px;color:#888">70,000円</span></label>
+              <label class="check-item" id="lbl_フラット35S申請"><input type="checkbox" id="chk_フラット35S申請" value="80000" onchange="toggleCheck(this)"> フラット35S申請<br><span style="font-size:10px;color:#888">80,000円</span></label>
+              <label class="check-item" id="lbl_ZEH申請"><input type="checkbox" id="chk_ZEH申請" value="50000" onchange="toggleCheck(this)"> ＺＥＨ申請費用<br><span style="font-size:10px;color:#888">50,000円</span></label>
+              <label class="check-item" id="lbl_BELS申請"><input type="checkbox" id="chk_BELS申請" value="50000" onchange="toggleCheck(this)"> ＢＥＬＳ評価申請<br><span style="font-size:10px;color:#888">50,000円</span></label>
+              <label class="check-item" id="lbl_狭あい道路申請"><input type="checkbox" id="chk_狭あい道路申請" value="30000" onchange="toggleCheck(this)"> 狭あい道路申請<br><span style="font-size:10px;color:#888">30,000円</span></label>
+              <label class="check-item" id="lbl_緑化計画申請"><input type="checkbox" id="chk_緑化計画申請" value="20000" onchange="toggleCheck(this)"> 緑化計画申請<br><span style="font-size:10px;color:#888">20,000円</span></label>
+              <label class="check-item" id="lbl_雨水流出抑制申請"><input type="checkbox" id="chk_雨水流出抑制申請" value="20000" onchange="toggleCheck(this)"> 雨水流出抑制申請<br><span style="font-size:10px;color:#888">20,000円</span></label>
+              <label class="check-item" id="lbl_地区計画届出"><input type="checkbox" id="chk_地区計画届出" value="20000" onchange="toggleCheck(this)"> 地区計画届出<br><span style="font-size:10px;color:#888">20,000円</span></label>
+              <label class="check-item" id="lbl_東京ゼロエミ申請"><input type="checkbox" id="chk_東京ゼロエミ申請" value="200000" onchange="toggleCheck(this)"> 東京ゼロエミ住宅<br><span style="font-size:10px;color:#888">200,000円</span></label>
+              <label class="check-item" id="lbl_子育てグリーン申請"><input type="checkbox" id="chk_子育てグリーン申請" value="50000" onchange="toggleCheck(this)"> 子育てグリーン住宅<br><span style="font-size:10px;color:#888">50,000円</span></label>
+              <label class="check-item" id="lbl_風致地区申請"><input type="checkbox" id="chk_風致地区申請" value="30000" onchange="toggleCheck(this)"> 風致地区申請<br><span style="font-size:10px;color:#888">30,000円</span></label>
+              <label class="check-item" id="lbl_埋蔵文化財届出"><input type="checkbox" id="chk_埋蔵文化財届出" value="20000" onchange="toggleCheck(this)"> 埋蔵文化財届出<br><span style="font-size:10px;color:#888">20,000円</span></label>
+              <label class="check-item" id="lbl_再資源化諸費用"><input type="checkbox" id="chk_再資源化諸費用" value="10000" onchange="toggleCheck(this)"> 再資源化諸費用<br><span style="font-size:10px;color:#888">10,000円</span></label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- END input-col -->
+
+    <!-- ===== RIGHT OUTPUT COLUMN ===== -->
+    <div class="output-col">
+      <div class="panel">
+
+        <!-- タイトルバー -->
+        <div class="output-top">
+          <div class="plan-date" id="todayDate"></div>
+          <div class="plan-title" id="outputTitle">●● 計画　資金リスト</div>
+          <div class="plan-subtitle" id="outputSubtitle">第二営業部　担当：—</div>
+          <div class="plan-meta" id="planMeta"></div>
+        </div>
+
+        <!-- 合計サマリー -->
+        <div class="totals-bar">
+          <div class="total-item">
+            <div class="label">請負工事(A)（税込）</div>
+            <div class="amount accent" id="sumA">—</div>
+          </div>
+          <div class="total-sep"></div>
+          <div class="total-item">
+            <div class="label">諸費用(B)（税込）</div>
+            <div class="amount" id="sumB">—</div>
+          </div>
+          <div class="total-sep"></div>
+          <div class="total-item">
+            <div class="label">その他工事(C)（税込）</div>
+            <div class="amount" id="sumC">—</div>
+          </div>
+          <div class="total-sep"></div>
+          <div class="total-item">
+            <div class="label">実費精算(D)</div>
+            <div class="amount" id="sumD">—</div>
+          </div>
+          <div class="total-sep"></div>
+          <div class="total-item">
+            <div class="label">建物総合計 A+B+C+D（税込）</div>
+            <div class="amount gold" id="grandTotal">—</div>
+          </div>
+        </div>
+
+        <!-- Section A〜E テーブル（印刷時2カラム） -->
+        <div class="tables-print-wrap">
+
+        <!-- Section A: 請負工事 -->
+        <div class="table-section">
+          <div class="table-section-title section-A">
+            ＜請負工事項目＞
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th style="width:200px">項　目</th>
+                <th>備　考</th>
+                <th class="right" style="width:130px">金　額（税抜）</th>
+                <th class="right" style="width:100px">消費税</th>
+                <th class="right" style="width:130px">合　計（税込）</th>
+              </tr>
+            </thead>
+            <tbody id="tableA"></tbody>
+          </table>
+        </div>
+
+        <!-- Section B: 契約時諸費用 -->
+        <div class="table-section">
+          <div class="table-section-title section-B">
+            ＜契約時諸費用＞
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th style="width:200px">項　目</th>
+                <th>備　考</th>
+                <th class="right" style="width:130px">金　額（税抜）</th>
+                <th class="right" style="width:100px">消費税</th>
+                <th class="right" style="width:130px">合　計（税込）</th>
+              </tr>
+            </thead>
+            <tbody id="tableB"></tbody>
+          </table>
+        </div>
+
+        <!-- Section C: その他工事費用 -->
+        <div class="table-section">
+          <div class="table-section-title section-C">
+            ＜その他工事費用＞
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th style="width:200px">項　目</th>
+                <th>備　考</th>
+                <th class="right" style="width:130px">金　額（税抜）</th>
+                <th class="right" style="width:100px">消費税</th>
+                <th class="right" style="width:130px">合　計（税込）</th>
+              </tr>
+            </thead>
+            <tbody id="tableC"></tbody>
+          </table>
+        </div>
+
+        <!-- Section D: 実費精算項目 -->
+        <div class="table-section">
+          <div class="table-section-title section-D">
+            ＜実費精算項目＞
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th style="width:200px">項　目</th>
+                <th>備　考</th>
+                <th class="right" style="width:130px">金　額</th>
+                <th class="right" style="width:100px">消費税</th>
+                <th class="right" style="width:130px">合　計</th>
+              </tr>
+            </thead>
+            <tbody id="tableD"></tbody>
+          </table>
+        </div>
+
+        <!-- Section E: 土地費用 -->
+        <div class="table-section" id="landSection">
+          <div class="table-section-title section-E">
+            ＜土地費用＞
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th style="width:200px">項　目</th>
+                <th>備　考</th>
+                <th class="right" style="width:130px">金　額</th>
+                <th class="right" style="width:100px">消費税</th>
+                <th class="right" style="width:130px">合　計</th>
+              </tr>
+            </thead>
+            <tbody id="tableE"></tbody>
+          </table>
+        </div>
+
+        </div><!-- END tables-print-wrap -->
+
+        <!-- 総合計 -->
+        <div style="background:linear-gradient(135deg,var(--accent) 0%,#7a0e0e 100%);padding:16px 24px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+            <div>
+              <div id="grandTotalSubtitle" style="font-size:11px;color:rgba(255,255,255,0.7);margin-bottom:2px">建物＋諸費用＋実費　すべて込みの総合計</div>
+              <div style="font-size:13px;font-weight:700;color:white">◆ 総合計（税込）</div>
+            </div>
+            <div style="font-size:26px;font-weight:700;color:#ffe0a0;font-family:'DM Serif Display',serif" id="superGrandTotal">—</div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px" id="grandBreakdown"></div>
+        </div>
+
+        <!-- 支払条件 -->
+        <div class="payment-schedule">
+          <div class="payment-title">◆ 支払条件（建物請負工事ベース）</div>
+          <div class="payment-grid">
+            <div class="payment-item">
+              <div class="phase">契約時</div>
+              <div class="pct">請負金額の 10%<br>＋諸費用</div>
+              <div class="amt" id="pay1">—</div>
+            </div>
+            <div class="payment-item">
+              <div class="phase">着工時</div>
+              <div class="pct">請負金額の 20%</div>
+              <div class="amt" id="pay2">—</div>
+            </div>
+            <div class="payment-item">
+              <div class="phase">上棟時</div>
+              <div class="pct">請負金額の 40%</div>
+              <div class="amt" id="pay3">—</div>
+            </div>
+            <div class="payment-item">
+              <div class="phase">引渡時</div>
+              <div class="pct">請負金額の 30%</div>
+              <div class="amt" id="pay4">—</div>
+            </div>
+          </div>
+          <div style="font-size:10px;color:var(--mid);margin-top:8px;">※消費税は各項目に含みます（インボイス対応）</div>
+        </div>
+
+        <!-- ローンシミュレーター -->
+        <div class="loan-section" style="background:#1a1a2e;color:white;padding:16px 20px">
+          <div style="font-size:13px;font-weight:700;color:#e8d5b0;margin-bottom:14px">🏦 住宅ローンシミュレーター</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+            <div>
+              <div style="font-size:10px;color:#aaa;margin-bottom:4px">自己資金（頭金）</div>
+              <div style="display:flex;align-items:center;gap:0;border:1px solid #444;border-radius:4px;overflow:hidden">
+                <button onclick="stepLoan('selfFund',-1000000)" style="width:28px;height:32px;border:none;background:#333;color:white;cursor:pointer;font-size:14px">－</button>
+                <input type="number" id="selfFund" value="0" step="1000000" oninput="calcLoan()" style="flex:1;border:none;background:#222;color:white;padding:6px 6px;font-size:12px;text-align:center;outline:none">
+                <button onclick="stepLoan('selfFund',1000000)" style="width:28px;height:32px;border:none;background:#333;color:white;cursor:pointer;font-size:14px">＋</button>
+              </div>
+              <div style="font-size:10px;color:#888;margin-top:2px">100万単位 ／ 現在: <strong id="selfFundDisp" style="color:#e8d5b0">0円</strong></div>
+            </div>
+            <div>
+              <div style="font-size:10px;color:#aaa;margin-bottom:4px">借入額（自動計算）</div>
+              <div style="background:#111;border:1px solid #333;border-radius:4px;padding:7px 10px;font-size:16px;font-weight:700;color:#ffd280" id="loanAmount">—</div>
+            </div>
+            <div>
+              <div style="font-size:10px;color:#aaa;margin-bottom:4px">金利タイプ</div>
+              <select id="loanType" onchange="calcLoan()" style="width:100%;padding:6px 8px;background:#222;border:1px solid #444;color:white;border-radius:4px;font-size:12px">
+                <option value="variable">変動金利（三菱UFJ 0.945%・2026年3月）</option>
+                <option value="fixed10">固定10年（現在 1.50%）</option>
+                <option value="fixed35">全期間固定35年（現在 1.82%）</option>
+                <option value="custom">カスタム金利</option>
+              </select>
+            </div>
+            <div>
+              <div style="font-size:10px;color:#aaa;margin-bottom:4px">返済期間</div>
+              <select id="loanYears" onchange="calcLoan()" style="width:100%;padding:6px 8px;background:#222;border:1px solid #444;color:white;border-radius:4px;font-size:12px">
+                <option value="20">20年</option>
+                <option value="25">25年</option>
+                <option value="30">30年</option>
+                <option value="35" selected>35年</option>
+              </select>
+            </div>
+          </div>
+          <div id="customRateRow" style="display:none;margin-bottom:10px">
+            <div style="font-size:10px;color:#aaa;margin-bottom:4px">カスタム金利（%）</div>
+            <input type="number" id="customRate" value="1.0" step="0.1" oninput="calcLoan()" style="width:100%;padding:6px 8px;background:#222;border:1px solid #444;color:white;border-radius:4px;font-size:12px">
+          </div>
+          <!-- ローン結果 -->
+          <div id="loanResult" style="background:#111;border-radius:6px;padding:12px;display:none">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
+              <div>
+                <div style="font-size:9px;color:#888;margin-bottom:3px">月々返済額</div>
+                <div style="font-size:18px;font-weight:700;color:#ffd280" id="loanMonthly">—</div>
+              </div>
+              <div>
+                <div style="font-size:9px;color:#888;margin-bottom:3px">総返済額</div>
+                <div style="font-size:14px;font-weight:700;color:#fff" id="loanTotal">—</div>
+              </div>
+              <div>
+                <div style="font-size:9px;color:#888;margin-bottom:3px">うち利息合計</div>
+                <div style="font-size:14px;font-weight:700;color:#ff9999" id="loanInterest">—</div>
+              </div>
+            </div>
+            <div style="margin-top:10px;font-size:10px;color:#888" id="loanCondition"></div>
+          </div>
+          <div style="font-size:9px;color:#666;margin-top:8px;line-height:1.5">※変動金利は三菱UFJ銀行2026年3月新規最優遇金利（0.945%）を使用。実際の借入条件は各金融機関にご確認ください。変動金利は将来変動する可能性があります。</div>
+        </div>
+
+        <!-- 特記事項 -->
+        <div class="notes-box">
+          <div style="font-weight:700; margin-bottom:6px; font-size:12px; color:var(--ink);">特記事項</div>
+          <p>記載金額には概算金額が含まれます。お打合せが進みますと見積を作成し、より精度の高い資金計画リストになります。</p>
+          <p>地耐力調査後、基礎形状変更に伴い、工事金額が変更になる場合があります。</p>
+        </div>
+
+        <!-- 保存・読込バー -->
+        <div class="no-print" style="background:#f0ece4;border-top:1px solid var(--line);padding:14px 20px;">
+          <div style="font-size:11px;font-weight:700;color:var(--ink);margin-bottom:10px">📁 ファイル保存（どのPCでも使える）</div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="btn btn-primary" onclick="saveToFile()">DL保存</button>
+            <label class="btn btn-outline" style="cursor:pointer;margin:0">
+              読込
+              <input type="file" id="loadFileInput" accept=".json" style="display:none" onchange="loadFromFile(this)">
+            </label>
+          </div>
+          <div style="font-size:10px;color:var(--mid);margin-top:6px">.jsonファイルをDL→次回読込で全項目復元</div>
+        </div>
+
+        <!-- アクション -->
+        <div class="action-bar">
+          <button class="btn btn-outline" onclick="window.print()">🖨 A4印刷・PDF保存</button>
+          <button class="btn btn-primary" onclick="resetForm()">リセット</button>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- END main-grid -->
+</div>
+
+<script>
+const TAX = 0.1;
+
+function fmt(n) {
+  if (n === null || n === undefined || n === '' || n === '-') return '<span class="zero">—</span>';
+  if (isNaN(n)) return '<span class="zero">—</span>';
+  return '¥' + Math.round(n).toLocaleString('ja-JP');
+}
+function fmtPlain(n) {
+  if (!n || isNaN(n)) return '—';
+  return '¥' + Math.round(n).toLocaleString('ja-JP');
+}
+function fmtMan(n) {
+  // 万円表示
+  if (!n || isNaN(n)) return '—万円';
+  return Math.round(n / 10000) + '万円';
+}
+function v(id) { return parseFloat(document.getElementById(id).value) || 0; }
+function s(id) { return document.getElementById(id).value; }
+
+// 3桁カンマ区切り（円表示用）
+function fmtComma(n) {
+  if (!n && n !== 0) return '—';
+  return Math.round(n).toLocaleString('ja-JP') + '円';
+}
+
+// ±ボタン用
+function step(id, delta) {
+  const el = document.getElementById(id);
+  const cur = parseFloat(el.value) || 0;
+  const next = Math.max(0, cur + delta);
+  el.value = next;
+  update();
+}
+// 主体工事費の直接入力（坪×単価より優先）
+function applyMainDirect() {
+  const el = document.getElementById('mainWorkDirect');
+  const val = parseFloat(el.value);
+  const statusEl = document.getElementById('mainWorkDirectStatus');
+  if (!isNaN(val) && val > 0) {
+    statusEl.textContent = '✅ 直接入力金額を使用中：' + fmtComma(val) + '（坪×単価の計算を上書き）';
+    statusEl.style.color = 'var(--accent)';
+  } else if (el.value === '' || val === 0) {
+    el.value = '';
+    statusEl.textContent = '（空欄 = 延床坪数×坪単価で自動計算）';
+    statusEl.style.color = 'var(--mid)';
+  }
+  update();
+}
+
+// 直接入力を反映
+function applyDirect(targetId, directId) {
+  const directEl = document.getElementById(directId);
+  const targetEl = document.getElementById(targetId);
+  const val = parseFloat(directEl.value);
+  if (!isNaN(val) && val >= 0) {
+    targetEl.value = val;
+    directEl.value = '';
+    update();
+  }
+}
+
+function stepExtWork(delta) {
+  const el = document.getElementById('extWork');
+  const cur = parseFloat(el.value) || 0;
+  const next = Math.max(0, cur + delta);
+  el.value = next;
+  update();
+}
+
+// 「調査後確定」チェックボックスのON/OFF
+function toggleUndecided(inputId, chkId, dispId) {
+  const chk = document.getElementById(chkId);
+  const wrap = document.getElementById(inputId + 'Wrap');
+  if (chk.checked) {
+    wrap.style.opacity = '0.4';
+    wrap.style.pointerEvents = 'none';
+  } else {
+    wrap.style.opacity = '1';
+    wrap.style.pointerEvents = 'auto';
+  }
+  update();
+}
+
+function toggleCheck(el) {
+  const lbl = el.closest('label');
+  if (el.checked) lbl.classList.add('checked');
+  else lbl.classList.remove('checked');
+  update();
+}
+
+function setToday() {
+  const d = new Date();
+  document.getElementById('todayDate').textContent =
+    d.getFullYear() + '年' + (d.getMonth()+1) + '月' + d.getDate() + '日';
+}
+
+function getChecked(id) {
+  const el = document.getElementById(id);
+  return el && el.checked ? parseFloat(el.value) || 0 : 0;
+}
+
+// 坪換算（㎡ × 0.3025）
+function toTsubo(sqm) {
+  return Math.round(sqm * 0.3025 * 100) / 100;
+}
+function showTsubo(badgeId, valId, sqm) {
+  const badge = document.getElementById(badgeId);
+  const val = document.getElementById(valId);
+  if (sqm > 0) {
+    badge.style.display = 'inline-flex';
+    val.textContent = toTsubo(sqm).toFixed(2);
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+function row(name, biko, excl, tax, incl) {
+  const showTax = (tax !== null && tax !== 0 && excl !== null);
+  return `<tr>
+    <td class="item-name">${name}</td>
+    <td class="備考">${biko || ''}</td>
+    <td class="right">${fmt(excl)}</td>
+    <td class="right">${showTax ? fmt(tax) : '<span class="zero">—</span>'}</td>
+    <td class="right">${fmt(incl)}</td>
+  </tr>`;
+}
+function subRow(label, val) {
+  return `<tr class="subtotal-row"><td colspan="2"><strong>${label}</strong></td><td></td><td></td><td class="right"><strong>${fmt(val)}</strong></td></tr>`;
+}
+function taxRow(label, val) {
+  return `<tr class="tax-row"><td colspan="2">${label}</td><td></td><td></td><td class="right">${fmt(val)}</td></tr>`;
+}
+function totalRow(label, val) {
+  return `<tr class="total-row"><td colspan="4"><strong>${label}</strong></td><td class="right"><strong>${fmtPlain(val)}</strong></td></tr>`;
+}
+
+function update() {
+  const customer = document.getElementById('customerName').value || '●●';
+  const staff = document.getElementById('staffName').value || '—';
+  const division = s('division');
+  const listType = s('listType');
+  const buildingType = s('buildingType');
+  const structure = s('structure');
+  const fireResist = s('fireResist');
+  const warranty = s('warranty');
+  const seismic = s('seismic');
+  const aircon = s('aircon');
+  const seido = s('seido');
+
+  // Title
+  document.getElementById('outputTitle').textContent =
+    (listType === '概算' ? '【概算】　' : '') + customer + '計画　資金リスト';
+  document.getElementById('outputSubtitle').textContent = division + '　担当：' + staff;
+  document.getElementById('planMeta').innerHTML = [
+    buildingType, structure, fireResist, seismic
+  ].filter(Boolean).map(x => `<div class="plan-meta-item"><strong>${x}</strong></div>`).join('<span style="color:#555;margin:0 4px;">|</span>');
+
+  // =========================
+  // 面積 → 坪換算
+  // =========================
+  const siteArea = v('siteArea');
+  const buildArea = v('buildArea');
+  const f1 = v('floor1'), f2 = v('floor2'), f3 = v('floor3');
+  const fB = v('floorB'), fG = v('floorG'), fBal = v('floorBal'), fPH = v('floorPH');
+
+  showTsubo('siteTsubo', 'siteTsuboVal', siteArea);
+  showTsubo('buildTsubo', 'buildTsuboVal', buildArea);
+  showTsubo('f1Tsubo', 'f1TsuboVal', f1);
+  showTsubo('f2Tsubo', 'f2TsuboVal', f2);
+  showTsubo('f3Tsubo', 'f3TsuboVal', f3);
+  showTsubo('fGTsubo', 'fGTsuboVal', fG);
+
+  // 法定延床（1F+2F+3F+ガレージ）
+  const hotelFloor = f1 + f2 + f3 + fG;
+  const hotelTsubo = toTsubo(hotelFloor);
+
+  if (hotelFloor > 0) {
+    document.getElementById('totalFloorDisp').textContent = hotelFloor.toFixed(2);
+    document.getElementById('totalTsuboDisp').textContent = hotelTsubo.toFixed(2);
+  } else {
+    document.getElementById('totalFloorDisp').textContent = '—';
+    document.getElementById('totalTsuboDisp').textContent = '—';
+  }
+
+  // =========================
+  // 主体工事費：坪数×坪単価
+  // ②で算出した法定延床坪数（hotelTsubo）をそのまま使用
+  // =========================
+  const tsuboPrice = v('tsuboPrice');
+
+  // ②の法定延床坪数（hotelTsubo）を③の延床坪数フィールドに反映
+  const mainTsuboEl = document.getElementById('mainTsubo');
+  if (hotelFloor > 0) {
+    mainTsuboEl.value = hotelTsubo.toFixed(2);
+  } else {
+    mainTsuboEl.value = '0';
+  }
+
+  // 主体工事費：直接入力があればそちら優先、なければ坪×単価
+  const mainWorkDirectVal = parseFloat(document.getElementById('mainWorkDirect').value);
+  const mainWork = (!isNaN(mainWorkDirectVal) && mainWorkDirectVal > 0)
+    ? mainWorkDirectVal
+    : Math.round(hotelTsubo * tsuboPrice);
+
+  // 坪単価・付帯・エネルギー等の表示更新（3桁カンマ）
+  document.getElementById('tsupoPriceDisp').textContent = fmtComma(tsuboPrice);
+  document.getElementById('subWorkDisp').textContent = fmtComma(v('subWork'));
+  document.getElementById('energyWorkDisp').textContent = fmtComma(v('energyWork'));
+  document.getElementById('solarWorkDisp').textContent = fmtComma(v('solarWork'));
+  document.getElementById('homeTactWorkDisp').textContent = fmtComma(v('homeTactWork'));
+  document.getElementById('chikaWorkDisp').textContent = fmtComma(v('chikaWork'));
+  document.getElementById('yohekiWorkDisp').textContent = fmtComma(v('yohekiWork'));
+  document.getElementById('extWorkDisp').textContent = fmtComma(v('extWork'));
+  document.getElementById('groundWorkDisp').textContent = fmtComma(v('groundWork'));
+  document.getElementById('interiorWorkDisp').textContent = fmtComma(v('interiorWork'));
+  document.getElementById('fireInsDisp').textContent = fmtComma(v('fireIns'));
+  document.getElementById('registrationDisp').textContent = fmtComma(v('registration'));
+
+  if (!isNaN(mainWorkDirectVal) && mainWorkDirectVal > 0) {
+    document.getElementById('mainWorkResult').innerHTML =
+      `主体工事費: <span style="color:var(--accent2)">${fmtPlain(mainWork)}</span> <span style="font-size:10px;color:var(--mid)">（直接入力）</span>`;
+  } else if (hotelTsubo > 0 && tsuboPrice > 0) {
+    document.getElementById('mainWorkResult').innerHTML =
+      `主体工事費: <span style="color:var(--accent2)">${hotelTsubo.toFixed(2)}坪 × ${fmtComma(tsuboPrice)} = ${fmtPlain(mainWork)}</span>`;
+  } else {
+    document.getElementById('mainWorkResult').textContent = '主体工事費: 面積を入力すると自動計算';
+  }
+
+  const subWork = v('subWork');
+  const energyWork = v('energyWork');
+  const solarWork = v('solarWork');
+  const homeTactWork = v('homeTactWork');
+  const chikaWork = v('chikaWork');
+  const yohekiWork = v('yohekiWork');
+
+  // ④設計料：（主体＋付帯＋エネルギー工事費合計）× 設計率 ＋ × 0.5%（監理）
+  const designBase = mainWork + subWork + energyWork;
+  const designRate = parseFloat(s('designRate')) || 0.025;
+  const designFee = Math.floor(designBase * designRate);
+  const superviseFee = Math.floor(designBase * 0.005);
+  const designRateLabel = designRate === 0.03 ? '3.0%' : '2.5%';
+
+  document.getElementById('designRateDisp').textContent = designRateLabel;
+  document.getElementById('designFeeDisp').textContent = fmtPlain(designFee) + `（工事費合計${fmtPlain(designBase)}×${designRateLabel}）`;
+  document.getElementById('superviseFeeDisp').textContent = fmtPlain(superviseFee) + `（工事費合計${fmtPlain(designBase)}×0.5%）`;
+
+  // 構造計算料：法定延床㎡ × 2,500円
+  const structCalc = Math.round(hotelFloor * 2500);
+
+  const aItems = [
+    { name: '主体工事', biko: `${hotelTsubo.toFixed(2)}坪 × ${fmtComma(tsuboPrice)}／坪`, excl: mainWork },
+    { name: '付帯工事', biko: '屋外給排水・電気ガス等', excl: subWork },
+    { name: 'スマートエネルギー機器工事', biko: aircon, excl: energyWork },
+    ...(solarWork > 0    ? [{ name: '太陽光発電工事',  biko: '', excl: solarWork }]    : []),
+    ...(homeTactWork > 0 ? [{ name: 'HOME TACT工事',   biko: '', excl: homeTactWork }] : []),
+    ...(chikaWork > 0    ? [{ name: '地下工事',         biko: '', excl: chikaWork }]    : []),
+    ...(yohekiWork > 0   ? [{ name: '擁壁工事',         biko: '', excl: yohekiWork }]   : []),
+  ];
+
+  let aSubtotal = mainWork + subWork + energyWork + solarWork + homeTactWork + chikaWork + yohekiWork;
+  let aTax = Math.round(aSubtotal * TAX);
+  let aTotal = aSubtotal + aTax;
+
+  let htmA = aItems.map(i => row(i.name, i.biko, i.excl, Math.round(i.excl * TAX), i.excl + Math.round(i.excl * TAX))).join('');
+  htmA += subRow('　　小　計（請負金額）', aSubtotal);
+  htmA += taxRow('　　消費税', aTax);
+  htmA += totalRow('(A) 合　計', aTotal);
+  document.getElementById('tableA').innerHTML = htmA;
+
+  // =========================
+  // Section B: 契約時諸費用
+  // =========================
+  const inshiDai = s('inshiDai') === '0' ? 0 : parseInt(s('inshiDai')) || 0;
+  const floor3val = f3;
+
+  const bItems = [
+    { name: '印紙代', biko: inshiDai === 0 ? '非課税（電子契約）' : '請負総額による', excl: inshiDai, noTax: true },
+    { name: '設計料', biko: `工事費合計×${designRateLabel}`, excl: designFee },
+    { name: '工事監理費', biko: `工事費合計×0.5%`, excl: superviseFee },
+    { name: '構造計算料', biko: `2,500円/㎡（延床${hotelFloor.toFixed(2)}㎡）`, excl: structCalc },
+    { name: '敷地調査費', biko: '35,000円', excl: getChecked('chk_敷地調査費') },
+    { name: '現況測量費', biko: '50,000円一律', excl: getChecked('chk_現況測量費') },
+    { name: '地盤調査料', biko: '30,000円一律', excl: getChecked('chk_地盤調査料') },
+    { name: 'ボーリング調査（土質試験含む）', biko: '250,000円', excl: getChecked('chk_ボーリング調査') },
+    { name: '三成分コーン貫入試験', biko: '130,000円', excl: getChecked('chk_三成分コーン') },
+    { name: '家屋調査', biko: '50,000円〜', excl: getChecked('chk_家屋調査') },
+    { name: '建築確認申請手数料（2F）', biko: '231,000円', excl: getChecked('chk_建築確認申請2F') },
+    { name: '建築確認申請手数料（3F）', biko: '251,000円', excl: getChecked('chk_建築確認申請3F') },
+    { name: '長期優良住宅申請費用', biko: '150,000円', excl: getChecked('chk_長期優良住宅申請') },
+    { name: '低炭素住宅申請費用', biko: '100,000円', excl: getChecked('chk_低炭素住宅申請') },
+    { name: '設計住宅性能評価申請', biko: '120,000円', excl: getChecked('chk_設計住宅性能評価') },
+    { name: '建設住宅性能評価申請', biko: '120,000円', excl: getChecked('chk_建設住宅性能評価') },
+    { name: '省エネ基準適合確認費用', biko: '30,000円（延床300㎡未満）', excl: getChecked('chk_省エネ基準適合確認') },
+    { name: 'フラット35申請手数料', biko: '70,000円', excl: getChecked('chk_フラット35申請') },
+    { name: 'フラット35S申請手数料', biko: '80,000円', excl: getChecked('chk_フラット35S申請') },
+    { name: 'ＺＥＨ申請費用', biko: '補助金申請業務', excl: getChecked('chk_ZEH申請') },
+    { name: 'ＢＥＬＳ評価申請費用', biko: 'ＺＥＨの場合も入力', excl: getChecked('chk_BELS申請') },
+    { name: '狭あい道路申請（補助金申請まで）', biko: '30,000円', excl: getChecked('chk_狭あい道路申請') },
+    { name: '緑化計画申請', biko: '20,000円', excl: getChecked('chk_緑化計画申請') },
+    { name: '雨水流出抑制申請', biko: '20,000円', excl: getChecked('chk_雨水流出抑制申請') },
+    { name: '地区計画届出', biko: '20,000円', excl: getChecked('chk_地区計画届出') },
+    { name: '東京ゼロエミ住宅補助金申請費', biko: '', excl: getChecked('chk_東京ゼロエミ申請') },
+    { name: '子育てグリーン支援住宅申請費', biko: '', excl: getChecked('chk_子育てグリーン申請') },
+    { name: '風致地区申請', biko: '30,000円', excl: getChecked('chk_風致地区申請') },
+    { name: '埋蔵文化財届出', biko: '20,000円', excl: getChecked('chk_埋蔵文化財届出') },
+    { name: '再資源化に関する諸費用', biko: '延床500㎡以上', excl: getChecked('chk_再資源化諸費用') },
+  ].filter(i => i.excl > 0);
+
+  let bSubtotal = bItems.reduce((s, i) => s + (i.excl || 0), 0);
+  let bTaxable = bItems.filter(i => !i.noTax).reduce((s, i) => s + (i.excl || 0), 0);
+  let bTax = Math.round(bTaxable * TAX);
+  let bTotal = bSubtotal + bTax;
+
+  let htmB = bItems.map(i => {
+    const t = i.noTax ? 0 : Math.round(i.excl * TAX);
+    const total = i.excl + (i.noTax ? 0 : t);
+    return row(i.name, i.biko, i.excl, i.noTax ? null : t, total);
+  }).join('');
+  htmB += subRow('　　小　計', bSubtotal);
+  htmB += taxRow('　　消費税（印紙代除く）', bTax);
+  htmB += totalRow('(B) 合　計', bTotal);
+  document.getElementById('tableB').innerHTML = htmB;
+
+  // =========================
+  // Section C: その他工事費用
+  // =========================
+  const extWork = v('extWork');
+  const groundUndecided = document.getElementById('groundUndecided').checked;
+  const interiorUndecided = document.getElementById('interiorUndecided').checked;
+  const groundWorkVal = groundUndecided ? null : v('groundWork');
+  const interiorWorkVal = interiorUndecided ? null : v('interiorWork');
+
+  const cItems = [
+    { name: '外構工事費用', biko: '概算', excl: extWork > 0 ? extWork : null },
+    { name: '地盤改良工事', biko: groundWorkVal === null ? '調査後確定' : '', excl: groundWorkVal },
+    { name: 'インテリア工事', biko: interiorWorkVal === null ? '調査後確定' : '', excl: interiorWorkVal },
+  ];
+
+  const cSubtotalNum = cItems.filter(i => i.excl !== null && !isNaN(i.excl)).reduce((s, i) => s + i.excl, 0);
+  const cTax = Math.round(cSubtotalNum * TAX);
+  const cTotal = cSubtotalNum + cTax;
+
+  let htmC = cItems.map(i => {
+    if (i.excl === null) return row(i.name, i.biko, null, null, null);
+    return row(i.name, i.biko, i.excl, Math.round(i.excl * TAX), i.excl + Math.round(i.excl * TAX));
+  }).join('');
+  htmC += subRow('　小　計', cSubtotalNum);
+  htmC += taxRow('　消費税', cTax);
+  htmC += totalRow('(C) 合　計', cTotal);
+  document.getElementById('tableC').innerHTML = htmC;
+
+  // =========================
+  // Section D: 実費精算項目
+  // =========================
+  const fireIns = v('fireIns');
+  const regist = v('registration');
+  const matsuri = v('matsuri');
+  const kariZumai = v('kariZumai');
+  const kaden = v('kaden');
+  const dItems = [
+    { name: '火災保険料', biko: '概算5年', excl: fireIns },
+    { name: '登記費用', biko: '概算　表示・保存登記', excl: regist },
+    ...(matsuri > 0   ? [{ name: '祭事費用', biko: '地鎮祭・上棟式等', excl: matsuri }] : []),
+    ...(kariZumai > 0 ? [{ name: '仮住まい費用', biko: '建替え時等', excl: kariZumai }] : []),
+    ...(kaden > 0     ? [{ name: '家電・家具費用', biko: '', excl: kaden }] : []),
+  ].filter(i => i.excl > 0);
+  const dTotal = dItems.reduce((s, i) => s + i.excl, 0);
+  let htmD = dItems.map(i => row(i.name, i.biko, i.excl, null, i.excl)).join('');
+  htmD += totalRow('(D) 合　計', dTotal);
+  document.getElementById('tableD').innerHTML = htmD;
+
+  // 実費精算関連の表示更新
+  document.getElementById('matsuriDisp').textContent = fmtComma(matsuri);
+  document.getElementById('kariZumaiDisp').textContent = fmtComma(kariZumai);
+  document.getElementById('kadenDisp').textContent = fmtComma(kaden);
+
+  // =========================
+  // Section E: 土地費用
+  // =========================
+  const landOwned = document.getElementById('landOwned').checked;
+  const landPrice = v('landPrice');
+  const landAgent = v('landAgent');
+  const landOther = v('landOther');
+  document.getElementById('landPriceDisp').textContent = fmtComma(landPrice);
+  document.getElementById('landAgentDisp').textContent = fmtComma(landAgent);
+  document.getElementById('landOtherDisp').textContent = fmtComma(landOther);
+
+  let eTotal = 0;
+  const landSec = document.getElementById('landSection');
+  if (landOwned) {
+    landSec.style.display = 'none';
+  } else {
+    landSec.style.display = 'block';
+    const eItems = [
+      ...(landPrice > 0 ? [{ name: '土地購入費用', biko: '', excl: landPrice }] : []),
+      ...(landAgent > 0 ? [{ name: '不動産仲介手数料', biko: '概算', excl: landAgent }] : []),
+      ...(landOther > 0 ? [{ name: 'その他土地関連費用', biko: '印紙・登記等', excl: landOther }] : []),
+    ];
+    eTotal = eItems.reduce((s, i) => s + i.excl, 0);
+    let htmE = eItems.length ? eItems.map(i => row(i.name, i.biko, i.excl, null, i.excl)).join('') : row('土地費用', '未入力', null, null, null);
+    htmE += totalRow('(E) 合　計', eTotal);
+    document.getElementById('tableE').innerHTML = htmE;
+  }
+
+  // =========================
+  // 総合計（A+B+C+D+E）
+  // =========================
+  const grand = aTotal + bTotal + cTotal + dTotal;   // ← 実費精算(D)込み
+  const superGrand = grand + eTotal;
+
+  document.getElementById('sumA').textContent = fmtPlain(aTotal);
+  document.getElementById('sumB').textContent = fmtPlain(bTotal);
+  document.getElementById('sumC').textContent = fmtPlain(cTotal);
+  document.getElementById('sumD').textContent = fmtPlain(dTotal);
+  document.getElementById('grandTotal').textContent = fmtPlain(grand);
+  document.getElementById('superGrandTotal').textContent = fmtPlain(superGrand);
+
+  // 総合計バナーのサブタイトルを土地有無で切り替え
+  const hasLand = !landOwned && eTotal > 0;
+  document.getElementById('grandTotalSubtitle').textContent =
+    hasLand ? '建物＋諸費用＋実費＋土地　すべて込みの総合計' : '建物＋諸費用＋実費　すべて込みの総合計';
+
+  // 内訳バッジ（土地が0円なら非表示）
+  const labels = ['建物工事(A)', '諸費用(B)', 'その他工事(C)', '実費精算(D)', ...(hasLand ? ['土地(E)'] : [])];
+  const vals   = [aTotal, bTotal, cTotal, dTotal, ...(hasLand ? [eTotal] : [])];
+  document.getElementById('grandBreakdown').style.gridTemplateColumns = `repeat(${labels.length},1fr)`;
+  document.getElementById('grandBreakdown').innerHTML = labels.map((l, i) => `
+    <div style="background:rgba(255,255,255,0.07);border-radius:4px;padding:6px 8px;text-align:center">
+      <div style="font-size:9px;color:rgba(255,255,255,0.6);margin-bottom:2px">${l}</div>
+      <div style="font-size:11px;font-weight:700;color:#ffe0a0">${fmtPlain(vals[i])}</div>
+    </div>`).join('');
+
+  // Payment schedule
+  const requestTotal = aTotal;
+  const p1 = Math.round(requestTotal * 0.1) + bTotal;
+  const p2 = Math.round(requestTotal * 0.2);
+  const p3 = Math.round(requestTotal * 0.4);
+  const p4 = Math.round(requestTotal * 0.3);
+  document.getElementById('pay1').textContent = fmtPlain(p1);
+  document.getElementById('pay2').textContent = fmtPlain(p2);
+  document.getElementById('pay3').textContent = fmtPlain(p3);
+  document.getElementById('pay4').textContent = fmtPlain(p4);
+
+  // ローン再計算
+  calcLoan();
+}
+
+// ========================
+// 土地所有トグル
+// ========================
+function toggleLandOwned() {
+  const owned = document.getElementById('landOwned').checked;
+  document.getElementById('landInputArea').style.display = owned ? 'none' : 'block';
+  update();
+}
+
+// ========================
+// ローンシミュレーター
+// ========================
+const LOAN_RATES = {
+  variable: 0.945,
+  fixed10:  1.50,
+  fixed35:  1.82,
+};
+
+function stepLoan(id, delta) {
+  const el = document.getElementById(id);
+  const cur = parseFloat(el.value) || 0;
+  el.value = Math.max(0, cur + delta);
+  calcLoan();
+}
+
+function calcLoan() {
+  const loanType = document.getElementById('loanType').value;
+  const isCustom = loanType === 'custom';
+  document.getElementById('customRateRow').style.display = isCustom ? 'block' : 'none';
+
+  const selfFund = parseFloat(document.getElementById('selfFund').value) || 0;
+  document.getElementById('selfFundDisp').textContent = fmtComma(selfFund);
+
+  // 総合計を取得（DOMから）
+  const superGrandEl = document.getElementById('superGrandTotal').textContent;
+  const superGrand = parseFloat(superGrandEl.replace(/[¥,]/g, '')) || 0;
+
+  const loanAmt = Math.max(0, superGrand - selfFund);
+  document.getElementById('loanAmount').textContent = loanAmt > 0 ? fmtPlain(loanAmt) : '0円';
+
+  const resultDiv = document.getElementById('loanResult');
+  if (loanAmt <= 0) { resultDiv.style.display = 'none'; return; }
+
+  let annualRate;
+  if (isCustom) {
+    annualRate = (parseFloat(document.getElementById('customRate').value) || 1.0) / 100;
+  } else {
+    annualRate = LOAN_RATES[loanType] / 100;
+  }
+
+  const years = parseInt(document.getElementById('loanYears').value) || 35;
+  const months = years * 12;
+  const monthRate = annualRate / 12;
+
+  let monthly, totalRepay, totalInterest;
+  if (monthRate === 0) {
+    monthly = Math.round(loanAmt / months);
+    totalRepay = monthly * months;
+    totalInterest = 0;
+  } else {
+    monthly = Math.round(loanAmt * monthRate * Math.pow(1 + monthRate, months) / (Math.pow(1 + monthRate, months) - 1));
+    totalRepay = monthly * months;
+    totalInterest = totalRepay - loanAmt;
+  }
+
+  const rateLabel = isCustom
+    ? `カスタム ${(annualRate*100).toFixed(2)}%`
+    : { variable: '変動 0.945%（三菱UFJ・2026年3月）', fixed10: '固定10年 1.50%', fixed35: '全期間固定 1.82%' }[loanType];
+
+  document.getElementById('loanMonthly').textContent = fmtPlain(monthly) + '/月';
+  document.getElementById('loanTotal').textContent = fmtPlain(totalRepay);
+  document.getElementById('loanInterest').textContent = fmtPlain(totalInterest);
+  document.getElementById('loanCondition').textContent =
+    `借入額 ${fmtPlain(loanAmt)} ／ ${rateLabel} ／ ${years}年返済（${months}回払い）`;
+  resultDiv.style.display = 'block';
+}
+
+function resetForm() {
+  if (!confirm('入力内容をリセットしますか？')) return;
+  document.querySelectorAll('input[type="number"]').forEach(el => {
+    if (el.id === 'mainTsubo') return;
+    el.value = '0';
+  });
+  document.querySelectorAll('input[type="text"]').forEach(el => el.value = '');
+  document.getElementById('tsuboPrice').value = '1100000';
+  document.getElementById('subWork').value = '2500000';
+  document.getElementById('energyWork').value = '3000000';
+  document.getElementById('fireIns').value = '70000';
+  document.getElementById('registration').value = '400000';
+  document.querySelectorAll('input[type="checkbox"]').forEach(el => {
+    el.checked = false;
+    el.closest('label')?.classList.remove('checked');
+  });
+  ['extUndecided','groundUndecided','interiorUndecided'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.checked = true;
+      const baseId = id.replace('Undecided','');
+      const wrap = document.getElementById(baseId + 'Wrap');
+      if (wrap) { wrap.style.opacity='0.4'; wrap.style.pointerEvents='none'; }
+    }
+  });
+  document.getElementById('loanResult').style.display = 'none';
+  update();
+}
+
+// Init
+setToday();
+document.getElementById('tsuboPrice').value = '1100000';
+document.getElementById('subWork').value = '2500000';
+document.getElementById('energyWork').value = '3000000';
+['solarWork','homeTactWork','chikaWork','yohekiWork','extWork','groundWork','interiorWork',
+ 'matsuri','kariZumai','kaden','landPrice','landAgent','landOther','selfFund'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.value = '0';
+});
+document.getElementById('fireIns').value = '70000';
+document.getElementById('registration').value = '400000';
+// 調査後確定を初期ON
+['extWork','groundWork','interiorWork'].forEach(id => {
+  const wrap = document.getElementById(id + 'Wrap');
+  if (wrap) { wrap.style.opacity='0.4'; wrap.style.pointerEvents='none'; }
+});
+document.querySelectorAll('input[type="checkbox"]:checked').forEach(el => {
+  el.closest('label')?.classList.add('checked');
+});
+document.getElementById('loanType').addEventListener('change', function() {
+  document.getElementById('customRateRow').style.display = this.value === 'custom' ? 'block' : 'none';
+});
+// ============================================================
+// 保存・読込機能（ファイルのみ）
+// ============================================================
+
+const SAVE_TEXT_IDS = ['customerName','staffName'];
+const SAVE_NUM_IDS = [
+  'siteArea','buildArea','floor1','floor2','floor3','floorB','floorG','floorBal','floorPH',
+  'tsuboPrice','subWork','energyWork','solarWork','homeTactWork','chikaWork','yohekiWork',
+  'extWork','groundWork','interiorWork',
+  'fireIns','registration','matsuri','kariZumai','kaden',
+  'landPrice','landAgent','landOther','selfFund'
+];
+const SAVE_SELECT_IDS = [
+  'division','listType','buildingType','structure','fireResist','warranty','seismic','aircon','seido',
+  'inshiDai','designRate','loanType','loanYears'
+];
+const SAVE_CHECK_IDS_PLAIN = [
+  'extUndecided','groundUndecided','interiorUndecided','landOwned',
+  'chk_敷地調査費','chk_現況測量費','chk_地盤調査料','chk_ボーリング調査','chk_三成分コーン','chk_家屋調査',
+  'chk_建築確認申請2F','chk_建築確認申請3F',
+  'chk_長期優良住宅申請','chk_低炭素住宅申請',
+  'chk_設計住宅性能評価','chk_建設住宅性能評価','chk_省エネ基準適合確認',
+  'chk_フラット35申請','chk_フラット35S申請','chk_ZEH申請','chk_BELS申請',
+  'chk_狭あい道路申請','chk_緑化計画申請','chk_雨水流出抑制申請','chk_地区計画届出',
+  'chk_東京ゼロエミ申請','chk_子育てグリーン申請','chk_風致地区申請','chk_埋蔵文化財届出','chk_再資源化諸費用'
+];
+
+function collectData() {
+  const data = { _savedAt: new Date().toLocaleString('ja-JP'), _version: 1 };
+  SAVE_TEXT_IDS.forEach(id => { const el = document.getElementById(id); if(el) data[id] = el.value; });
+  SAVE_NUM_IDS.forEach(id => { const el = document.getElementById(id); if(el) data[id] = el.value; });
+  SAVE_SELECT_IDS.forEach(id => { const el = document.getElementById(id); if(el) data[id] = el.value; });
+  SAVE_CHECK_IDS_PLAIN.forEach(id => { const el = document.getElementById(id); if(el) data[id] = el.checked; });
+  return data;
+}
+
+function applyData(data) {
+  SAVE_TEXT_IDS.forEach(id => { const el = document.getElementById(id); if(el && data[id] !== undefined) el.value = data[id]; });
+  SAVE_NUM_IDS.forEach(id => { const el = document.getElementById(id); if(el && data[id] !== undefined) el.value = data[id]; });
+  SAVE_SELECT_IDS.forEach(id => { const el = document.getElementById(id); if(el && data[id] !== undefined) el.value = data[id]; });
+  SAVE_CHECK_IDS_PLAIN.forEach(id => {
+    const el = document.getElementById(id);
+    if(el && data[id] !== undefined) {
+      el.checked = data[id];
+      const lbl = el.closest('label');
+      if(lbl) { el.checked ? lbl.classList.add('checked') : lbl.classList.remove('checked'); }
+    }
+  });
+  ['extWork','groundWork','interiorWork'].forEach(id => {
+    const chkId = id === 'extWork' ? 'extUndecided' : id.replace('Work','') + 'Undecided';
+    const chk = document.getElementById(chkId);
+    const wrap = document.getElementById(id + 'Wrap');
+    if(chk && wrap) {
+      wrap.style.opacity = chk.checked ? '0.4' : '1';
+      wrap.style.pointerEvents = chk.checked ? 'none' : 'auto';
+    }
+  });
+  const landOwned = document.getElementById('landOwned');
+  if(landOwned) document.getElementById('landInputArea').style.display = landOwned.checked ? 'none' : 'block';
+  update();
+}
+
+function saveToFile() {
+  const data = collectData();
+  const customer = data.customerName || '名前なし';
+  const dt = new Date().toISOString().slice(0,10);
+  const filename = `資金リスト_${customer}_${dt}.json`;
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function loadFromFile(input) {
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      applyData(JSON.parse(e.target.result));
+      input.value = '';
+    } catch(err) { alert('ファイルの読込に失敗しました。正しいJSONファイルか確認してください。'); }
+  };
+  reader.readAsText(file);
+}
+
+</script>
+</body>
+</html>
