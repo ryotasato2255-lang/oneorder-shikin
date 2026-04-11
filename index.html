@@ -1386,6 +1386,43 @@
 <script>
 const TAX = 0.1;
 
+// ============================================================
+// カスタム追加行管理（先頭で定義）
+// ============================================================
+const customRows = { A: [], B: [], C: [], D: [] };
+let customRowIdCounter = 0;
+
+function addCustomRow(section) {
+  const id = ++customRowIdCounter;
+  customRows[section].push({ id, name: '', amount: 0 });
+  renderCustomRows(section);
+}
+function removeCustomRow(section, id) {
+  customRows[section] = customRows[section].filter(r => r.id !== id);
+  renderCustomRows(section);
+  update();
+}
+function renderCustomRows(section) {
+  const wrap = document.getElementById('customRows' + section);
+  if (!wrap) return;
+  wrap.innerHTML = customRows[section].map(r => `
+    <div class="custom-row">
+      <input type="text" placeholder="工事名・項目名" value="${r.name}"
+        oninput="customRows['${section}'].find(x=>x.id===${r.id}).name=this.value; update()">
+      <input type="number" placeholder="金額（円）" value="${r.amount || ''}"
+        oninput="customRows['${section}'].find(x=>x.id===${r.id}).amount=parseFloat(this.value)||0; update()">
+      <span style="font-size:10px;color:var(--mid);flex-shrink:0">円</span>
+      <button class="del-btn" onclick="removeCustomRow('${section}',${r.id})">×</button>
+    </div>
+  `).join('');
+}
+function getCustomTotal(section) {
+  return customRows[section].reduce((s, r) => s + (r.amount || 0), 0);
+}
+function getCustomItems(section) {
+  return customRows[section].filter(r => r.amount > 0 || r.name);
+}
+
 function fmt(n) {
   if (n === null || n === undefined || n === '' || n === '-') return '<span class="zero">—</span>';
   if (isNaN(n)) return '<span class="zero">—</span>';
@@ -1731,6 +1768,7 @@ function update() {
   // Section C: その他工事費用
   // =========================
   const extWork = v('extWork');
+  const extUndecided = document.getElementById('extUndecided').checked;
   const groundUndecided = document.getElementById('groundUndecided').checked;
   const interiorUndecided = document.getElementById('interiorUndecided').checked;
   const groundWorkVal = groundUndecided ? null : v('groundWork');
@@ -1984,46 +2022,6 @@ document.querySelectorAll('input[type="checkbox"]:checked').forEach(el => {
 document.getElementById('loanType').addEventListener('change', function() {
   document.getElementById('customRateRow').style.display = this.value === 'custom' ? 'block' : 'none';
 });
-// ============================================================
-// カスタム追加行管理
-// ============================================================
-const customRows = { A: [], B: [], C: [], D: [] };
-let customRowIdCounter = 0;
-
-function addCustomRow(section) {
-  const id = ++customRowIdCounter;
-  customRows[section].push({ id, name: '', amount: 0 });
-  renderCustomRows(section);
-}
-
-function removeCustomRow(section, id) {
-  customRows[section] = customRows[section].filter(r => r.id !== id);
-  renderCustomRows(section);
-  update();
-}
-
-function renderCustomRows(section) {
-  const wrap = document.getElementById('customRows' + section);
-  if (!wrap) return;
-  wrap.innerHTML = customRows[section].map(r => `
-    <div class="custom-row">
-      <input type="text" placeholder="工事名・項目名" value="${r.name}"
-        oninput="customRows['${section}'].find(x=>x.id===${r.id}).name=this.value; update()">
-      <input type="number" placeholder="金額（円）" value="${r.amount || ''}"
-        oninput="customRows['${section}'].find(x=>x.id===${r.id}).amount=parseFloat(this.value)||0; update()">
-      <span style="font-size:10px;color:var(--mid);flex-shrink:0">円</span>
-      <button class="del-btn" onclick="removeCustomRow('${section}',${r.id})">×</button>
-    </div>
-  `).join('');
-}
-
-function getCustomTotal(section) {
-  return customRows[section].reduce((s, r) => s + (r.amount || 0), 0);
-}
-function getCustomItems(section) {
-  return customRows[section].filter(r => r.amount > 0 || r.name);
-}
-
 const SAVE_TEXT_IDS = ['customerName','staffName'];
 const SAVE_NUM_IDS = [
   'siteArea','buildArea','floor1','floor2','floor3','floorB','floorG','floorBal','floorPH',
