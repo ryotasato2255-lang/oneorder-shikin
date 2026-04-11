@@ -139,7 +139,30 @@
   .stepper-hint span { display: flex; align-items: center; gap: 3px; }
   .stepper-hint strong { color: var(--ink); font-variant-numeric: tabular-nums; }
 
-  /* 直接入力フィールド */
+  /* 項目追加ボタン */
+  .add-row-btn {
+    margin-top: 6px; margin-bottom: 4px;
+    padding: 5px 12px; border: 1px dashed var(--accent);
+    background: transparent; color: var(--accent);
+    border-radius: 4px; font-family: 'Noto Sans JP', sans-serif;
+    font-size: 11px; cursor: pointer; transition: all 0.15s;
+  }
+  .add-row-btn:hover { background: #fdf0f0; }
+
+  /* カスタム行 */
+  .custom-row {
+    display: flex; gap: 6px; align-items: center;
+    margin-bottom: 6px; background: #fdf8f2;
+    border: 1px solid #e8d9c0; border-radius: 4px; padding: 6px 8px;
+  }
+  .custom-row input[type="text"] { flex: 2; font-size: 11px; }
+  .custom-row input[type="number"] { flex: 1.5; font-size: 11px; text-align: right; }
+  .custom-row .del-btn {
+    width: 22px; height: 22px; border: none; background: #eee;
+    color: #888; border-radius: 50%; cursor: pointer; font-size: 13px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .custom-row .del-btn:hover { background: var(--accent); color: white; }
   .direct-input-row { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
   .direct-input-row input {
     flex: 1; padding: 5px 8px; border: 1px dashed var(--line); border-radius: 4px;
@@ -369,7 +392,7 @@
 
     /* テーブル */
     .tables-print-wrap { display: block !important; }
-    .table-section { padding: 0 0 6px !important; }
+    .table-section { padding: 0 0 4px !important; break-inside: avoid; }
     .table-section-title { padding: 5px 14px !important; font-size: 10px !important; }
     thead th { padding: 4px 10px !important; font-size: 9px !important; }
     tbody td { padding: 3px 10px !important; font-size: 9.5px !important; }
@@ -378,29 +401,27 @@
     .total-row td { padding: 4px 10px !important; font-size: 10px !important; }
     .total-row td.right { font-size: 11px !important; }
 
-    /* ── 1ページ目：A〜B で終わる ── */
-    /* A（請負工事）とB（諸費用）は1ページ目 */
-    .table-section:nth-of-type(1),
-    .table-section:nth-of-type(2) { break-inside: avoid; }
+    /* ── 1ページ目：A（請負）＋B（諸費用）＋C（その他）＋D（実費） ── */
+    /* D（実費精算）のあとで改ページ */
+    #landSection { break-before: page !important; }
 
-    /* B終わりで改ページ */
-    .table-section:nth-of-type(2) { break-after: page !important; }
-
-    /* ── 2ページ目：C〜E＋総合計＋支払条件＋ローン ── */
-    .table-section:nth-of-type(3),
-    .table-section:nth-of-type(4),
-    .table-section:nth-of-type(5) { break-inside: avoid; }
+    /* ── 2ページ目：E（土地）＋総合計＋支払条件＋特記事項＋ローン ── */
+    #landSection,
+    div[style*="background:linear-gradient(135deg,var(--accent)"],
+    .payment-schedule,
+    .notes-box,
+    .loan-section { break-inside: avoid; }
 
     /* 総合計バナー */
     div[style*="background:linear-gradient(135deg,var(--accent)"] {
-      padding: 10px 16px !important; break-inside: avoid;
+      padding: 10px 16px !important;
     }
     #superGrandTotal { font-size: 20px !important; }
     #grandBreakdown { gap: 5px !important; margin-top: 8px !important; }
     #grandBreakdown > div { padding: 4px 8px !important; font-size: 9px !important; }
 
     /* 支払条件 */
-    .payment-schedule { padding: 10px 16px !important; break-inside: avoid; }
+    .payment-schedule { padding: 10px 16px !important; }
     .payment-title { font-size: 10px !important; margin-bottom: 6px !important; }
     .payment-grid { gap: 6px !important; grid-template-columns: repeat(4,1fr) !important; }
     .payment-item { padding: 7px !important; }
@@ -409,17 +430,18 @@
     .payment-item .amt { font-size: 11px !important; margin-top: 3px !important; }
 
     /* 特記事項 */
-    .notes-box { padding: 8px 16px !important; font-size: 9px !important; break-inside: avoid; }
+    .notes-box { padding: 8px 16px !important; font-size: 9px !important; }
     .notes-box p { margin-bottom: 3px !important; }
 
-    /* ローンシミュレーター */
-    .loan-section { padding: 10px 16px !important; break-inside: avoid; }
-    .loan-section * { font-size: 9px !important; }
-    #loanMonthly { font-size: 14px !important; }
-    #loanTotal, #loanInterest { font-size: 10px !important; }
+    /* ローンシミュレーター（白ベース・コンパクト） */
+    .loan-section { padding: 8px 14px !important; background: #f9f6f0 !important; }
+    .loan-section * { font-size: 8.5px !important; color: var(--ink) !important; }
+    #loanMonthly { font-size: 13px !important; color: var(--accent2) !important; }
+    #loanTotal { font-size: 10px !important; color: var(--ink) !important; }
+    #loanInterest { font-size: 10px !important; color: #c0392b !important; }
     .loan-section select, .loan-section input[type="number"],
     .loan-section button, #customRateRow { display: none !important; }
-    #loanResult { display: block !important; }
+    #loanResult { display: block !important; background: white !important; border: 1px solid var(--line) !important; }
     #loanResult > div { gap: 6px !important; padding: 8px !important; }
   }
 </style>
@@ -747,6 +769,21 @@
                 <div class="stepper-hint"><span>現在: <strong id="yohekiWorkDisp">0円</strong></span><span>100万単位 / 直接入力可 / 0円なら非表示</span></div>
               </div>
             </div>
+
+            <!-- カスタム追加行（A） -->
+            <div id="customRowsA"></div>
+            <button class="add-row-btn" onclick="addCustomRow('A')">＋ 工事項目を追加</button>
+
+            <!-- 値引き -->
+            <div class="form-row" style="margin-top:10px">
+              <label style="color:var(--accent);font-weight:700">値引き（直接入力・マイナス適用）</label>
+              <div class="direct-input-row">
+                <label>値引き額：</label>
+                <input type="number" id="discount" placeholder="例: 500000" oninput="update()" style="border-color:var(--accent)">
+                <span style="font-size:10px;color:var(--mid)">円</span>
+              </div>
+              <div style="font-size:10px;color:var(--mid);margin-top:3px" id="discountDisp"></div>
+            </div>
           </div>
 
           <div class="form-section">
@@ -823,6 +860,10 @@
                 <div class="stepper-hint"><span>現在: <strong id="interiorWorkDisp">0円</strong></span><span>10万単位 / 直接入力可</span></div>
               </div>
             </div>
+
+            <!-- カスタム追加行（C） -->
+            <div id="customRowsC"></div>
+            <button class="add-row-btn" onclick="addCustomRow('C')">＋ 工事項目を追加</button>
           </div>
 
           <div class="form-section">
@@ -917,6 +958,10 @@
                 <div class="stepper-hint"><span>現在: <strong id="kadenDisp">0円</strong></span><span>1万単位 / 直接入力可</span></div>
               </div>
             </div>
+
+            <!-- カスタム追加行（D） -->
+            <div id="customRowsD"></div>
+            <button class="add-row-btn" onclick="addCustomRow('D')">＋ 実費項目を追加</button>
           </div>
         </div>
       </div>
@@ -1053,6 +1098,12 @@
               <label class="check-item" id="lbl_埋蔵文化財届出"><input type="checkbox" id="chk_埋蔵文化財届出" value="20000" onchange="toggleCheck(this)"> 埋蔵文化財届出<br><span style="font-size:10px;color:#888">20,000円</span></label>
               <label class="check-item" id="lbl_再資源化諸費用"><input type="checkbox" id="chk_再資源化諸費用" value="10000" onchange="toggleCheck(this)"> 再資源化諸費用<br><span style="font-size:10px;color:#888">10,000円</span></label>
             </div>
+          </div>
+          <!-- カスタム追加行（B） -->
+          <div class="form-section">
+            <div class="section-title">諸費用・カスタム追加</div>
+            <div id="customRowsB"></div>
+            <button class="add-row-btn" onclick="addCustomRow('B')">＋ 諸費用項目を追加</button>
           </div>
         </div>
       </div>
@@ -1240,34 +1291,34 @@
         </div>
 
         <!-- ローンシミュレーター -->
-        <div class="loan-section" style="background:#1a1a2e;color:white;padding:16px 20px">
-          <div style="font-size:13px;font-weight:700;color:#e8d5b0;margin-bottom:14px">🏦 住宅ローンシミュレーター</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div class="loan-section" style="background:#f5f2ec;border-top:2px solid var(--line);padding:12px 20px">
+          <div style="font-size:12px;font-weight:700;color:var(--ink);margin-bottom:10px">🏦 住宅ローンシミュレーター</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:8px">
             <div>
-              <div style="font-size:10px;color:#aaa;margin-bottom:4px">自己資金（頭金）</div>
-              <div style="display:flex;align-items:center;gap:0;border:1px solid #444;border-radius:4px;overflow:hidden">
-                <button onclick="stepLoan('selfFund',-1000000)" style="width:28px;height:32px;border:none;background:#333;color:white;cursor:pointer;font-size:14px">－</button>
-                <input type="number" id="selfFund" value="0" step="1000000" oninput="calcLoan()" style="flex:1;border:none;background:#222;color:white;padding:6px 6px;font-size:12px;text-align:center;outline:none">
-                <button onclick="stepLoan('selfFund',1000000)" style="width:28px;height:32px;border:none;background:#333;color:white;cursor:pointer;font-size:14px">＋</button>
+              <div style="font-size:9px;color:var(--mid);margin-bottom:3px">自己資金（頭金）</div>
+              <div style="display:flex;align-items:center;border:1px solid var(--line);border-radius:4px;overflow:hidden;background:white">
+                <button onclick="stepLoan('selfFund',-1000000)" style="width:26px;height:28px;border:none;background:#eee;color:var(--ink);cursor:pointer;font-size:13px;flex-shrink:0">－</button>
+                <input type="number" id="selfFund" value="0" step="1000000" oninput="calcLoan()" style="flex:1;border:none;background:white;color:var(--ink);padding:4px;font-size:11px;text-align:center;outline:none;min-width:0">
+                <button onclick="stepLoan('selfFund',1000000)" style="width:26px;height:28px;border:none;background:#eee;color:var(--ink);cursor:pointer;font-size:13px;flex-shrink:0">＋</button>
               </div>
-              <div style="font-size:10px;color:#888;margin-top:2px">100万単位 ／ 現在: <strong id="selfFundDisp" style="color:#e8d5b0">0円</strong></div>
+              <div style="font-size:9px;color:var(--mid);margin-top:2px">現在: <strong id="selfFundDisp" style="color:var(--accent)">0円</strong></div>
             </div>
             <div>
-              <div style="font-size:10px;color:#aaa;margin-bottom:4px">借入額（自動計算）</div>
-              <div style="background:#111;border:1px solid #333;border-radius:4px;padding:7px 10px;font-size:16px;font-weight:700;color:#ffd280" id="loanAmount">—</div>
+              <div style="font-size:9px;color:var(--mid);margin-bottom:3px">借入額</div>
+              <div style="background:white;border:1px solid var(--line);border-radius:4px;padding:5px 8px;font-size:13px;font-weight:700;color:var(--accent2)" id="loanAmount">—</div>
             </div>
             <div>
-              <div style="font-size:10px;color:#aaa;margin-bottom:4px">金利タイプ</div>
-              <select id="loanType" onchange="calcLoan()" style="width:100%;padding:6px 8px;background:#222;border:1px solid #444;color:white;border-radius:4px;font-size:12px">
-                <option value="variable">変動金利（三菱UFJ 0.945%・2026年3月）</option>
-                <option value="fixed10">固定10年（現在 1.50%）</option>
-                <option value="fixed35">全期間固定35年（現在 1.82%）</option>
+              <div style="font-size:9px;color:var(--mid);margin-bottom:3px">金利タイプ</div>
+              <select id="loanType" onchange="calcLoan()" style="width:100%;padding:5px 6px;background:white;border:1px solid var(--line);color:var(--ink);border-radius:4px;font-size:10px;font-family:'Noto Sans JP',sans-serif">
+                <option value="variable">変動 0.945%（三菱UFJ）</option>
+                <option value="fixed10">固定10年 1.50%</option>
+                <option value="fixed35">全期間固定 1.82%</option>
                 <option value="custom">カスタム金利</option>
               </select>
             </div>
             <div>
-              <div style="font-size:10px;color:#aaa;margin-bottom:4px">返済期間</div>
-              <select id="loanYears" onchange="calcLoan()" style="width:100%;padding:6px 8px;background:#222;border:1px solid #444;color:white;border-radius:4px;font-size:12px">
+              <div style="font-size:9px;color:var(--mid);margin-bottom:3px">返済期間</div>
+              <select id="loanYears" onchange="calcLoan()" style="width:100%;padding:5px 6px;background:white;border:1px solid var(--line);color:var(--ink);border-radius:4px;font-size:10px;font-family:'Noto Sans JP',sans-serif">
                 <option value="20">20年</option>
                 <option value="25">25年</option>
                 <option value="30">30年</option>
@@ -1275,29 +1326,29 @@
               </select>
             </div>
           </div>
-          <div id="customRateRow" style="display:none;margin-bottom:10px">
-            <div style="font-size:10px;color:#aaa;margin-bottom:4px">カスタム金利（%）</div>
-            <input type="number" id="customRate" value="1.0" step="0.1" oninput="calcLoan()" style="width:100%;padding:6px 8px;background:#222;border:1px solid #444;color:white;border-radius:4px;font-size:12px">
+          <div id="customRateRow" style="display:none;margin-bottom:8px">
+            <div style="font-size:9px;color:var(--mid);margin-bottom:3px">カスタム金利（%）</div>
+            <input type="number" id="customRate" value="1.0" step="0.1" oninput="calcLoan()" style="width:120px;padding:5px 8px;background:white;border:1px solid var(--line);color:var(--ink);border-radius:4px;font-size:11px">
           </div>
           <!-- ローン結果 -->
-          <div id="loanResult" style="background:#111;border-radius:6px;padding:12px;display:none">
+          <div id="loanResult" style="background:white;border:1px solid var(--line);border-radius:6px;padding:10px;display:none">
             <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
               <div>
-                <div style="font-size:9px;color:#888;margin-bottom:3px">月々返済額</div>
-                <div style="font-size:18px;font-weight:700;color:#ffd280" id="loanMonthly">—</div>
+                <div style="font-size:9px;color:var(--mid);margin-bottom:2px">月々返済額</div>
+                <div style="font-size:17px;font-weight:700;color:var(--accent2)" id="loanMonthly">—</div>
               </div>
               <div>
-                <div style="font-size:9px;color:#888;margin-bottom:3px">総返済額</div>
-                <div style="font-size:14px;font-weight:700;color:#fff" id="loanTotal">—</div>
+                <div style="font-size:9px;color:var(--mid);margin-bottom:2px">総返済額</div>
+                <div style="font-size:13px;font-weight:700;color:var(--ink)" id="loanTotal">—</div>
               </div>
               <div>
-                <div style="font-size:9px;color:#888;margin-bottom:3px">うち利息合計</div>
-                <div style="font-size:14px;font-weight:700;color:#ff9999" id="loanInterest">—</div>
+                <div style="font-size:9px;color:var(--mid);margin-bottom:2px">うち利息合計</div>
+                <div style="font-size:13px;font-weight:700;color:#c0392b" id="loanInterest">—</div>
               </div>
             </div>
-            <div style="margin-top:10px;font-size:10px;color:#888" id="loanCondition"></div>
+            <div style="margin-top:8px;font-size:9px;color:var(--mid);border-top:1px solid var(--line);padding-top:6px" id="loanCondition"></div>
           </div>
-          <div style="font-size:9px;color:#666;margin-top:8px;line-height:1.5">※変動金利は三菱UFJ銀行2026年3月新規最優遇金利（0.945%）を使用。実際の借入条件は各金融機関にご確認ください。変動金利は将来変動する可能性があります。</div>
+          <div style="font-size:8.5px;color:var(--mid);margin-top:6px;line-height:1.5">※変動金利は三菱UFJ銀行2026年3月新規最優遇金利（0.945%）。実際の借入条件は各金融機関にご確認ください。</div>
         </div>
 
         <!-- 特記事項 -->
@@ -1582,21 +1633,40 @@ function update() {
   // 構造計算料：法定延床㎡ × 2,500円
   const structCalc = Math.round(hotelFloor * 2500);
 
+  const discount = parseFloat(document.getElementById('discount').value) || 0;
+  const discountEl = document.getElementById('discountDisp');
+  if (discount > 0) {
+    discountEl.textContent = `値引き適用：－${fmtComma(discount)}（小計から差し引き）`;
+    discountEl.style.color = 'var(--accent)';
+  } else {
+    discountEl.textContent = '';
+  }
+
+  const aCustomItems = getCustomItems('A');
+  const aCustomTotal = getCustomTotal('A');
+
   const aItems = [
-    { name: '主体工事', biko: `${hotelTsubo.toFixed(2)}坪 × ${fmtComma(tsuboPrice)}／坪`, excl: mainWork },
+    { name: '主体工事', biko: (!isNaN(mainWorkDirectVal) && mainWorkDirectVal > 0) ? '直接入力' : `${hotelTsubo.toFixed(2)}坪 × ${fmtComma(tsuboPrice)}／坪`, excl: mainWork },
     { name: '付帯工事', biko: '屋外給排水・電気ガス等', excl: subWork },
     { name: 'スマートエネルギー機器工事', biko: aircon, excl: energyWork },
     ...(solarWork > 0    ? [{ name: '太陽光発電工事',  biko: '', excl: solarWork }]    : []),
     ...(homeTactWork > 0 ? [{ name: 'HOME TACT工事',   biko: '', excl: homeTactWork }] : []),
     ...(chikaWork > 0    ? [{ name: '地下工事',         biko: '', excl: chikaWork }]    : []),
     ...(yohekiWork > 0   ? [{ name: '擁壁工事',         biko: '', excl: yohekiWork }]   : []),
+    ...aCustomItems.map(r => ({ name: r.name || '追加工事', biko: '', excl: r.amount })),
+    ...(discount > 0 ? [{ name: '値引き', biko: '', excl: -discount, isDiscount: true }] : []),
   ];
 
-  let aSubtotal = mainWork + subWork + energyWork + solarWork + homeTactWork + chikaWork + yohekiWork;
+  let aSubtotal = mainWork + subWork + energyWork + solarWork + homeTactWork + chikaWork + yohekiWork + aCustomTotal - discount;
   let aTax = Math.round(aSubtotal * TAX);
   let aTotal = aSubtotal + aTax;
 
-  let htmA = aItems.map(i => row(i.name, i.biko, i.excl, Math.round(i.excl * TAX), i.excl + Math.round(i.excl * TAX))).join('');
+  let htmA = aItems.map(i => {
+    if (i.isDiscount) {
+      return `<tr style="background:#fff5f5"><td class="item-name" style="color:#c0392b">値引き</td><td class="備考"></td><td class="right" style="color:#c0392b">－${fmt(i.excl * -1)}</td><td class="right">—</td><td class="right" style="color:#c0392b;font-weight:700">－${fmt(i.excl * -1)}</td></tr>`;
+    }
+    return row(i.name, i.biko, i.excl, Math.round(i.excl * TAX), i.excl + Math.round(i.excl * TAX));
+  }).join('');
   htmA += subRow('　　小　計（請負金額）', aSubtotal);
   htmA += taxRow('　　消費税', aTax);
   htmA += totalRow('(A) 合　計', aTotal);
@@ -1639,6 +1709,7 @@ function update() {
     { name: '風致地区申請', biko: '30,000円', excl: getChecked('chk_風致地区申請') },
     { name: '埋蔵文化財届出', biko: '20,000円', excl: getChecked('chk_埋蔵文化財届出') },
     { name: '再資源化に関する諸費用', biko: '延床500㎡以上', excl: getChecked('chk_再資源化諸費用') },
+    ...getCustomItems('B').map(r => ({ name: r.name || '追加諸費用', biko: '', excl: r.amount })),
   ].filter(i => i.excl > 0);
 
   let bSubtotal = bItems.reduce((s, i) => s + (i.excl || 0), 0);
@@ -1665,10 +1736,12 @@ function update() {
   const groundWorkVal = groundUndecided ? null : v('groundWork');
   const interiorWorkVal = interiorUndecided ? null : v('interiorWork');
 
+  const cCustomItems = getCustomItems('C');
   const cItems = [
-    { name: '外構工事費用', biko: '概算', excl: extWork > 0 ? extWork : null },
+    { name: '外構工事費用', biko: extUndecided ? '調査後確定' : '概算', excl: extUndecided ? null : (extWork > 0 ? extWork : null) },
     { name: '地盤改良工事', biko: groundWorkVal === null ? '調査後確定' : '', excl: groundWorkVal },
     { name: 'インテリア工事', biko: interiorWorkVal === null ? '調査後確定' : '', excl: interiorWorkVal },
+    ...cCustomItems.map(r => ({ name: r.name || '追加工事', biko: '', excl: r.amount })),
   ];
 
   const cSubtotalNum = cItems.filter(i => i.excl !== null && !isNaN(i.excl)).reduce((s, i) => s + i.excl, 0);
@@ -1692,12 +1765,14 @@ function update() {
   const matsuri = v('matsuri');
   const kariZumai = v('kariZumai');
   const kaden = v('kaden');
+  const dCustomItems = getCustomItems('D');
   const dItems = [
     { name: '火災保険料', biko: '概算5年', excl: fireIns },
     { name: '登記費用', biko: '概算　表示・保存登記', excl: regist },
     ...(matsuri > 0   ? [{ name: '祭事費用', biko: '地鎮祭・上棟式等', excl: matsuri }] : []),
     ...(kariZumai > 0 ? [{ name: '仮住まい費用', biko: '建替え時等', excl: kariZumai }] : []),
     ...(kaden > 0     ? [{ name: '家電・家具費用', biko: '', excl: kaden }] : []),
+    ...dCustomItems.map(r => ({ name: r.name || '追加項目', biko: '', excl: r.amount })),
   ].filter(i => i.excl > 0);
   const dTotal = dItems.reduce((s, i) => s + i.excl, 0);
   let htmD = dItems.map(i => row(i.name, i.biko, i.excl, null, i.excl)).join('');
@@ -1910,8 +1985,44 @@ document.getElementById('loanType').addEventListener('change', function() {
   document.getElementById('customRateRow').style.display = this.value === 'custom' ? 'block' : 'none';
 });
 // ============================================================
-// 保存・読込機能（ファイルのみ）
+// カスタム追加行管理
 // ============================================================
+const customRows = { A: [], B: [], C: [], D: [] };
+let customRowIdCounter = 0;
+
+function addCustomRow(section) {
+  const id = ++customRowIdCounter;
+  customRows[section].push({ id, name: '', amount: 0 });
+  renderCustomRows(section);
+}
+
+function removeCustomRow(section, id) {
+  customRows[section] = customRows[section].filter(r => r.id !== id);
+  renderCustomRows(section);
+  update();
+}
+
+function renderCustomRows(section) {
+  const wrap = document.getElementById('customRows' + section);
+  if (!wrap) return;
+  wrap.innerHTML = customRows[section].map(r => `
+    <div class="custom-row">
+      <input type="text" placeholder="工事名・項目名" value="${r.name}"
+        oninput="customRows['${section}'].find(x=>x.id===${r.id}).name=this.value; update()">
+      <input type="number" placeholder="金額（円）" value="${r.amount || ''}"
+        oninput="customRows['${section}'].find(x=>x.id===${r.id}).amount=parseFloat(this.value)||0; update()">
+      <span style="font-size:10px;color:var(--mid);flex-shrink:0">円</span>
+      <button class="del-btn" onclick="removeCustomRow('${section}',${r.id})">×</button>
+    </div>
+  `).join('');
+}
+
+function getCustomTotal(section) {
+  return customRows[section].reduce((s, r) => s + (r.amount || 0), 0);
+}
+function getCustomItems(section) {
+  return customRows[section].filter(r => r.amount > 0 || r.name);
+}
 
 const SAVE_TEXT_IDS = ['customerName','staffName'];
 const SAVE_NUM_IDS = [
