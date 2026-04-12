@@ -854,6 +854,21 @@
               設計料: <strong id="designFeeDisp" style="color:var(--accent2)">—</strong><br>
               監理費: <strong id="superviseFeeDisp" style="color:var(--accent2)">—</strong>
             </div>
+            <!-- 設計料・監理費 直接入力 -->
+            <div style="margin-top:8px;padding:6px 8px;background:#f0ece4;border-radius:4px">
+              <div style="font-size:10px;color:var(--mid);margin-bottom:6px">📌 金額を直接指定する場合（率計算より優先）</div>
+              <div class="direct-input-row" style="margin-bottom:4px">
+                <label>設計料を直接入力：</label>
+                <input type="number" id="designFeeDirect" placeholder="例: 1500000" oninput="update()">
+                <span style="font-size:10px;color:var(--mid)">円</span>
+              </div>
+              <div class="direct-input-row">
+                <label>監理費を直接入力：</label>
+                <input type="number" id="superviseFeesDirect" placeholder="例: 300000" oninput="update()">
+                <span style="font-size:10px;color:var(--mid)">円</span>
+              </div>
+              <div style="font-size:10px;color:var(--mid);margin-top:4px" id="designDirectStatus"></div>
+            </div>
           </div>
           <div class="form-section">
             <div class="section-title">調査・測量費</div>
@@ -1794,13 +1809,35 @@ function update() {
   // ④設計料：（主体＋付帯＋エネルギー工事費合計）× 設計率 ＋ × 0.5%（監理）
   const designBase = mainWork + subWork + energyWork;
   const designRate = parseFloat(s('designRate')) || 0.025;
-  const designFee = Math.floor(designBase * designRate);
-  const superviseFee = Math.floor(designBase * 0.005);
   const designRateLabel = designRate === 0.03 ? '3.0%' : '2.5%';
 
+  const designFeeDirectVal = parseFloat(document.getElementById('designFeeDirect').value);
+  const superviseFeeDirectVal = parseFloat(document.getElementById('superviseFeesDirect').value);
+  const designFee = (!isNaN(designFeeDirectVal) && designFeeDirectVal > 0)
+    ? designFeeDirectVal
+    : Math.floor(designBase * designRate);
+  const superviseFee = (!isNaN(superviseFeeDirectVal) && superviseFeeDirectVal > 0)
+    ? superviseFeeDirectVal
+    : Math.floor(designBase * 0.005);
+
+  const isDesignDirect = !isNaN(designFeeDirectVal) && designFeeDirectVal > 0;
+  const isSuperviseDirect = !isNaN(superviseFeeDirectVal) && superviseFeeDirectVal > 0;
+  const statusEl = document.getElementById('designDirectStatus');
+  if (statusEl) {
+    const msgs = [];
+    if (isDesignDirect) msgs.push(`設計料：直接入力 ${fmtComma(designFee)}`);
+    if (isSuperviseDirect) msgs.push(`監理費：直接入力 ${fmtComma(superviseFee)}`);
+    statusEl.textContent = msgs.length ? '✅ ' + msgs.join('　') : '（空欄 = 率×工事費で自動計算）';
+    statusEl.style.color = msgs.length ? 'var(--accent)' : 'var(--mid)';
+  }
+
   document.getElementById('designRateDisp').textContent = designRateLabel;
-  document.getElementById('designFeeDisp').textContent = fmtPlain(designFee) + `（工事費合計${fmtPlain(designBase)}×${designRateLabel}）`;
-  document.getElementById('superviseFeeDisp').textContent = fmtPlain(superviseFee) + `（工事費合計${fmtPlain(designBase)}×0.5%）`;
+  document.getElementById('designFeeDisp').textContent = isDesignDirect
+    ? fmtPlain(designFee) + '（直接入力）'
+    : fmtPlain(designFee) + `（工事費合計${fmtPlain(designBase)}×${designRateLabel}）`;
+  document.getElementById('superviseFeeDisp').textContent = isSuperviseDirect
+    ? fmtPlain(superviseFee) + '（直接入力）'
+    : fmtPlain(superviseFee) + `（工事費合計${fmtPlain(designBase)}×0.5%）`;
 
   // 構造計算料：法定延床㎡ × 2,500円
   const structCalc = Math.round(hotelFloor * 2500);
