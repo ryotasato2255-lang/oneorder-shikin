@@ -242,7 +242,7 @@
   .plan-meta { display: flex; gap: 14px; margin-top: 10px; flex-wrap: wrap; align-items: center; }
   .plan-meta-item { font-size: 11px; color: var(--mid); }
   .plan-meta-item strong { color: var(--ink); font-weight: 700; }
-  .plan-date { position: absolute; right: 20px; top: 14px; font-size: 11px; color: var(--mid); }
+  .plan-date { position: absolute; left: 20px; bottom: 10px; font-size: 11px; color: var(--mid); }
 
   /* === SUMMARY TOTALS === */
   .totals-bar {
@@ -407,7 +407,7 @@
     .plan-subtitle { font-size: 10px !important; color: var(--mid) !important; }
     .plan-meta { margin-top: 5px !important; gap: 10px !important; }
     .plan-meta-item, .plan-meta-item strong { font-size: 10px !important; }
-    .plan-date { font-size: 10px !important; color: var(--mid) !important; }
+    .plan-date { font-size: 10px !important; color: var(--mid) !important; left: 14px !important; bottom: 6px !important; }
 
     /* 建物仕様＋面積情報ボックス */
     #specAreaBox > div { padding: 6px 12px !important; }
@@ -511,6 +511,11 @@
             <div class="form-row">
               <label>担当者名</label>
               <input type="text" id="staffName" placeholder="例：佐藤 亮太" oninput="update()">
+            </div>
+            <div class="form-row">
+              <label>資金リスト日付</label>
+              <input type="text" id="planDate" placeholder="例：2026年4月12日" oninput="updateDate()" style="font-size:12px">
+              <div style="font-size:10px;color:var(--mid);margin-top:2px">※空欄にすると今日の日付が自動入力されます</div>
             </div>
             <div class="form-row">
               <label>事業部</label>
@@ -1669,8 +1674,21 @@ function toggleCheck(el) {
 
 function setToday() {
   const d = new Date();
-  document.getElementById('todayDate').textContent =
-    d.getFullYear() + '年' + (d.getMonth()+1) + '月' + d.getDate() + '日';
+  const today = d.getFullYear() + '年' + (d.getMonth()+1) + '月' + d.getDate() + '日';
+  // planDate入力欄にデフォルトセット
+  const planDateEl = document.getElementById('planDate');
+  if (planDateEl && !planDateEl.value) {
+    planDateEl.placeholder = today;
+  }
+  document.getElementById('todayDate').textContent = today;
+}
+
+function updateDate() {
+  const planDateEl = document.getElementById('planDate');
+  const val = planDateEl ? planDateEl.value.trim() : '';
+  const d = new Date();
+  const today = d.getFullYear() + '年' + (d.getMonth()+1) + '月' + d.getDate() + '日';
+  document.getElementById('todayDate').textContent = val || today;
 }
 
 function getChecked(id) {
@@ -2329,7 +2347,7 @@ document.querySelectorAll('input[type="checkbox"]:checked').forEach(el => {
 document.getElementById('loanType').addEventListener('change', function() {
   document.getElementById('customRateRow').style.display = this.value === 'custom' ? 'block' : 'none';
 });
-const SAVE_TEXT_IDS = ['customerName','staffName'];
+const SAVE_TEXT_IDS = ['customerName','staffName','planDate'];
 const SAVE_NUM_IDS = [
   'siteArea','buildArea','floor1','floor2','floor3','floorB','floorG','floorBal','floorPH',
   'tsuboPrice','subWork','energyWork','solarWork','homeTactWork','chikaWork','yohekiWork',
