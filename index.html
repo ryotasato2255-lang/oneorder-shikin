@@ -654,6 +654,7 @@
       <div class="panel" style="margin-bottom:14px;">
         <div class="panel-header"><div class="num">3</div> 工事費用</div>
         <div class="panel-body">
+        <div class="panel-body">
           <div class="form-section">
             <div class="section-title">請負工事</div>
 
@@ -821,6 +822,91 @@
             </div>
           </div>
 
+        </div>
+      </div>
+
+            <!-- 諸費用チェック -->
+      <div class="panel" style="margin-bottom:14px;">
+        <div class="panel-header"><div class="num">4</div> 諸費用・申請手数料チェック</div>
+        <div class="panel-body">
+          <div class="form-section">
+            <div class="section-title">印紙代</div>
+            <div class="form-row">
+              <label>印紙代（請負総額による）</label>
+              <select id="inshiDai" onchange="update()">
+                <option value="0">電子契約（0円）</option>
+                <option value="10000">10,000円（1千万超〜5千万以下）</option>
+                <option value="30000">30,000円（5千万超〜1億以下）</option>
+                <option value="60000">60,000円（1億超〜5億以下）</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-section">
+            <div class="section-title">設計料</div>
+            <div class="form-row">
+              <label>設計料率</label>
+              <select id="designRate" onchange="update()">
+                <option value="0.025">2.5%（標準）</option>
+                <option value="0.03">3.0%（BIM等）</option>
+              </select>
+            </div>
+            <div style="font-size:10px; color:var(--mid); margin-top:4px; padding:6px 8px; background:#f9f6f0; border-radius:4px; line-height:1.6">
+              設計料 ＝ 工事費合計（主体＋付帯＋エネルギー）× <strong id="designRateDisp">2.5%</strong><br>
+              監理費 ＝ 工事費合計 × 0.5%（固定）<br>
+              設計料: <strong id="designFeeDisp" style="color:var(--accent2)">—</strong><br>
+              監理費: <strong id="superviseFeeDisp" style="color:var(--accent2)">—</strong>
+            </div>
+          </div>
+          <div class="form-section">
+            <div class="section-title">調査・測量費</div>
+            <div class="check-grid" id="surveyChecks">
+              <label class="check-item" id="lbl_敷地調査費"><input type="checkbox" id="chk_敷地調査費" value="35000" onchange="toggleCheck(this)" checked> 敷地調査費<br><span style="font-size:10px;color:#888">35,000円</span></label>
+              <label class="check-item" id="lbl_現況測量費"><input type="checkbox" id="chk_現況測量費" value="50000" onchange="toggleCheck(this)" checked> 現況測量費<br><span style="font-size:10px;color:#888">50,000円</span></label>
+              <label class="check-item" id="lbl_地盤調査料"><input type="checkbox" id="chk_地盤調査料" value="30000" onchange="toggleCheck(this)" checked> 地盤調査料<br><span style="font-size:10px;color:#888">30,000円</span></label>
+              <label class="check-item" id="lbl_ボーリング調査"><input type="checkbox" id="chk_ボーリング調査" value="250000" onchange="toggleCheck(this)"> ボーリング調査<br><span style="font-size:10px;color:#888">250,000円</span></label>
+              <label class="check-item" id="lbl_三成分コーン"><input type="checkbox" id="chk_三成分コーン" value="130000" onchange="toggleCheck(this)"> 三成分コーン貫入試験<br><span style="font-size:10px;color:#888">130,000円</span></label>
+              <label class="check-item" id="lbl_家屋調査"><input type="checkbox" id="chk_家屋調査" value="50000" onchange="toggleCheck(this)"> 家屋調査<br><span style="font-size:10px;color:#888">50,000円〜</span></label>
+            </div>
+          </div>
+          <div class="form-section">
+            <div class="section-title">申請手数料</div>
+            <div class="check-grid">
+              <label class="check-item" id="lbl_建築確認申請2F"><input type="checkbox" id="chk_建築確認申請2F" value="231000" onchange="toggleCheck(this)" checked> 建築確認申請（2F）<br><span style="font-size:10px;color:#888">231,000円</span></label>
+              <label class="check-item" id="lbl_建築確認申請3F"><input type="checkbox" id="chk_建築確認申請3F" value="251000" onchange="toggleCheck(this)"> 建築確認申請（3F）<br><span style="font-size:10px;color:#888">251,000円</span></label>
+              <label class="check-item" id="lbl_長期優良住宅申請"><input type="checkbox" id="chk_長期優良住宅申請" value="150000" onchange="toggleCheck(this)" checked> 長期優良住宅申請<br><span style="font-size:10px;color:#888">150,000円</span></label>
+              <label class="check-item" id="lbl_低炭素住宅申請"><input type="checkbox" id="chk_低炭素住宅申請" value="100000" onchange="toggleCheck(this)"> 低炭素住宅申請<br><span style="font-size:10px;color:#888">100,000円</span></label>
+              <label class="check-item" id="lbl_設計住宅性能評価"><input type="checkbox" id="chk_設計住宅性能評価" value="120000" onchange="toggleCheck(this)"> 設計住宅性能評価<br><span style="font-size:10px;color:#888">120,000円</span></label>
+              <label class="check-item" id="lbl_建設住宅性能評価"><input type="checkbox" id="chk_建設住宅性能評価" value="120000" onchange="toggleCheck(this)"> 建設住宅性能評価<br><span style="font-size:10px;color:#888">120,000円</span></label>
+              <label class="check-item" id="lbl_省エネ基準適合確認"><input type="checkbox" id="chk_省エネ基準適合確認" value="30000" onchange="toggleCheck(this)" checked> 省エネ基準適合確認<br><span style="font-size:10px;color:#888">30,000円</span></label>
+              <label class="check-item" id="lbl_フラット35申請"><input type="checkbox" id="chk_フラット35申請" value="70000" onchange="toggleCheck(this)"> フラット35申請<br><span style="font-size:10px;color:#888">70,000円</span></label>
+              <label class="check-item" id="lbl_フラット35S申請"><input type="checkbox" id="chk_フラット35S申請" value="80000" onchange="toggleCheck(this)"> フラット35S申請<br><span style="font-size:10px;color:#888">80,000円</span></label>
+              <label class="check-item" id="lbl_ZEH申請"><input type="checkbox" id="chk_ZEH申請" value="50000" onchange="toggleCheck(this)"> ＺＥＨ申請費用<br><span style="font-size:10px;color:#888">50,000円</span></label>
+              <label class="check-item" id="lbl_BELS申請"><input type="checkbox" id="chk_BELS申請" value="50000" onchange="toggleCheck(this)"> ＢＥＬＳ評価申請<br><span style="font-size:10px;color:#888">50,000円</span></label>
+              <label class="check-item" id="lbl_狭あい道路申請"><input type="checkbox" id="chk_狭あい道路申請" value="30000" onchange="toggleCheck(this)"> 狭あい道路申請<br><span style="font-size:10px;color:#888">30,000円</span></label>
+              <label class="check-item" id="lbl_緑化計画申請"><input type="checkbox" id="chk_緑化計画申請" value="20000" onchange="toggleCheck(this)"> 緑化計画申請<br><span style="font-size:10px;color:#888">20,000円</span></label>
+              <label class="check-item" id="lbl_雨水流出抑制申請"><input type="checkbox" id="chk_雨水流出抑制申請" value="20000" onchange="toggleCheck(this)"> 雨水流出抑制申請<br><span style="font-size:10px;color:#888">20,000円</span></label>
+              <label class="check-item" id="lbl_地区計画届出"><input type="checkbox" id="chk_地区計画届出" value="20000" onchange="toggleCheck(this)"> 地区計画届出<br><span style="font-size:10px;color:#888">20,000円</span></label>
+              <label class="check-item" id="lbl_東京ゼロエミ申請"><input type="checkbox" id="chk_東京ゼロエミ申請" value="200000" onchange="toggleCheck(this)"> 東京ゼロエミ住宅<br><span style="font-size:10px;color:#888">200,000円</span></label>
+              <label class="check-item" id="lbl_子育てグリーン申請"><input type="checkbox" id="chk_子育てグリーン申請" value="50000" onchange="toggleCheck(this)"> 子育てグリーン住宅<br><span style="font-size:10px;color:#888">50,000円</span></label>
+              <label class="check-item" id="lbl_風致地区申請"><input type="checkbox" id="chk_風致地区申請" value="30000" onchange="toggleCheck(this)"> 風致地区申請<br><span style="font-size:10px;color:#888">30,000円</span></label>
+              <label class="check-item" id="lbl_埋蔵文化財届出"><input type="checkbox" id="chk_埋蔵文化財届出" value="20000" onchange="toggleCheck(this)"> 埋蔵文化財届出<br><span style="font-size:10px;color:#888">20,000円</span></label>
+              <label class="check-item" id="lbl_再資源化諸費用"><input type="checkbox" id="chk_再資源化諸費用" value="10000" onchange="toggleCheck(this)"> 再資源化諸費用<br><span style="font-size:10px;color:#888">10,000円</span></label>
+            </div>
+          </div>
+          <!-- カスタム追加行（B） -->
+          <div class="form-section">
+            <div class="section-title">諸費用・カスタム追加</div>
+            <div id="customRowsB"></div>
+            <button class="add-row-btn" onclick="addCustomRow('B')">＋ 諸費用項目を追加</button>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- その他工事費用 -->
+      <div class="panel" style="margin-bottom:14px;">
+        <div class="panel-header"><div class="num">5</div> その他工事費用</div>
+        <div class="panel-body">
           <div class="form-section">
             <div class="section-title">その他工事費用</div>
 
@@ -828,7 +914,7 @@
             <div class="form-row">
               <label>外構工事費用</label>
               <div class="status-select-row">
-                <select class="status-select" id="extStatus" onchange="toggleUndecided('extWork','extUndecided','extWorkDisp');update()">
+                <select class="status-select" id="extStatus" onchange="applyStatusSelect('extWork','extUndecided','extWorkWrap');update()">
                   <option value="undecided">調査後確定（未定）</option>
                   <option value="estimate">概算</option>
                   <option value="fixed">確定金額</option>
@@ -916,6 +1002,13 @@
             <button class="add-row-btn" onclick="addCustomRow('C')">＋ 工事項目を追加</button>
           </div>
 
+        </div>
+      </div>
+
+      <!-- 実費精算項目 -->
+      <div class="panel" style="margin-bottom:14px;">
+        <div class="panel-header"><div class="num">6</div> 実費精算項目</div>
+        <div class="panel-body">
           <div class="form-section">
             <div class="section-title">実費精算項目</div>
 
@@ -932,6 +1025,10 @@
                   <label>直接入力：</label>
                   <input type="number" id="fireInsDirect" placeholder="例: 85000" onchange="applyDirect('fireIns','fireInsDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
+                </div>
+                <div class="direct-input-row">
+                  <label>備考：</label>
+                  <input type="text" id="bikoFireIns" placeholder="概算5年" value="概算5年" oninput="dBiko.fireIns=this.value;update()" style="border-style:dashed">
                 </div>
                 <div class="stepper-hint"><span>現在: <strong id="fireInsDisp">70,000円</strong></span><span>1万単位 / 直接入力可</span></div>
               </div>
@@ -951,6 +1048,10 @@
                   <input type="number" id="registrationDirect" placeholder="例: 420000" onchange="applyDirect('registration','registrationDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
                 </div>
+                <div class="direct-input-row">
+                  <label>備考：</label>
+                  <input type="text" id="bikoRegistration" placeholder="概算　表示・保存登記" value="概算　表示・保存登記" oninput="dBiko.registration=this.value;update()" style="border-style:dashed">
+                </div>
                 <div class="stepper-hint"><span>現在: <strong id="registrationDisp">400,000円</strong></span><span>1万単位 / 直接入力可</span></div>
               </div>
             </div>
@@ -968,6 +1069,10 @@
                   <label>直接入力：</label>
                   <input type="number" id="matsuriDirect" placeholder="例: 150000" onchange="applyDirect('matsuri','matsuriDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
+                </div>
+                <div class="direct-input-row">
+                  <label>備考：</label>
+                  <input type="text" id="bikoMatsuri" placeholder="地鎮祭・上棟式等" value="地鎮祭・上棟式等" oninput="dBiko.matsuri=this.value;update()" style="border-style:dashed">
                 </div>
                 <div class="stepper-hint"><span>現在: <strong id="matsuriDisp">0円</strong></span><span>1万単位 / 直接入力可</span></div>
               </div>
@@ -987,6 +1092,10 @@
                   <input type="number" id="kariZumaiDirect" placeholder="例: 600000" onchange="applyDirect('kariZumai','kariZumaiDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
                 </div>
+                <div class="direct-input-row">
+                  <label>備考：</label>
+                  <input type="text" id="bikoKariZumai" placeholder="建替え時等" value="建替え時等" oninput="dBiko.kariZumai=this.value;update()" style="border-style:dashed">
+                </div>
                 <div class="stepper-hint"><span>現在: <strong id="kariZumaiDisp">0円</strong></span><span>1万単位 / 直接入力可</span></div>
               </div>
             </div>
@@ -1005,6 +1114,10 @@
                   <input type="number" id="kadenDirect" placeholder="例: 500000" onchange="applyDirect('kaden','kadenDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
                 </div>
+                <div class="direct-input-row">
+                  <label>備考：</label>
+                  <input type="text" id="bikoKaden" placeholder="（任意）" value="" oninput="dBiko.kaden=this.value;update()" style="border-style:dashed">
+                </div>
                 <div class="stepper-hint"><span>現在: <strong id="kadenDisp">0円</strong></span><span>1万単位 / 直接入力可</span></div>
               </div>
             </div>
@@ -1016,9 +1129,9 @@
         </div>
       </div>
 
-      <!-- 土地費用 -->
+            <!-- 土地費用 -->
       <div class="panel" style="margin-bottom:14px;">
-        <div class="panel-header"><div class="num">5</div> 土地費用</div>
+        <div class="panel-header"><div class="num">7</div> 土地費用</div>
         <div class="panel-body">
           <div class="form-section">
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
@@ -1081,82 +1194,6 @@
         </div>
       </div>
 
-      <!-- 諸費用チェック -->
-      <div class="panel" style="margin-bottom:14px;">
-        <div class="panel-header"><div class="num">4</div> 諸費用・申請手数料チェック</div>
-        <div class="panel-body">
-          <div class="form-section">
-            <div class="section-title">印紙代</div>
-            <div class="form-row">
-              <label>印紙代（請負総額による）</label>
-              <select id="inshiDai" onchange="update()">
-                <option value="0">電子契約（0円）</option>
-                <option value="10000">10,000円（1千万超〜5千万以下）</option>
-                <option value="30000">30,000円（5千万超〜1億以下）</option>
-                <option value="60000">60,000円（1億超〜5億以下）</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-section">
-            <div class="section-title">設計料</div>
-            <div class="form-row">
-              <label>設計料率</label>
-              <select id="designRate" onchange="update()">
-                <option value="0.025">2.5%（標準）</option>
-                <option value="0.03">3.0%（BIM等）</option>
-              </select>
-            </div>
-            <div style="font-size:10px; color:var(--mid); margin-top:4px; padding:6px 8px; background:#f9f6f0; border-radius:4px; line-height:1.6">
-              設計料 ＝ 工事費合計（主体＋付帯＋エネルギー）× <strong id="designRateDisp">2.5%</strong><br>
-              監理費 ＝ 工事費合計 × 0.5%（固定）<br>
-              設計料: <strong id="designFeeDisp" style="color:var(--accent2)">—</strong><br>
-              監理費: <strong id="superviseFeeDisp" style="color:var(--accent2)">—</strong>
-            </div>
-          </div>
-          <div class="form-section">
-            <div class="section-title">調査・測量費</div>
-            <div class="check-grid" id="surveyChecks">
-              <label class="check-item" id="lbl_敷地調査費"><input type="checkbox" id="chk_敷地調査費" value="35000" onchange="toggleCheck(this)" checked> 敷地調査費<br><span style="font-size:10px;color:#888">35,000円</span></label>
-              <label class="check-item" id="lbl_現況測量費"><input type="checkbox" id="chk_現況測量費" value="50000" onchange="toggleCheck(this)" checked> 現況測量費<br><span style="font-size:10px;color:#888">50,000円</span></label>
-              <label class="check-item" id="lbl_地盤調査料"><input type="checkbox" id="chk_地盤調査料" value="30000" onchange="toggleCheck(this)" checked> 地盤調査料<br><span style="font-size:10px;color:#888">30,000円</span></label>
-              <label class="check-item" id="lbl_ボーリング調査"><input type="checkbox" id="chk_ボーリング調査" value="250000" onchange="toggleCheck(this)"> ボーリング調査<br><span style="font-size:10px;color:#888">250,000円</span></label>
-              <label class="check-item" id="lbl_三成分コーン"><input type="checkbox" id="chk_三成分コーン" value="130000" onchange="toggleCheck(this)"> 三成分コーン貫入試験<br><span style="font-size:10px;color:#888">130,000円</span></label>
-              <label class="check-item" id="lbl_家屋調査"><input type="checkbox" id="chk_家屋調査" value="50000" onchange="toggleCheck(this)"> 家屋調査<br><span style="font-size:10px;color:#888">50,000円〜</span></label>
-            </div>
-          </div>
-          <div class="form-section">
-            <div class="section-title">申請手数料</div>
-            <div class="check-grid">
-              <label class="check-item" id="lbl_建築確認申請2F"><input type="checkbox" id="chk_建築確認申請2F" value="231000" onchange="toggleCheck(this)" checked> 建築確認申請（2F）<br><span style="font-size:10px;color:#888">231,000円</span></label>
-              <label class="check-item" id="lbl_建築確認申請3F"><input type="checkbox" id="chk_建築確認申請3F" value="251000" onchange="toggleCheck(this)"> 建築確認申請（3F）<br><span style="font-size:10px;color:#888">251,000円</span></label>
-              <label class="check-item" id="lbl_長期優良住宅申請"><input type="checkbox" id="chk_長期優良住宅申請" value="150000" onchange="toggleCheck(this)" checked> 長期優良住宅申請<br><span style="font-size:10px;color:#888">150,000円</span></label>
-              <label class="check-item" id="lbl_低炭素住宅申請"><input type="checkbox" id="chk_低炭素住宅申請" value="100000" onchange="toggleCheck(this)"> 低炭素住宅申請<br><span style="font-size:10px;color:#888">100,000円</span></label>
-              <label class="check-item" id="lbl_設計住宅性能評価"><input type="checkbox" id="chk_設計住宅性能評価" value="120000" onchange="toggleCheck(this)"> 設計住宅性能評価<br><span style="font-size:10px;color:#888">120,000円</span></label>
-              <label class="check-item" id="lbl_建設住宅性能評価"><input type="checkbox" id="chk_建設住宅性能評価" value="120000" onchange="toggleCheck(this)"> 建設住宅性能評価<br><span style="font-size:10px;color:#888">120,000円</span></label>
-              <label class="check-item" id="lbl_省エネ基準適合確認"><input type="checkbox" id="chk_省エネ基準適合確認" value="30000" onchange="toggleCheck(this)" checked> 省エネ基準適合確認<br><span style="font-size:10px;color:#888">30,000円</span></label>
-              <label class="check-item" id="lbl_フラット35申請"><input type="checkbox" id="chk_フラット35申請" value="70000" onchange="toggleCheck(this)"> フラット35申請<br><span style="font-size:10px;color:#888">70,000円</span></label>
-              <label class="check-item" id="lbl_フラット35S申請"><input type="checkbox" id="chk_フラット35S申請" value="80000" onchange="toggleCheck(this)"> フラット35S申請<br><span style="font-size:10px;color:#888">80,000円</span></label>
-              <label class="check-item" id="lbl_ZEH申請"><input type="checkbox" id="chk_ZEH申請" value="50000" onchange="toggleCheck(this)"> ＺＥＨ申請費用<br><span style="font-size:10px;color:#888">50,000円</span></label>
-              <label class="check-item" id="lbl_BELS申請"><input type="checkbox" id="chk_BELS申請" value="50000" onchange="toggleCheck(this)"> ＢＥＬＳ評価申請<br><span style="font-size:10px;color:#888">50,000円</span></label>
-              <label class="check-item" id="lbl_狭あい道路申請"><input type="checkbox" id="chk_狭あい道路申請" value="30000" onchange="toggleCheck(this)"> 狭あい道路申請<br><span style="font-size:10px;color:#888">30,000円</span></label>
-              <label class="check-item" id="lbl_緑化計画申請"><input type="checkbox" id="chk_緑化計画申請" value="20000" onchange="toggleCheck(this)"> 緑化計画申請<br><span style="font-size:10px;color:#888">20,000円</span></label>
-              <label class="check-item" id="lbl_雨水流出抑制申請"><input type="checkbox" id="chk_雨水流出抑制申請" value="20000" onchange="toggleCheck(this)"> 雨水流出抑制申請<br><span style="font-size:10px;color:#888">20,000円</span></label>
-              <label class="check-item" id="lbl_地区計画届出"><input type="checkbox" id="chk_地区計画届出" value="20000" onchange="toggleCheck(this)"> 地区計画届出<br><span style="font-size:10px;color:#888">20,000円</span></label>
-              <label class="check-item" id="lbl_東京ゼロエミ申請"><input type="checkbox" id="chk_東京ゼロエミ申請" value="200000" onchange="toggleCheck(this)"> 東京ゼロエミ住宅<br><span style="font-size:10px;color:#888">200,000円</span></label>
-              <label class="check-item" id="lbl_子育てグリーン申請"><input type="checkbox" id="chk_子育てグリーン申請" value="50000" onchange="toggleCheck(this)"> 子育てグリーン住宅<br><span style="font-size:10px;color:#888">50,000円</span></label>
-              <label class="check-item" id="lbl_風致地区申請"><input type="checkbox" id="chk_風致地区申請" value="30000" onchange="toggleCheck(this)"> 風致地区申請<br><span style="font-size:10px;color:#888">30,000円</span></label>
-              <label class="check-item" id="lbl_埋蔵文化財届出"><input type="checkbox" id="chk_埋蔵文化財届出" value="20000" onchange="toggleCheck(this)"> 埋蔵文化財届出<br><span style="font-size:10px;color:#888">20,000円</span></label>
-              <label class="check-item" id="lbl_再資源化諸費用"><input type="checkbox" id="chk_再資源化諸費用" value="10000" onchange="toggleCheck(this)"> 再資源化諸費用<br><span style="font-size:10px;color:#888">10,000円</span></label>
-            </div>
-          </div>
-          <!-- カスタム追加行（B） -->
-          <div class="form-section">
-            <div class="section-title">諸費用・カスタム追加</div>
-            <div id="customRowsB"></div>
-            <button class="add-row-btn" onclick="addCustomRow('B')">＋ 諸費用項目を追加</button>
-          </div>
-        </div>
-      </div>
 
     </div><!-- END input-col -->
 
@@ -1425,6 +1462,15 @@
 <script>
 const TAX = 0.1;
 
+// 実費精算の備考メモ
+const dBiko = {
+  fireIns: '概算5年',
+  registration: '概算　表示・保存登記',
+  matsuri: '地鎮祭・上棟式等',
+  kariZumai: '建替え時等',
+  kaden: '',
+};
+
 // ============================================================
 // カスタム追加行管理（先頭で定義）
 // ============================================================
@@ -1433,7 +1479,7 @@ let customRowIdCounter = 0;
 
 function addCustomRow(section) {
   const id = ++customRowIdCounter;
-  customRows[section].push({ id, name: '', amount: 0 });
+  customRows[section].push({ id, name: '', amount: 0, biko: '', status: section === 'C' ? 'undecided' : 'fixed' });
   renderCustomRows(section);
 }
 function removeCustomRow(section, id) {
@@ -1444,16 +1490,38 @@ function removeCustomRow(section, id) {
 function renderCustomRows(section) {
   const wrap = document.getElementById('customRows' + section);
   if (!wrap) return;
-  wrap.innerHTML = customRows[section].map(r => `
+  wrap.innerHTML = customRows[section].map(r => {
+    const isC = section === 'C';
+    const isD = section === 'D';
+    const status = r.status || 'fixed';
+    const amtDisabled = isC && status === 'undecided' ? 'style="opacity:0.4;pointer-events:none"' : '';
+    const statusSelect = isC ? `
+      <select class="status-select" style="flex:1.2;font-size:10px;padding:4px 6px"
+        onchange="customRows['${section}'].find(x=>x.id===${r.id}).status=this.value;renderCustomRows('${section}');update()">
+        <option value="undecided"${status==='undecided'?' selected':''}>調査後確定</option>
+        <option value="estimate"${status==='estimate'?' selected':''}>概算</option>
+        <option value="fixed"${status==='fixed'?' selected':''}>確定金額</option>
+      </select>` : '';
+    const bikoInput = isD ? `
+      <input type="text" placeholder="備考（任意）" value="${r.biko||''}"
+        oninput="customRows['${section}'].find(x=>x.id===${r.id}).biko=this.value; update()"
+        style="flex:1.5;padding:5px 8px;border:1px dashed var(--line);border-radius:4px;font-family:'Noto Sans JP',sans-serif;font-size:11px;">` : '';
+    const amtPlaceholder = isD ? '金額（マイナス可）' : '金額（円）';
+    return `
     <div class="custom-row">
-      <input type="text" placeholder="工事名・項目名" value="${r.name}"
+      <input type="text" placeholder="項目名" value="${r.name}"
         oninput="customRows['${section}'].find(x=>x.id===${r.id}).name=this.value; update()">
-      <input type="number" placeholder="金額（円）" value="${r.amount || ''}"
-        oninput="customRows['${section}'].find(x=>x.id===${r.id}).amount=parseFloat(this.value)||0; update()">
+      ${statusSelect}
+      ${bikoInput}
+      <div ${amtDisabled}>
+        <input type="number" placeholder="${amtPlaceholder}" value="${r.amount || ''}"
+          oninput="customRows['${section}'].find(x=>x.id===${r.id}).amount=parseFloat(this.value)||0; update()"
+          style="width:100%;padding:5px 8px;border:1px dashed var(--line);border-radius:4px;font-family:'Noto Sans JP',sans-serif;font-size:11px;text-align:right;">
+      </div>
       <span style="font-size:10px;color:var(--mid);flex-shrink:0">円</span>
       <button class="del-btn" onclick="removeCustomRow('${section}',${r.id})">×</button>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 function getCustomTotal(section) {
   return customRows[section].reduce((s, r) => s + (r.amount || 0), 0);
@@ -1861,7 +1929,12 @@ function update() {
     { name: '外構工事費用', biko: extBiko, excl: extExcl },
     { name: '地盤改良工事', biko: groundBiko, excl: groundExcl },
     { name: 'インテリア工事', biko: interiorBiko, excl: interiorExcl },
-    ...cCustomItems.map(r => ({ name: r.name || '追加工事', biko: '', excl: r.amount })),
+    ...cCustomItems.map(r => {
+      const st = r.status || 'fixed';
+      const biko = st === 'undecided' ? '調査後確定' : st === 'estimate' ? '概算' : '';
+      const excl = st === 'undecided' ? null : (r.amount > 0 ? r.amount : 0);
+      return { name: r.name || '追加工事', biko, excl };
+    }),
   ];
 
   const cSubtotalNum = cItems.filter(i => i.excl !== null && !isNaN(i.excl) && i.excl > 0).reduce((s, i) => s + i.excl, 0);
@@ -1888,15 +1961,22 @@ function update() {
   const kaden = v('kaden');
   const dCustomItems = getCustomItems('D');
   const dItems = [
-    { name: '火災保険料', biko: '概算5年', excl: fireIns > 0 ? fireIns : null },
-    { name: '登記費用', biko: '概算　表示・保存登記', excl: regist > 0 ? regist : null },
-    { name: '祭事費用', biko: '地鎮祭・上棟式等', excl: matsuri > 0 ? matsuri : null },
-    { name: '仮住まい費用', biko: '建替え時等', excl: kariZumai > 0 ? kariZumai : null },
-    { name: '家電・家具費用', biko: '', excl: kaden > 0 ? kaden : null },
-    ...dCustomItems.map(r => ({ name: r.name || '追加項目', biko: '', excl: r.amount > 0 ? r.amount : null })),
+    { name: '火災保険料', biko: dBiko.fireIns, excl: fireIns !== 0 ? fireIns : null },
+    { name: '登記費用', biko: dBiko.registration, excl: regist !== 0 ? regist : null },
+    { name: '祭事費用', biko: dBiko.matsuri, excl: matsuri !== 0 ? matsuri : null },
+    { name: '仮住まい費用', biko: dBiko.kariZumai, excl: kariZumai !== 0 ? kariZumai : null },
+    { name: '家電・家具費用', biko: dBiko.kaden, excl: kaden !== 0 ? kaden : null },
+    ...dCustomItems.map(r => ({ name: r.name || '追加項目', biko: r.biko || '', excl: r.amount !== 0 ? r.amount : null })),
   ];
   const dTotal = dItems.filter(i => i.excl !== null).reduce((s, i) => s + i.excl, 0);
-  let htmD = dItems.map(i => row(i.name, i.biko, i.excl, null, i.excl)).join('');
+  let htmD = dItems.map(i => {
+    if (i.excl === null) return row(i.name, i.biko, null, null, null);
+    if (i.excl < 0) {
+      // マイナス項目：赤字で表示
+      return `<tr style="background:#fff5f5"><td class="item-name" style="color:#c0392b">${i.name}</td><td class="備考" style="color:#c0392b">${i.biko||''}</td><td class="right" style="color:#c0392b">－${fmt(Math.abs(i.excl))}</td><td class="right">—</td><td class="right" style="color:#c0392b;font-weight:700">－${fmt(Math.abs(i.excl))}</td></tr>`;
+    }
+    return row(i.name, i.biko, i.excl, null, i.excl);
+  }).join('');
   htmD += totalRow('(D) 合　計', dTotal);
   document.getElementById('tableD').innerHTML = htmD;
 
