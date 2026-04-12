@@ -364,94 +364,110 @@
   .btn-outline { background: transparent; border: 1px solid var(--line); color: var(--ink); }
   .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
 
+  /* === A3印刷用 2カラム構造 === */
+  .tables-print-wrap { display: block; }
+  .print-col-left, .print-col-right { display: block; }
+
+  /* 請負契約合計ボックス */
+  .contract-total-box {
+    background: var(--ink); color: white;
+    padding: 12px 16px; margin-top: 6px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-radius: 4px;
+  }
+  .contract-total-label { font-size: 12px; font-weight: 700; }
+  .contract-total-amount { font-size: 20px; font-weight: 700; color: #e8d5b0; font-family: 'DM Serif Display', serif; }
+
   @media print {
     header, .action-bar, .input-col, .no-print { display: none !important; }
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 
-    @page { size: A4 portrait; margin: 8mm 8mm 8mm 8mm; }
+    @page { size: A3 landscape; margin: 8mm 8mm 8mm 8mm; }
 
-    html, body { font-size: 8.5px !important; background: white !important; }
+    html, body { font-size: 10px !important; background: white !important; }
     .container { padding: 0 !important; max-width: 100% !important; }
     .main-grid { grid-template-columns: 1fr !important; gap: 0 !important; }
     .panel { box-shadow: none !important; border-radius: 0 !important; }
     .output-col { width: 100% !important; }
 
-    /* タイトル：コンパクト */
-    .output-top { padding: 6px 12px !important; }
-    .plan-title { font-size: 13px !important; margin-bottom: 1px !important; }
-    .plan-subtitle { font-size: 7.5px !important; }
-    .plan-meta { margin-top: 4px !important; gap: 8px !important; }
-    .plan-meta-item, .plan-meta-item strong { font-size: 7.5px !important; }
-    .plan-date { font-size: 7.5px !important; top: 8px !important; right: 12px !important; }
+    /* タイトル */
+    .output-top { padding: 8px 14px !important; }
+    .plan-title { font-size: 18px !important; margin-bottom: 2px !important; }
+    .plan-subtitle { font-size: 10px !important; }
+    .plan-meta { margin-top: 5px !important; gap: 10px !important; }
+    .plan-meta-item, .plan-meta-item strong { font-size: 10px !important; }
+    .plan-date { font-size: 10px !important; }
     .output-top::before { display: none !important; }
 
     /* 建物仕様＋面積情報ボックス */
-    #specAreaBox { font-size: 8px !important; }
-    #specAreaBox > div { padding: 5px 10px !important; }
-    #specAreaBox > div > div:first-child { font-size: 7.5px !important; margin-bottom: 3px !important; }
-    #specInfoGrid, #areaInfoGrid { gap: 1px 8px !important; }
-    #specInfoGrid > div, #areaInfoGrid > div { font-size: 8px !important; }
+    #specAreaBox > div { padding: 6px 12px !important; }
+    #specAreaBox > div > div:first-child { font-size: 9px !important; }
+    #specInfoGrid > div, #areaInfoGrid > div { font-size: 9.5px !important; }
 
     /* サマリーバー */
-    .totals-bar { padding: 4px 12px !important; gap: 10px !important; flex-wrap: nowrap !important; }
-    .total-item .label { font-size: 7px !important; }
-    .total-item .amount { font-size: 9.5px !important; }
-    .total-sep { height: 20px !important; }
+    .totals-bar { padding: 5px 14px !important; gap: 14px !important; flex-wrap: nowrap !important; }
+    .total-item .label { font-size: 8.5px !important; }
+    .total-item .amount { font-size: 12px !important; }
+    .total-sep { height: 24px !important; }
 
-    /* ── テーブル共通：極限圧縮 ── */
-    .tables-print-wrap { display: block !important; }
-    .table-section { padding: 0 0 2px !important; break-inside: avoid; }
-    .table-section-title { padding: 3px 10px !important; font-size: 8px !important; }
-    thead th { padding: 2px 6px !important; font-size: 7.5px !important; }
-    tbody td { padding: 2px 6px !important; font-size: 8px !important; line-height: 1.3 !important; }
-    tbody td.備考 { max-width: 120px !important; font-size: 7.5px !important; }
-    .subtotal-row td { padding: 2px 6px !important; font-size: 8px !important; }
-    .tax-row td { padding: 2px 6px !important; font-size: 7.5px !important; }
-    .total-row td { padding: 3px 6px !important; font-size: 8.5px !important; }
-    .total-row td.right { font-size: 9.5px !important; }
+    /* 2カラムレイアウト */
+    .tables-print-wrap {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 0 10px !important;
+      align-items: start !important;
+    }
 
-    /* ── 1ページ目終了：Dのあとで改ページ ── */
-    #landSection { break-before: page !important; }
+    /* テーブル共通 */
+    .table-section { padding: 0 0 4px !important; break-inside: avoid; }
+    .table-section-title { padding: 5px 10px !important; font-size: 10px !important; }
+    thead th { padding: 3px 7px !important; font-size: 9px !important; }
+    tbody td { padding: 3px 7px !important; font-size: 10px !important; line-height: 1.4 !important; }
+    tbody td.備考 { max-width: 130px !important; font-size: 9px !important; }
+    .subtotal-row td { padding: 3px 7px !important; font-size: 10px !important; }
+    .tax-row td { padding: 2px 7px !important; font-size: 9px !important; }
+    .total-row td { padding: 5px 7px !important; font-size: 12px !important; }
+    .total-row td.right { font-size: 14px !important; font-weight: 700 !important; }
 
-    /* ── 2ページ目：E+総合計+支払条件+特記事項+ローン ── */
-    #landSection { break-inside: avoid; }
+    /* 請負契約合計ボックス */
+    .contract-total-box { padding: 8px 12px !important; margin-top: 4px !important; }
+    .contract-total-label { font-size: 11px !important; }
+    .contract-total-amount { font-size: 18px !important; }
 
     /* 総合計バナー */
     div[style*="background:linear-gradient(135deg,var(--accent)"] {
-      padding: 7px 12px !important; break-inside: avoid;
+      padding: 8px 14px !important; break-inside: avoid;
     }
-    #superGrandTotal { font-size: 16px !important; }
-    #grandBreakdown { gap: 3px !important; margin-top: 5px !important; }
-    #grandBreakdown > div { padding: 3px 5px !important; font-size: 7.5px !important; }
+    #superGrandTotal { font-size: 22px !important; }
+    #grandBreakdown { gap: 4px !important; margin-top: 6px !important; }
+    #grandBreakdown > div { padding: 4px 6px !important; font-size: 9px !important; }
 
     /* 支払条件 */
-    .payment-schedule { padding: 6px 12px !important; break-inside: avoid; }
-    .payment-title { font-size: 8.5px !important; margin-bottom: 4px !important; }
-    .payment-grid { gap: 4px !important; grid-template-columns: repeat(4,1fr) !important; }
-    .payment-item { padding: 5px !important; }
-    .payment-item .phase { font-size: 7px !important; margin-bottom: 1px !important; }
-    .payment-item .pct { font-size: 7.5px !important; }
-    .payment-item .amt { font-size: 9px !important; margin-top: 2px !important; }
+    .payment-schedule { padding: 8px 12px !important; break-inside: avoid; }
+    .payment-title { font-size: 10px !important; margin-bottom: 5px !important; }
+    .payment-grid { gap: 5px !important; grid-template-columns: repeat(4,1fr) !important; }
+    .payment-item { padding: 6px !important; }
+    .payment-item .phase { font-size: 8.5px !important; }
+    .payment-item .pct { font-size: 9px !important; }
+    .payment-item .amt { font-size: 12px !important; margin-top: 2px !important; }
 
     /* 特記事項 */
-    .notes-box { padding: 5px 12px !important; font-size: 7.5px !important; break-inside: avoid; }
+    .notes-box { padding: 6px 12px !important; font-size: 9px !important; break-inside: avoid; }
     .notes-box p { margin-bottom: 2px !important; }
-    .notes-box > div { font-size: 8.5px !important; margin-bottom: 3px !important; }
+    .notes-box > div { font-size: 10px !important; margin-bottom: 3px !important; }
 
     /* ローンシミュレーター */
     .loan-no-print { display: none !important; }
-    .loan-section { padding: 6px 12px !important; background: #f9f6f0 !important; break-inside: avoid; }
-    .loan-section > div:first-child { font-size: 9px !important; margin-bottom: 6px !important; }
-    .loan-section * { font-size: 7.5px !important; color: var(--ink) !important; }
-    #loanMonthly { font-size: 12px !important; color: var(--accent2) !important; }
-    #loanTotal { font-size: 8.5px !important; color: var(--ink) !important; }
-    #loanInterest { font-size: 8.5px !important; color: #c0392b !important; }
+    .loan-section { padding: 8px 12px !important; background: #f9f6f0 !important; break-inside: avoid; }
+    .loan-section > div:first-child { margin-bottom: 6px !important; }
+    .loan-section * { font-size: 9px !important; color: var(--ink) !important; }
+    #loanMonthly { font-size: 14px !important; color: var(--accent2) !important; }
+    #loanTotal, #loanInterest { font-size: 10px !important; }
+    #loanInterest { color: #c0392b !important; }
     .loan-section select, .loan-section input[type="number"],
     .loan-section button, #customRateRow { display: none !important; }
-    #loanResult { display: block !important; background: white !important;
-      border: 1px solid var(--line) !important; }
-    #loanResult > div { gap: 4px !important; padding: 6px !important; }
-    .loan-section > div:last-child { font-size: 7px !important; margin-top: 4px !important; }
+    #loanResult { display: block !important; background: white !important; border: 1px solid var(--line) !important; }
+    #loanResult > div { gap: 5px !important; padding: 7px !important; }
   }
 </style>
 </head>
@@ -1172,219 +1188,187 @@
           </div>
         </div>
 
-        <!-- Section A〜E テーブル（印刷時2カラム） -->
+        <!-- A3印刷用 2カラムレイアウト -->
         <div class="tables-print-wrap">
 
-        <!-- Section A: 請負工事 -->
-        <div class="table-section">
-          <div class="table-section-title section-A">
-            ＜請負工事項目＞
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th style="width:200px">項　目</th>
-                <th>備　考</th>
-                <th class="right" style="width:130px">金　額（税抜）</th>
-                <th class="right" style="width:100px">消費税</th>
-                <th class="right" style="width:130px">合　計（税込）</th>
-              </tr>
-            </thead>
-            <tbody id="tableA"></tbody>
-          </table>
-        </div>
+          <!-- 左カラム：A（請負工事）＋ B（諸費用） -->
+          <div class="print-col-left">
 
-        <!-- Section B: 契約時諸費用 -->
-        <div class="table-section">
-          <div class="table-section-title section-B">
-            ＜契約時諸費用＞
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th style="width:200px">項　目</th>
-                <th>備　考</th>
-                <th class="right" style="width:130px">金　額（税抜）</th>
-                <th class="right" style="width:100px">消費税</th>
-                <th class="right" style="width:130px">合　計（税込）</th>
-              </tr>
-            </thead>
-            <tbody id="tableB"></tbody>
-          </table>
-        </div>
+            <!-- Section A: 請負工事 -->
+            <div class="table-section">
+              <div class="table-section-title section-A">＜請負工事項目＞</div>
+              <table>
+                <thead><tr>
+                  <th style="width:180px">項　目</th>
+                  <th>備　考</th>
+                  <th class="right" style="width:110px">金額（税抜）</th>
+                  <th class="right" style="width:80px">消費税</th>
+                  <th class="right" style="width:110px">合計（税込）</th>
+                </tr></thead>
+                <tbody id="tableA"></tbody>
+              </table>
+            </div>
 
-        <!-- Section C: その他工事費用 -->
-        <div class="table-section">
-          <div class="table-section-title section-C">
-            ＜その他工事費用＞
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th style="width:200px">項　目</th>
-                <th>備　考</th>
-                <th class="right" style="width:130px">金　額（税抜）</th>
-                <th class="right" style="width:100px">消費税</th>
-                <th class="right" style="width:130px">合　計（税込）</th>
-              </tr>
-            </thead>
-            <tbody id="tableC"></tbody>
-          </table>
-        </div>
+            <!-- Section B: 契約時諸費用 -->
+            <div class="table-section">
+              <div class="table-section-title section-B">＜契約時諸費用＞</div>
+              <table>
+                <thead><tr>
+                  <th style="width:180px">項　目</th>
+                  <th>備　考</th>
+                  <th class="right" style="width:110px">金額（税抜）</th>
+                  <th class="right" style="width:80px">消費税</th>
+                  <th class="right" style="width:110px">合計（税込）</th>
+                </tr></thead>
+                <tbody id="tableB"></tbody>
+              </table>
+            </div>
 
-        <!-- Section D: 実費精算項目 -->
-        <div class="table-section">
-          <div class="table-section-title section-D">
-            ＜実費精算項目＞
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th style="width:200px">項　目</th>
-                <th>備　考</th>
-                <th class="right" style="width:130px">金　額</th>
-                <th class="right" style="width:100px">消費税</th>
-                <th class="right" style="width:130px">合　計</th>
-              </tr>
-            </thead>
-            <tbody id="tableD"></tbody>
-          </table>
-        </div>
+            <!-- 請負契約合計（A+B） -->
+            <div class="contract-total-box">
+              <div class="contract-total-label">◆ 請負契約合計（A＋B）</div>
+              <div class="contract-total-amount" id="contractTotal">—</div>
+            </div>
 
-        <!-- Section E: 土地費用 -->
-        <div class="table-section" id="landSection">
-          <div class="table-section-title section-E">
-            ＜土地費用＞
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th style="width:200px">項　目</th>
-                <th>備　考</th>
-                <th class="right" style="width:130px">金　額</th>
-                <th class="right" style="width:100px">消費税</th>
-                <th class="right" style="width:130px">合　計</th>
-              </tr>
-            </thead>
-            <tbody id="tableE"></tbody>
-          </table>
-        </div>
+          </div><!-- END print-col-left -->
+
+          <!-- 右カラム：C（その他）＋ D（実費）＋ E（土地）＋ 総合計＋ローン -->
+          <div class="print-col-right">
+
+            <!-- Section C: その他工事費用 -->
+            <div class="table-section">
+              <div class="table-section-title section-C">＜その他工事費用＞</div>
+              <table>
+                <thead><tr>
+                  <th style="width:160px">項　目</th>
+                  <th>備　考</th>
+                  <th class="right" style="width:100px">金額（税抜）</th>
+                  <th class="right" style="width:75px">消費税</th>
+                  <th class="right" style="width:100px">合計（税込）</th>
+                </tr></thead>
+                <tbody id="tableC"></tbody>
+              </table>
+            </div>
+
+            <!-- Section D: 実費精算 -->
+            <div class="table-section">
+              <div class="table-section-title section-D">＜実費精算項目＞</div>
+              <table>
+                <thead><tr>
+                  <th style="width:160px">項　目</th>
+                  <th>備　考</th>
+                  <th class="right" style="width:100px">金額</th>
+                  <th class="right" style="width:75px">消費税</th>
+                  <th class="right" style="width:100px">合計</th>
+                </tr></thead>
+                <tbody id="tableD"></tbody>
+              </table>
+            </div>
+
+            <!-- Section E: 土地費用 -->
+            <div class="table-section" id="landSection">
+              <div class="table-section-title section-E">＜土地費用＞</div>
+              <table>
+                <thead><tr>
+                  <th style="width:160px">項　目</th>
+                  <th>備　考</th>
+                  <th class="right" style="width:100px">金額</th>
+                  <th class="right" style="width:75px">消費税</th>
+                  <th class="right" style="width:100px">合計</th>
+                </tr></thead>
+                <tbody id="tableE"></tbody>
+              </table>
+            </div>
+
+            <!-- 総合計 -->
+            <div style="background:linear-gradient(135deg,var(--accent) 0%,#7a0e0e 100%);padding:16px 24px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+                <div>
+                  <div id="grandTotalSubtitle" style="font-size:11px;color:rgba(255,255,255,0.7);margin-bottom:2px">建物＋諸費用＋実費　すべて込みの総合計</div>
+                  <div style="font-size:13px;font-weight:700;color:white">◆ 総合計（税込）</div>
+                </div>
+                <div style="font-size:26px;font-weight:700;color:#ffe0a0;font-family:'DM Serif Display',serif" id="superGrandTotal">—</div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px" id="grandBreakdown"></div>
+            </div>
+
+            <!-- 支払条件 -->
+            <div class="payment-schedule">
+              <div class="payment-title">◆ 支払条件（建物請負工事ベース）</div>
+              <div class="payment-grid">
+                <div class="payment-item"><div class="phase">契約時</div><div class="pct">請負金額の 10%＋諸費用</div><div class="amt" id="pay1">—</div></div>
+                <div class="payment-item"><div class="phase">着工時</div><div class="pct">請負金額の 20%</div><div class="amt" id="pay2">—</div></div>
+                <div class="payment-item"><div class="phase">上棟時</div><div class="pct">請負金額の 40%</div><div class="amt" id="pay3">—</div></div>
+                <div class="payment-item"><div class="phase">引渡時</div><div class="pct">請負金額の 30%</div><div class="amt" id="pay4">—</div></div>
+              </div>
+              <div style="font-size:10px;color:var(--mid);margin-top:8px;">※消費税は各項目に含みます（インボイス対応）</div>
+            </div>
+
+            <!-- ローンシミュレーター -->
+            <div class="loan-section" style="background:#f5f2ec;border-top:2px solid var(--line);padding:12px 20px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+                <div style="font-size:12px;font-weight:700;color:var(--ink)">🏦 住宅ローンシミュレーター</div>
+                <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--mid);cursor:pointer;font-weight:500">
+                  <input type="checkbox" id="loanPrintToggle" checked onchange="toggleLoanPrint()" style="accent-color:var(--accent);width:14px;height:14px">
+                  印刷に含める
+                </label>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:8px">
+                <div>
+                  <div style="font-size:9px;color:var(--mid);margin-bottom:3px">自己資金（頭金）</div>
+                  <div style="display:flex;align-items:center;border:1px solid var(--line);border-radius:4px;overflow:hidden;background:white">
+                    <button onclick="stepLoan('selfFund',-1000000)" style="width:26px;height:28px;border:none;background:#eee;color:var(--ink);cursor:pointer;font-size:13px;flex-shrink:0">－</button>
+                    <input type="number" id="selfFund" value="0" step="1000000" oninput="calcLoan()" style="flex:1;border:none;background:white;color:var(--ink);padding:4px;font-size:11px;text-align:center;outline:none;min-width:0">
+                    <button onclick="stepLoan('selfFund',1000000)" style="width:26px;height:28px;border:none;background:#eee;color:var(--ink);cursor:pointer;font-size:13px;flex-shrink:0">＋</button>
+                  </div>
+                  <div style="font-size:9px;color:var(--mid);margin-top:2px">現在: <strong id="selfFundDisp" style="color:var(--accent)">0円</strong></div>
+                </div>
+                <div>
+                  <div style="font-size:9px;color:var(--mid);margin-bottom:3px">借入額</div>
+                  <div style="background:white;border:1px solid var(--line);border-radius:4px;padding:5px 8px;font-size:13px;font-weight:700;color:var(--accent2)" id="loanAmount">—</div>
+                </div>
+                <div>
+                  <div style="font-size:9px;color:var(--mid);margin-bottom:3px">金利タイプ</div>
+                  <select id="loanType" onchange="calcLoan()" style="width:100%;padding:5px 6px;background:white;border:1px solid var(--line);color:var(--ink);border-radius:4px;font-size:10px;font-family:'Noto Sans JP',sans-serif">
+                    <option value="variable">変動 0.945%（三菱UFJ）</option>
+                    <option value="fixed10">固定10年 1.50%</option>
+                    <option value="fixed35">全期間固定 1.82%</option>
+                    <option value="custom">カスタム金利</option>
+                  </select>
+                </div>
+                <div>
+                  <div style="font-size:9px;color:var(--mid);margin-bottom:3px">返済期間</div>
+                  <select id="loanYears" onchange="calcLoan()" style="width:100%;padding:5px 6px;background:white;border:1px solid var(--line);color:var(--ink);border-radius:4px;font-size:10px;font-family:'Noto Sans JP',sans-serif">
+                    <option value="20">20年</option><option value="25">25年</option>
+                    <option value="30">30年</option><option value="35" selected>35年</option>
+                  </select>
+                </div>
+              </div>
+              <div id="customRateRow" style="display:none;margin-bottom:8px">
+                <div style="font-size:9px;color:var(--mid);margin-bottom:3px">カスタム金利（%）</div>
+                <input type="number" id="customRate" value="1.0" step="0.1" oninput="calcLoan()" style="width:120px;padding:5px 8px;background:white;border:1px solid var(--line);color:var(--ink);border-radius:4px;font-size:11px">
+              </div>
+              <div id="loanResult" style="background:white;border:1px solid var(--line);border-radius:6px;padding:10px;display:none">
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
+                  <div><div style="font-size:9px;color:var(--mid);margin-bottom:2px">月々返済額</div><div style="font-size:17px;font-weight:700;color:var(--accent2)" id="loanMonthly">—</div></div>
+                  <div><div style="font-size:9px;color:var(--mid);margin-bottom:2px">総返済額</div><div style="font-size:13px;font-weight:700;color:var(--ink)" id="loanTotal">—</div></div>
+                  <div><div style="font-size:9px;color:var(--mid);margin-bottom:2px">うち利息合計</div><div style="font-size:13px;font-weight:700;color:#c0392b" id="loanInterest">—</div></div>
+                </div>
+                <div style="margin-top:8px;font-size:9px;color:var(--mid);border-top:1px solid var(--line);padding-top:6px" id="loanCondition"></div>
+              </div>
+              <div style="font-size:8.5px;color:var(--mid);margin-top:6px;line-height:1.5">※変動金利は三菱UFJ銀行2026年3月新規最優遇金利（0.945%）。実際の借入条件は各金融機関にご確認ください。</div>
+            </div>
+
+            <!-- 特記事項 -->
+            <div class="notes-box">
+              <div style="font-weight:700; margin-bottom:6px; font-size:12px; color:var(--ink);">特記事項</div>
+              <p>記載金額には概算金額が含まれます。お打合せが進みますと見積を作成し、より精度の高い資金計画リストになります。</p>
+              <p>地耐力調査後、基礎形状変更に伴い、工事金額が変更になる場合があります。</p>
+            </div>
+
+          </div><!-- END print-col-right -->
 
         </div><!-- END tables-print-wrap -->
-
-        <!-- 総合計 -->
-        <div style="background:linear-gradient(135deg,var(--accent) 0%,#7a0e0e 100%);padding:16px 24px;">
-          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
-            <div>
-              <div id="grandTotalSubtitle" style="font-size:11px;color:rgba(255,255,255,0.7);margin-bottom:2px">建物＋諸費用＋実費　すべて込みの総合計</div>
-              <div style="font-size:13px;font-weight:700;color:white">◆ 総合計（税込）</div>
-            </div>
-            <div style="font-size:26px;font-weight:700;color:#ffe0a0;font-family:'DM Serif Display',serif" id="superGrandTotal">—</div>
-          </div>
-          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px" id="grandBreakdown"></div>
-        </div>
-
-        <!-- 支払条件 -->
-        <div class="payment-schedule">
-          <div class="payment-title">◆ 支払条件（建物請負工事ベース）</div>
-          <div class="payment-grid">
-            <div class="payment-item">
-              <div class="phase">契約時</div>
-              <div class="pct">請負金額の 10%<br>＋諸費用</div>
-              <div class="amt" id="pay1">—</div>
-            </div>
-            <div class="payment-item">
-              <div class="phase">着工時</div>
-              <div class="pct">請負金額の 20%</div>
-              <div class="amt" id="pay2">—</div>
-            </div>
-            <div class="payment-item">
-              <div class="phase">上棟時</div>
-              <div class="pct">請負金額の 40%</div>
-              <div class="amt" id="pay3">—</div>
-            </div>
-            <div class="payment-item">
-              <div class="phase">引渡時</div>
-              <div class="pct">請負金額の 30%</div>
-              <div class="amt" id="pay4">—</div>
-            </div>
-          </div>
-          <div style="font-size:10px;color:var(--mid);margin-top:8px;">※消費税は各項目に含みます（インボイス対応）</div>
-        </div>
-
-        <!-- ローンシミュレーター -->
-        <div class="loan-section" style="background:#f5f2ec;border-top:2px solid var(--line);padding:12px 20px">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-            <div style="font-size:12px;font-weight:700;color:var(--ink)">🏦 住宅ローンシミュレーター</div>
-            <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--mid);cursor:pointer;font-weight:500">
-              <input type="checkbox" id="loanPrintToggle" checked onchange="toggleLoanPrint()" style="accent-color:var(--accent);width:14px;height:14px">
-              印刷に含める
-            </label>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:8px">
-            <div>
-              <div style="font-size:9px;color:var(--mid);margin-bottom:3px">自己資金（頭金）</div>
-              <div style="display:flex;align-items:center;border:1px solid var(--line);border-radius:4px;overflow:hidden;background:white">
-                <button onclick="stepLoan('selfFund',-1000000)" style="width:26px;height:28px;border:none;background:#eee;color:var(--ink);cursor:pointer;font-size:13px;flex-shrink:0">－</button>
-                <input type="number" id="selfFund" value="0" step="1000000" oninput="calcLoan()" style="flex:1;border:none;background:white;color:var(--ink);padding:4px;font-size:11px;text-align:center;outline:none;min-width:0">
-                <button onclick="stepLoan('selfFund',1000000)" style="width:26px;height:28px;border:none;background:#eee;color:var(--ink);cursor:pointer;font-size:13px;flex-shrink:0">＋</button>
-              </div>
-              <div style="font-size:9px;color:var(--mid);margin-top:2px">現在: <strong id="selfFundDisp" style="color:var(--accent)">0円</strong></div>
-            </div>
-            <div>
-              <div style="font-size:9px;color:var(--mid);margin-bottom:3px">借入額</div>
-              <div style="background:white;border:1px solid var(--line);border-radius:4px;padding:5px 8px;font-size:13px;font-weight:700;color:var(--accent2)" id="loanAmount">—</div>
-            </div>
-            <div>
-              <div style="font-size:9px;color:var(--mid);margin-bottom:3px">金利タイプ</div>
-              <select id="loanType" onchange="calcLoan()" style="width:100%;padding:5px 6px;background:white;border:1px solid var(--line);color:var(--ink);border-radius:4px;font-size:10px;font-family:'Noto Sans JP',sans-serif">
-                <option value="variable">変動 0.945%（三菱UFJ）</option>
-                <option value="fixed10">固定10年 1.50%</option>
-                <option value="fixed35">全期間固定 1.82%</option>
-                <option value="custom">カスタム金利</option>
-              </select>
-            </div>
-            <div>
-              <div style="font-size:9px;color:var(--mid);margin-bottom:3px">返済期間</div>
-              <select id="loanYears" onchange="calcLoan()" style="width:100%;padding:5px 6px;background:white;border:1px solid var(--line);color:var(--ink);border-radius:4px;font-size:10px;font-family:'Noto Sans JP',sans-serif">
-                <option value="20">20年</option>
-                <option value="25">25年</option>
-                <option value="30">30年</option>
-                <option value="35" selected>35年</option>
-              </select>
-            </div>
-          </div>
-          <div id="customRateRow" style="display:none;margin-bottom:8px">
-            <div style="font-size:9px;color:var(--mid);margin-bottom:3px">カスタム金利（%）</div>
-            <input type="number" id="customRate" value="1.0" step="0.1" oninput="calcLoan()" style="width:120px;padding:5px 8px;background:white;border:1px solid var(--line);color:var(--ink);border-radius:4px;font-size:11px">
-          </div>
-          <!-- ローン結果 -->
-          <div id="loanResult" style="background:white;border:1px solid var(--line);border-radius:6px;padding:10px;display:none">
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
-              <div>
-                <div style="font-size:9px;color:var(--mid);margin-bottom:2px">月々返済額</div>
-                <div style="font-size:17px;font-weight:700;color:var(--accent2)" id="loanMonthly">—</div>
-              </div>
-              <div>
-                <div style="font-size:9px;color:var(--mid);margin-bottom:2px">総返済額</div>
-                <div style="font-size:13px;font-weight:700;color:var(--ink)" id="loanTotal">—</div>
-              </div>
-              <div>
-                <div style="font-size:9px;color:var(--mid);margin-bottom:2px">うち利息合計</div>
-                <div style="font-size:13px;font-weight:700;color:#c0392b" id="loanInterest">—</div>
-              </div>
-            </div>
-            <div style="margin-top:8px;font-size:9px;color:var(--mid);border-top:1px solid var(--line);padding-top:6px" id="loanCondition"></div>
-          </div>
-          <div style="font-size:8.5px;color:var(--mid);margin-top:6px;line-height:1.5">※変動金利は三菱UFJ銀行2026年3月新規最優遇金利（0.945%）。実際の借入条件は各金融機関にご確認ください。</div>
-        </div>
-
-        <!-- 特記事項 -->
-        <div class="notes-box">
-          <div style="font-weight:700; margin-bottom:6px; font-size:12px; color:var(--ink);">特記事項</div>
-          <p>記載金額には概算金額が含まれます。お打合せが進みますと見積を作成し、より精度の高い資金計画リストになります。</p>
-          <p>地耐力調査後、基礎形状変更に伴い、工事金額が変更になる場合があります。</p>
-        </div>
 
         <!-- 保存・読込バー -->
         <div class="no-print" style="background:#f0ece4;border-top:1px solid var(--line);padding:14px 20px;">
@@ -1401,7 +1385,7 @@
 
         <!-- アクション -->
         <div class="action-bar">
-          <button class="btn btn-outline" onclick="window.print()">🖨 A4印刷・PDF保存</button>
+          <button class="btn btn-outline" onclick="window.print()">🖨 A3印刷・PDF保存</button>
           <button class="btn btn-primary" onclick="resetForm()">リセット</button>
         </div>
 
@@ -1920,6 +1904,10 @@ function update() {
   document.getElementById('sumD').textContent = fmtPlain(dTotal);
   document.getElementById('grandTotal').textContent = fmtPlain(grand);
   document.getElementById('superGrandTotal').textContent = fmtPlain(superGrand);
+
+  // 請負契約合計（A+B）
+  const contractTotalEl = document.getElementById('contractTotal');
+  if (contractTotalEl) contractTotalEl.textContent = fmtPlain(aTotal + bTotal);
 
   // 総合計バナーのサブタイトルを土地有無で切り替え
   const hasLand = !landOwned && eTotal > 0;
