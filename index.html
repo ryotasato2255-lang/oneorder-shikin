@@ -385,6 +385,13 @@
     .plan-date { font-size: 7.5px !important; top: 8px !important; right: 12px !important; }
     .output-top::before { display: none !important; }
 
+    /* 建物仕様＋面積情報ボックス */
+    #specAreaBox { font-size: 8px !important; }
+    #specAreaBox > div { padding: 5px 10px !important; }
+    #specAreaBox > div > div:first-child { font-size: 7.5px !important; margin-bottom: 3px !important; }
+    #specInfoGrid, #areaInfoGrid { gap: 1px 8px !important; }
+    #specInfoGrid > div, #areaInfoGrid > div { font-size: 8px !important; }
+
     /* サマリーバー */
     .totals-bar { padding: 4px 12px !important; gap: 10px !important; flex-wrap: nowrap !important; }
     .total-item .label { font-size: 7px !important; }
@@ -432,6 +439,7 @@
     .notes-box > div { font-size: 8.5px !important; margin-bottom: 3px !important; }
 
     /* ローンシミュレーター */
+    .loan-no-print { display: none !important; }
     .loan-section { padding: 6px 12px !important; background: #f9f6f0 !important; break-inside: avoid; }
     .loan-section > div:first-child { font-size: 9px !important; margin-bottom: 6px !important; }
     .loan-section * { font-size: 7.5px !important; color: var(--ink) !important; }
@@ -454,7 +462,7 @@
     MITSUBISHI ESTATE HOME
     <span>三菱地所ホーム　資金リスト作成ツール</span>
   </div>
-  <div class="tagline">ONEORDER / ORDER GRAN / SMART ORDER</div>
+  <div class="tagline">ONEORDER E / D / F　ORDER GRAN</div>
 </header>
 
 <div class="container">
@@ -501,11 +509,10 @@
             <div class="form-row">
               <label>建物タイプ</label>
               <select id="buildingType" onchange="update()">
-                <option value="ONE ORDER">ONE ORDER</option>
-                <option value="SMART ORDER Fit">SMART ORDER Fit</option>
-                <option value="SMART ORDER">SMART ORDER</option>
+                <option value="ONEORDER E">ONEORDER E</option>
+                <option value="ONEORDER D">ONEORDER D</option>
+                <option value="ONEORDER F">ONEORDER F</option>
                 <option value="ORDER GRAN">ORDER GRAN</option>
-                <option value="The Park Maison">The Park Maison</option>
               </select>
             </div>
             <div class="form-row">
@@ -1123,6 +1130,20 @@
           <div class="plan-meta" id="planMeta"></div>
         </div>
 
+        <!-- 建物仕様＋面積情報（印刷用） -->
+        <div id="specAreaBox" style="display:flex;gap:0;border-bottom:1px solid var(--line)">
+          <!-- 建物仕様 -->
+          <div style="flex:1;padding:8px 14px;border-right:1px solid var(--line);background:#f9f6f0">
+            <div style="font-size:9px;font-weight:700;color:var(--mid);letter-spacing:1px;margin-bottom:5px">◆ 建物仕様</div>
+            <div id="specInfoGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:2px 10px;font-size:11px"></div>
+          </div>
+          <!-- 面積情報 -->
+          <div style="flex:1;padding:8px 14px;background:#f9f6f0">
+            <div style="font-size:9px;font-weight:700;color:var(--mid);letter-spacing:1px;margin-bottom:5px">◆ 敷地・面積情報</div>
+            <div id="areaInfoGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:2px 10px;font-size:11px"></div>
+          </div>
+        </div>
+
         <!-- 合計サマリー -->
         <div class="totals-bar">
           <div class="total-item">
@@ -1293,7 +1314,13 @@
 
         <!-- ローンシミュレーター -->
         <div class="loan-section" style="background:#f5f2ec;border-top:2px solid var(--line);padding:12px 20px">
-          <div style="font-size:12px;font-weight:700;color:var(--ink);margin-bottom:10px">🏦 住宅ローンシミュレーター</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+            <div style="font-size:12px;font-weight:700;color:var(--ink)">🏦 住宅ローンシミュレーター</div>
+            <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--mid);cursor:pointer;font-weight:500">
+              <input type="checkbox" id="loanPrintToggle" checked onchange="toggleLoanPrint()" style="accent-color:var(--accent);width:14px;height:14px">
+              印刷に含める
+            </label>
+          </div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:8px">
             <div>
               <div style="font-size:9px;color:var(--mid);margin-bottom:3px">自己資金（頭金）</div>
@@ -1606,6 +1633,36 @@ function update() {
     document.getElementById('totalTsuboDisp').textContent = '—';
   }
 
+  // 建物仕様グリッド更新
+  const specRows = [
+    ['建物タイプ', buildingType],
+    ['構造', structure],
+    ['防火・耐火', fireResist],
+    ['建物保証', s('warranty').replace('（ロングサポート50）','').replace('（ロングサポート30）','')],
+    ['耐震性能', seismic],
+    ['空調', s('aircon').replace('全館空調システム「','').replace('」','')],
+    ['制度', seido || 'なし'],
+  ];
+  document.getElementById('specInfoGrid').innerHTML = specRows.map(([k,val]) =>
+    `<div style="color:var(--mid);font-size:10px">${k}</div><div style="font-weight:600;font-size:10px;color:var(--ink)">${val}</div>`
+  ).join('');
+
+  // 面積情報グリッド更新
+  const areaRows = [
+    ['敷地面積', siteArea > 0 ? `${siteArea}㎡（${toTsubo(siteArea).toFixed(2)}坪）` : '—'],
+    ['建築面積', buildArea > 0 ? `${buildArea}㎡（${toTsubo(buildArea).toFixed(2)}坪）` : '—'],
+    ['１階床面積', f1 > 0 ? `${f1}㎡（${toTsubo(f1).toFixed(2)}坪）` : '—'],
+    ['２階床面積', f2 > 0 ? `${f2}㎡（${toTsubo(f2).toFixed(2)}坪）` : '—'],
+    ['３階床面積', f3 > 0 ? `${f3}㎡（${toTsubo(f3).toFixed(2)}坪）` : '—'],
+    ['地下床面積', fB > 0 ? `${fB}㎡（${toTsubo(fB).toFixed(2)}坪）` : '—'],
+    ['ガレージ', fG > 0 ? `${fG}㎡（${toTsubo(fG).toFixed(2)}坪）` : '—'],
+    ['法定延床', hotelFloor > 0 ? `${hotelFloor.toFixed(2)}㎡（${hotelTsubo.toFixed(2)}坪）` : '—'],
+  ];
+  document.getElementById('areaInfoGrid').innerHTML = areaRows.map(([k,val]) =>
+    `<div style="color:var(--mid);font-size:10px">${k}</div><div style="font-weight:600;font-size:10px;color:var(--ink)">${val}</div>`
+  ).join('');
+
+
   // =========================
   // 主体工事費：坪数×坪単価
   // ②で算出した法定延床坪数（hotelTsubo）をそのまま使用
@@ -1901,6 +1958,16 @@ function toggleLandOwned() {
   const owned = document.getElementById('landOwned').checked;
   document.getElementById('landInputArea').style.display = owned ? 'none' : 'block';
   update();
+}
+
+function toggleLoanPrint() {
+  const include = document.getElementById('loanPrintToggle').checked;
+  const section = document.querySelector('.loan-section');
+  if (include) {
+    section.classList.remove('loan-no-print');
+  } else {
+    section.classList.add('loan-no-print');
+  }
 }
 
 // ========================
