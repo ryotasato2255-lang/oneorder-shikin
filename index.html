@@ -870,6 +870,42 @@
               <div style="font-size:10px;color:var(--mid);margin-top:4px" id="designDirectStatus"></div>
             </div>
           </div>
+
+          <!-- 構造計算料 -->
+          <div class="form-section">
+            <div class="section-title">構造計算料</div>
+            <div style="font-size:10px;color:var(--mid);padding:6px 8px;background:#f9f6f0;border-radius:4px;margin-bottom:8px;line-height:1.6">
+              デフォルト：法定延床㎡ × 2,500円<br>
+              RC・地下がある場合：地下＋RC部分の㎡ × 7,000円を加算<br>
+              自動計算: <strong id="structCalcAutoDisp" style="color:var(--accent2)">—</strong>
+            </div>
+            <!-- RC・地下面積入力 -->
+            <div class="form-row">
+              <label>RC・地下部分の㎡面積（7,000円/㎡ 加算）</label>
+              <div class="stepper-wrap">
+                <div class="stepper-row">
+                  <button class="step-btn" onclick="step('structRcArea',-1)">－</button>
+                  <input type="number" id="structRcArea" value="0" step="1" oninput="update()">
+                  <button class="step-btn" onclick="step('structRcArea',1)">＋</button>
+                </div>
+                <div class="stepper-hint">
+                  <span>現在: <strong id="structRcAreaDisp">0㎡</strong></span>
+                  <span>1㎡単位 / 0なら加算なし</span>
+                </div>
+              </div>
+            </div>
+            <!-- 直接入力 -->
+            <div style="padding:6px 8px;background:#f0ece4;border-radius:4px;margin-top:4px">
+              <div style="font-size:10px;color:var(--mid);margin-bottom:4px">📌 金額を直接指定（自動計算より優先）</div>
+              <div class="direct-input-row">
+                <label>構造計算料を直接入力：</label>
+                <input type="number" id="structCalcDirect" placeholder="例: 500000" oninput="update()">
+                <span style="font-size:10px;color:var(--mid)">円</span>
+              </div>
+              <div style="font-size:10px;color:var(--mid);margin-top:3px" id="structCalcDirectStatus"></div>
+            </div>
+          </div>
+
           <div class="form-section">
             <div class="section-title">調査・測量費</div>
             <div class="check-grid" id="surveyChecks">
@@ -1839,8 +1875,32 @@ function update() {
     ? fmtPlain(superviseFee) + '（直接入力）'
     : fmtPlain(superviseFee) + `（工事費合計${fmtPlain(designBase)}×0.5%）`;
 
-  // 構造計算料：法定延床㎡ × 2,500円
-  const structCalc = Math.round(hotelFloor * 2500);
+  // 構造計算料：法定延床㎡ × 2,500円 + RC・地下㎡ × 7,000円
+  const structRcArea = v('structRcArea');
+  const structCalcAuto = Math.round(hotelFloor * 2500) + Math.round(structRcArea * 7000);
+  const structCalcDirectVal = parseFloat(document.getElementById('structCalcDirect').value);
+  const structCalc = (!isNaN(structCalcDirectVal) && structCalcDirectVal > 0)
+    ? structCalcDirectVal
+    : structCalcAuto;
+
+  // 表示更新
+  document.getElementById('structRcAreaDisp').textContent = structRcArea > 0 ? `${structRcArea}㎡` : '0㎡';
+  const autoDispEl = document.getElementById('structCalcAutoDisp');
+  if (autoDispEl) {
+    let autoMsg = `延床${hotelFloor.toFixed(2)}㎡×2,500円＝${fmtComma(Math.round(hotelFloor*2500))}`;
+    if (structRcArea > 0) autoMsg += `　＋　RC${structRcArea}㎡×7,000円＝${fmtComma(Math.round(structRcArea*7000))}　→　合計${fmtComma(structCalcAuto)}`;
+    autoDispEl.textContent = autoMsg;
+  }
+  const structStatusEl = document.getElementById('structCalcDirectStatus');
+  if (structStatusEl) {
+    if (!isNaN(structCalcDirectVal) && structCalcDirectVal > 0) {
+      structStatusEl.textContent = `✅ 直接入力：${fmtComma(structCalcDirectVal)}（自動計算を上書き）`;
+      structStatusEl.style.color = 'var(--accent)';
+    } else {
+      structStatusEl.textContent = '（空欄 = 自動計算）';
+      structStatusEl.style.color = 'var(--mid)';
+    }
+  }
 
   const discount = parseFloat(document.getElementById('discount').value) || 0;
   const discountEl = document.getElementById('discountDisp');
@@ -1891,7 +1951,7 @@ function update() {
     { name: '印紙代', biko: '非課税', excl: inshiDai, noTax: true },
     { name: '設計料', biko: `工事費合計×${designRateLabel}`, excl: designFee },
     { name: '工事監理費', biko: `工事費合計×0.5%`, excl: superviseFee },
-    { name: '構造計算料', biko: `2,500円/㎡（延床${hotelFloor.toFixed(2)}㎡）`, excl: structCalc },
+    { name: '構造計算料', biko: structRcArea > 0 ? `延床×2,500＋RC${structRcArea}㎡×7,000` : `2,500円/㎡（延床${hotelFloor.toFixed(2)}㎡）`, excl: structCalc },
     { name: '敷地調査費', biko: '35,000円', excl: getChecked('chk_敷地調査費') },
     { name: '現況測量費', biko: '50,000円一律', excl: getChecked('chk_現況測量費') },
     { name: '地盤調査料', biko: '30,000円一律', excl: getChecked('chk_地盤調査料') },
