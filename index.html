@@ -173,6 +173,13 @@
     display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   }
   .custom-row .del-btn:hover { background: var(--accent); color: white; }
+  .hide-btn {
+    width: 22px; height: 22px; border: none; background: #eee;
+    color: #888; border-radius: 50%; cursor: pointer; font-size: 12px;
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-left: 4px; vertical-align: middle;
+  }
+  .hide-btn:hover { background: #c0392b; color: white; }
   .direct-input-row { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
   .direct-input-row input {
     flex: 1; padding: 5px 8px; border: 1px dashed var(--line); border-radius: 4px;
@@ -957,10 +964,7 @@
               <label class="check-item" id="lbl_三成分コーン"><input type="checkbox" id="chk_三成分コーン" value="130000" onchange="toggleCheck(this)"> 三成分コーン貫入試験<br><span style="font-size:10px;color:#888">130,000円</span></label>
               <label class="check-item" id="lbl_家屋調査"><input type="checkbox" id="chk_家屋調査" value="50000" onchange="toggleCheck(this)"> 家屋調査<br><span style="font-size:10px;color:#888">50,000円〜</span></label>
             </div>
-            <div class="direct-input-row" style="margin-top:6px">
-              <label>備考：</label>
-              <input type="text" id="bBikoSurvey" placeholder="（調査・測量費の備考）" oninput="bBiko.survey=this.value;update()" style="border-style:dashed;flex:1;font-size:11px;padding:5px 8px">
-            </div>
+
           </div>
           <div class="form-section">
             <div class="section-title">申請手数料</div>
@@ -986,10 +990,7 @@
               <label class="check-item" id="lbl_埋蔵文化財届出"><input type="checkbox" id="chk_埋蔵文化財届出" value="20000" onchange="toggleCheck(this)"> 埋蔵文化財届出<br><span style="font-size:10px;color:#888">20,000円</span></label>
               <label class="check-item" id="lbl_再資源化諸費用"><input type="checkbox" id="chk_再資源化諸費用" value="10000" onchange="toggleCheck(this)"> 再資源化諸費用<br><span style="font-size:10px;color:#888">10,000円</span></label>
             </div>
-            <div class="direct-input-row" style="margin-top:6px">
-              <label>備考：</label>
-              <input type="text" id="bBikoShinsei" placeholder="（申請手数料の備考）" oninput="bBiko.shinsei=this.value;update()" style="border-style:dashed;flex:1;font-size:11px;padding:5px 8px">
-            </div>
+
           </div>
           <!-- カスタム追加行（B） -->
           <div class="form-section">
@@ -1009,8 +1010,8 @@
             <div class="section-title">その他工事費用</div>
 
             <!-- 外構工事 -->
-            <div class="form-row">
-              <label>外構工事費用</label>
+            <div class="form-row" id="cRow_ext">
+              <label>外構工事費用 <button class="hide-btn" onclick="toggleCItem('ext')" title="非表示（印刷から除外）">✕</button></label>
               <div class="status-select-row">
                 <select class="status-select" id="extStatus" onchange="applyStatusSelect('extWork','extUndecided','extWorkWrap');update()">
                   <option value="undecided">調査後確定（未定）</option>
@@ -1039,8 +1040,8 @@
             </div>
 
             <!-- 地盤改良工事 -->
-            <div class="form-row">
-              <label>地盤改良工事</label>
+            <div class="form-row" id="cRow_ground">
+              <label>地盤改良工事 <button class="hide-btn" onclick="toggleCItem('ground')" title="非表示（印刷から除外）">✕</button></label>
               <div class="status-select-row">
                 <select class="status-select" id="groundStatus" onchange="applyStatusSelect('groundWork','groundUndecided','groundWorkWrap');update()">
                   <option value="undecided">調査後確定（未定）</option>
@@ -1069,8 +1070,8 @@
             </div>
 
             <!-- インテリア工事 -->
-            <div class="form-row">
-              <label>インテリア工事</label>
+            <div class="form-row" id="cRow_interior">
+              <label>インテリア工事 <button class="hide-btn" onclick="toggleCItem('interior')" title="非表示（印刷から除外）">✕</button></label>
               <div class="status-select-row">
                 <select class="status-select" id="interiorStatus" onchange="applyStatusSelect('interiorWork','interiorUndecided','interiorWorkWrap');update()">
                   <option value="undecided">調査後確定（未定）</option>
@@ -1099,8 +1100,8 @@
             </div>
 
             <!-- 給水引込工事 -->
-            <div class="form-row">
-              <label>給水引込工事</label>
+            <div class="form-row" id="cRow_kyusui">
+              <label>給水引込工事 <button class="hide-btn" onclick="toggleCItem('kyusui')" title="非表示（印刷から除外）">✕</button></label>
               <div class="status-select-row">
                 <select class="status-select" id="kyusuiStatus" onchange="applyStatusSelect('kyusuiWork','kyusuiUndecided','kyusuiWorkWrap');update()">
                   <option value="undecided">調査後確定（未定）</option>
@@ -1129,8 +1130,8 @@
             </div>
 
             <!-- ホームセキュリティ工事 -->
-            <div class="form-row">
-              <label>ホームセキュリティ工事</label>
+            <div class="form-row" id="cRow_security">
+              <label>ホームセキュリティ工事 <button class="hide-btn" onclick="toggleCItem('security')" title="非表示（印刷から除外）">✕</button></label>
               <div class="status-select-row">
                 <select class="status-select" id="securityStatus" onchange="applyStatusSelect('securityWork','securityUndecided','securityWorkWrap');update()">
                   <option value="undecided">調査後確定（未定）</option>
@@ -1159,8 +1160,8 @@
             </div>
 
             <!-- カーテン・家具工事 -->
-            <div class="form-row">
-              <label>カーテン・家具工事</label>
+            <div class="form-row" id="cRow_curtain">
+              <label>カーテン・家具工事 <button class="hide-btn" onclick="toggleCItem('curtain')" title="非表示（印刷から除外）">✕</button></label>
               <div class="status-select-row">
                 <select class="status-select" id="curtainStatus" onchange="applyStatusSelect('curtainWork','curtainUndecided','curtainWorkWrap');update()">
                   <option value="undecided">調査後確定（未定）</option>
@@ -1204,8 +1205,8 @@
             <div class="section-title">実費精算項目</div>
 
             <!-- 火災保険料 -->
-            <div class="form-row">
-              <label>火災保険料（概算5年）</label>
+            <div class="form-row" id="dRow_fireIns">
+              <label>火災保険料（概算5年） <button class="hide-btn" onclick="toggleDItem('fireIns')" title="非表示（印刷から除外）">✕</button></label>
               <div class="stepper-wrap">
                 <div class="stepper-row">
                   <button class="step-btn" onclick="step('fireIns',-10000)">－</button>
@@ -1230,8 +1231,8 @@
             </div>
 
             <!-- 登記費用 -->
-            <div class="form-row">
-              <label>登記費用（表示・保存登記）</label>
+            <div class="form-row" id="dRow_registration">
+              <label>登記費用（表示・保存登記） <button class="hide-btn" onclick="toggleDItem('registration')" title="非表示（印刷から除外）">✕</button></label>
               <div class="stepper-wrap">
                 <div class="stepper-row">
                   <button class="step-btn" onclick="step('registration',-10000)">－</button>
@@ -1256,8 +1257,8 @@
             </div>
 
             <!-- 祭事費用 -->
-            <div class="form-row">
-              <label>祭事費用（地鎮祭・上棟式等）</label>
+            <div class="form-row" id="dRow_matsuri">
+              <label>祭事費用（地鎮祭・上棟式等） <button class="hide-btn" onclick="toggleDItem('matsuri')" title="非表示（印刷から除外）">✕</button></label>
               <div class="stepper-wrap">
                 <div class="stepper-row">
                   <button class="step-btn" onclick="step('matsuri',-10000)">－</button>
@@ -1282,30 +1283,9 @@
             </div>
 
             <!-- 仮住まい費用 -->
-            <div class="form-row">
-              <label>仮住まい費用（建替え時等）</label>
-              <div class="stepper-wrap">
-                <div class="stepper-row">
-                  <button class="step-btn" onclick="step('kariZumai',-10000)">－</button>
-                  <input type="number" id="kariZumai" value="0" step="10000" oninput="update()">
-                  <button class="step-btn" onclick="step('kariZumai',10000)">＋</button>
-                </div>
-                <div class="direct-input-row">
-                  <label>直接入力：</label>
-                  <input type="number" id="kariZumaiDirect" placeholder="例: 600000" onchange="applyDirect('kariZumai','kariZumaiDirect')">
-                  <span style="font-size:10px;color:var(--mid)">円</span>
-                </div>
-                <div class="direct-input-row">
-                  <label>備考：</label>
-                  <input type="text" id="bikoKariZumai" placeholder="建替え時等" value="建替え時等" oninput="dBiko.kariZumai=this.value;update()" style="border-style:dashed">
-                </div>
-                <div class="stepper-hint"><span>現在: <strong id="kariZumaiDisp">0円</strong></span><span>1万単位 / 直接入力可</span></div>
-              </div>
-            </div>
-
             <!-- 家電・家具費用 -->
-            <div class="form-row">
-              <label>家電・家具費用</label>
+            <div class="form-row" id="dRow_kaden">
+              <label>家電・家具費用 <button class="hide-btn" onclick="toggleDItem('kaden')" title="非表示（印刷から除外）">✕</button></label>
               <div class="stepper-wrap">
                 <div class="stepper-row">
                   <button class="step-btn" onclick="step('kaden',-10000)">－</button>
@@ -1694,12 +1674,38 @@ const cBiko = {
   ext: '', ground: '', interior: '', kyusui: '', security: '', curtain: '',
 };
 
+// C・D固定項目の非表示フラグ
+const cHidden = { ext: false, ground: false, interior: false, kyusui: false, security: false, curtain: false };
+const dHidden = { fireIns: false, registration: false, matsuri: false, kaden: false };
+
+function toggleCItem(key) {
+  cHidden[key] = !cHidden[key];
+  const row = document.getElementById('cRow_' + key);
+  if (row) {
+    row.style.opacity = cHidden[key] ? '0.35' : '1';
+    const btn = row.querySelector('.hide-btn');
+    if (btn) btn.textContent = cHidden[key] ? '↩' : '✕';
+    btn.title = cHidden[key] ? '表示に戻す' : '非表示（印刷から除外）';
+  }
+  update();
+}
+function toggleDItem(key) {
+  dHidden[key] = !dHidden[key];
+  const row = document.getElementById('dRow_' + key);
+  if (row) {
+    row.style.opacity = dHidden[key] ? '0.35' : '1';
+    const btn = row.querySelector('.hide-btn');
+    if (btn) btn.textContent = dHidden[key] ? '↩' : '✕';
+    btn.title = dHidden[key] ? '表示に戻す' : '非表示（印刷から除外）';
+  }
+  update();
+}
+
 // 実費精算の備考メモ
 const dBiko = {
   fireIns: '概算5年',
   registration: '概算　表示・保存登記',
   matsuri: '地鎮祭・上棟式等',
-  kariZumai: '建替え時等',
   kaden: '',
 };
 
@@ -2167,36 +2173,36 @@ function update() {
   const floor3val = f3;
 
   const bItems = [
-    { name: '印紙代', biko: bBiko.inshi || '非課税', excl: inshiDai, noTax: true },
-    { name: '設計料', biko: bBiko.design || `工事費合計×${designRateLabel}`, excl: designFee },
-    { name: '工事監理費', biko: bBiko.supervise || `工事費合計×0.5%`, excl: superviseFee },
-    { name: '構造計算料', biko: bBiko.struct || (structRcArea > 0 ? `延床×2,500＋RC${structRcArea}㎡×7,000` : `2,500円/㎡（延床${hotelFloor.toFixed(2)}㎡）`), excl: structCalc },
-    { name: '敷地調査費', biko: '35,000円', excl: getChecked('chk_敷地調査費') },
-    { name: '現況測量費', biko: '50,000円一律', excl: getChecked('chk_現況測量費') },
-    { name: '地盤調査料', biko: '30,000円一律', excl: getChecked('chk_地盤調査料') },
-    { name: 'ボーリング調査（土質試験含む）', biko: '250,000円', excl: getChecked('chk_ボーリング調査') },
-    { name: '三成分コーン貫入試験', biko: '130,000円', excl: getChecked('chk_三成分コーン') },
-    { name: '家屋調査', biko: '50,000円〜', excl: getChecked('chk_家屋調査') },
-    { name: '建築確認申請手数料（2F）', biko: '231,000円', excl: getChecked('chk_建築確認申請2F') },
-    { name: '建築確認申請手数料（3F）', biko: '251,000円', excl: getChecked('chk_建築確認申請3F') },
-    { name: '長期優良住宅申請費用', biko: '150,000円', excl: getChecked('chk_長期優良住宅申請') },
-    { name: '低炭素住宅申請費用', biko: '100,000円', excl: getChecked('chk_低炭素住宅申請') },
-    { name: '設計住宅性能評価申請', biko: '120,000円', excl: getChecked('chk_設計住宅性能評価') },
-    { name: '建設住宅性能評価申請', biko: '120,000円', excl: getChecked('chk_建設住宅性能評価') },
-    { name: '省エネ基準適合確認費用', biko: '30,000円（延床300㎡未満）', excl: getChecked('chk_省エネ基準適合確認') },
-    { name: 'フラット35申請手数料', biko: '70,000円', excl: getChecked('chk_フラット35申請') },
-    { name: 'フラット35S申請手数料', biko: '80,000円', excl: getChecked('chk_フラット35S申請') },
-    { name: 'ＺＥＨ申請費用', biko: '補助金申請業務', excl: getChecked('chk_ZEH申請') },
-    { name: 'ＢＥＬＳ評価申請費用', biko: 'ＺＥＨの場合も入力', excl: getChecked('chk_BELS申請') },
-    { name: '狭あい道路申請（補助金申請まで）', biko: '30,000円', excl: getChecked('chk_狭あい道路申請') },
-    { name: '緑化計画申請', biko: '20,000円', excl: getChecked('chk_緑化計画申請') },
-    { name: '雨水流出抑制申請', biko: '20,000円', excl: getChecked('chk_雨水流出抑制申請') },
-    { name: '地区計画届出', biko: '20,000円', excl: getChecked('chk_地区計画届出') },
+    { name: '印紙代', biko: '', excl: inshiDai, noTax: true },
+    { name: '設計料', biko: bBiko.design, excl: designFee },
+    { name: '工事監理費', biko: bBiko.supervise, excl: superviseFee },
+    { name: '構造計算料', biko: bBiko.struct, excl: structCalc },
+    { name: '敷地調査費', biko: '', excl: getChecked('chk_敷地調査費') },
+    { name: '現況測量費', biko: '', excl: getChecked('chk_現況測量費') },
+    { name: '地盤調査料', biko: '', excl: getChecked('chk_地盤調査料') },
+    { name: 'ボーリング調査（土質試験含む）', biko: '', excl: getChecked('chk_ボーリング調査') },
+    { name: '三成分コーン貫入試験', biko: '', excl: getChecked('chk_三成分コーン') },
+    { name: '家屋調査', biko: '', excl: getChecked('chk_家屋調査') },
+    { name: '建築確認申請手数料（2F）', biko: '', excl: getChecked('chk_建築確認申請2F') },
+    { name: '建築確認申請手数料（3F）', biko: '', excl: getChecked('chk_建築確認申請3F') },
+    { name: '長期優良住宅申請費用', biko: '', excl: getChecked('chk_長期優良住宅申請') },
+    { name: '低炭素住宅申請費用', biko: '', excl: getChecked('chk_低炭素住宅申請') },
+    { name: '設計住宅性能評価申請', biko: '', excl: getChecked('chk_設計住宅性能評価') },
+    { name: '建設住宅性能評価申請', biko: '', excl: getChecked('chk_建設住宅性能評価') },
+    { name: '省エネ基準適合確認費用', biko: '', excl: getChecked('chk_省エネ基準適合確認') },
+    { name: 'フラット35申請手数料', biko: '', excl: getChecked('chk_フラット35申請') },
+    { name: 'フラット35S申請手数料', biko: '', excl: getChecked('chk_フラット35S申請') },
+    { name: 'ＺＥＨ申請費用', biko: '', excl: getChecked('chk_ZEH申請') },
+    { name: 'ＢＥＬＳ評価申請費用', biko: '', excl: getChecked('chk_BELS申請') },
+    { name: '狭あい道路申請（補助金申請まで）', biko: '', excl: getChecked('chk_狭あい道路申請') },
+    { name: '緑化計画申請', biko: '', excl: getChecked('chk_緑化計画申請') },
+    { name: '雨水流出抑制申請', biko: '', excl: getChecked('chk_雨水流出抑制申請') },
+    { name: '地区計画届出', biko: '', excl: getChecked('chk_地区計画届出') },
     { name: '東京ゼロエミ住宅補助金申請費', biko: '', excl: getChecked('chk_東京ゼロエミ申請') },
     { name: '子育てグリーン支援住宅申請費', biko: '', excl: getChecked('chk_子育てグリーン申請') },
-    { name: '風致地区申請', biko: '30,000円', excl: getChecked('chk_風致地区申請') },
-    { name: '埋蔵文化財届出', biko: '20,000円', excl: getChecked('chk_埋蔵文化財届出') },
-    { name: '再資源化に関する諸費用', biko: '延床500㎡以上', excl: getChecked('chk_再資源化諸費用') },
+    { name: '風致地区申請', biko: '', excl: getChecked('chk_風致地区申請') },
+    { name: '埋蔵文化財届出', biko: '', excl: getChecked('chk_埋蔵文化財届出') },
+    { name: '再資源化に関する諸費用', biko: '', excl: getChecked('chk_再資源化諸費用') },
     ...getCustomItems('B').map(r => ({ name: r.name || '追加諸費用', biko: r.biko || '', excl: r.amount })),
   ].filter(i => i.excl > 0);
 
@@ -2258,12 +2264,12 @@ function update() {
 
   const cCustomItems = getCustomItems('C');
   const cItems = [
-    { name: '外構工事費用',   biko: [extBiko, cBiko.ext].filter(Boolean).join('　'),         excl: extExcl },
-    { name: '地盤改良工事',   biko: [groundBiko, cBiko.ground].filter(Boolean).join('　'),   excl: groundExcl },
-    { name: 'インテリア工事', biko: [interiorBiko, cBiko.interior].filter(Boolean).join('　'), excl: interiorExcl },
-    { name: '給水引込工事',   biko: [kyusuiBiko, cBiko.kyusui].filter(Boolean).join('　'),   excl: kyusuiExcl },
-    { name: 'ホームセキュリティ工事', biko: [securityBiko, cBiko.security].filter(Boolean).join('　'), excl: securityExcl },
-    { name: 'カーテン・家具工事',     biko: [curtainBiko, cBiko.curtain].filter(Boolean).join('　'),  excl: curtainExcl },
+    ...(cHidden.ext      ? [] : [{ name: '外構工事費用',   biko: [extBiko, cBiko.ext].filter(Boolean).join('　'),         excl: extExcl }]),
+    ...(cHidden.ground   ? [] : [{ name: '地盤改良工事',   biko: [groundBiko, cBiko.ground].filter(Boolean).join('　'),   excl: groundExcl }]),
+    ...(cHidden.interior ? [] : [{ name: 'インテリア工事', biko: [interiorBiko, cBiko.interior].filter(Boolean).join('　'), excl: interiorExcl }]),
+    ...(cHidden.kyusui   ? [] : [{ name: '給水引込工事',   biko: [kyusuiBiko, cBiko.kyusui].filter(Boolean).join('　'),   excl: kyusuiExcl }]),
+    ...(cHidden.security ? [] : [{ name: 'ホームセキュリティ工事', biko: [securityBiko, cBiko.security].filter(Boolean).join('　'), excl: securityExcl }]),
+    ...(cHidden.curtain  ? [] : [{ name: 'カーテン・家具工事',     biko: [curtainBiko, cBiko.curtain].filter(Boolean).join('　'),  excl: curtainExcl }]),
     ...cCustomItems.map(r => {
       const st = r.status || 'fixed';
       const autoBiko = st === 'undecided' ? '調査後確定' : st === 'estimate' ? '概算' : st === 'betsu' ? '別途' : '';
@@ -2293,15 +2299,13 @@ function update() {
   const fireIns = v('fireIns');
   const regist = v('registration');
   const matsuri = v('matsuri');
-  const kariZumai = v('kariZumai');
   const kaden = v('kaden');
   const dCustomItems = getCustomItems('D');
   const dItems = [
-    { name: '火災保険料', biko: dBiko.fireIns, excl: fireIns !== 0 ? fireIns : null },
-    { name: '登記費用', biko: dBiko.registration, excl: regist !== 0 ? regist : null },
-    { name: '祭事費用', biko: dBiko.matsuri, excl: matsuri !== 0 ? matsuri : null },
-    { name: '仮住まい費用', biko: dBiko.kariZumai, excl: kariZumai !== 0 ? kariZumai : null },
-    { name: '家電・家具費用', biko: dBiko.kaden, excl: kaden !== 0 ? kaden : null },
+    ...(dHidden.fireIns      ? [] : [{ name: '火災保険料',    biko: dBiko.fireIns,      excl: fireIns      !== 0 ? fireIns      : null }]),
+    ...(dHidden.registration ? [] : [{ name: '登記費用',      biko: dBiko.registration, excl: regist       !== 0 ? regist       : null }]),
+    ...(dHidden.matsuri      ? [] : [{ name: '祭事費用',      biko: dBiko.matsuri,      excl: matsuri      !== 0 ? matsuri      : null }]),
+    ...(dHidden.kaden        ? [] : [{ name: '家電・家具費用',biko: dBiko.kaden,        excl: kaden        !== 0 ? kaden        : null }]),
     ...dCustomItems.map(r => ({ name: r.name || '追加項目', biko: r.biko || '', excl: r.amount !== 0 ? r.amount : null })),
   ];
   const dTotal = dItems.filter(i => i.excl !== null).reduce((s, i) => s + i.excl, 0);
@@ -2318,7 +2322,6 @@ function update() {
 
   // 実費精算関連の表示更新
   document.getElementById('matsuriDisp').textContent = fmtComma(matsuri);
-  document.getElementById('kariZumaiDisp').textContent = fmtComma(kariZumai);
   document.getElementById('kadenDisp').textContent = fmtComma(kaden);
 
   // =========================
@@ -2554,7 +2557,7 @@ document.getElementById('subWork').value = '2500000';
 document.getElementById('energyWork').value = '3000000';
 ['solarWork','homeTactWork','chikaWork','yohekiWork','extWork','groundWork','interiorWork',
  'kyusuiWork','securityWork','curtainWork',
- 'matsuri','kariZumai','kaden','landPrice','landAgent','landOther','selfFund'].forEach(id => {
+ 'matsuri','kaden','landPrice','landAgent','landOther','selfFund'].forEach(id => {
   const el = document.getElementById(id);
   if (el) el.value = '0';
 });
@@ -2576,7 +2579,7 @@ const SAVE_NUM_IDS = [
   'siteArea','buildArea','floor1','floor2','floor3','floorB','floorG','floorBal','floorPH',
   'tsuboPrice','subWork','energyWork','solarWork','homeTactWork','chikaWork','yohekiWork',
   'extWork','groundWork','interiorWork','kyusuiWork','securityWork','curtainWork',
-  'fireIns','registration','matsuri','kariZumai','kaden',
+  'fireIns','registration','matsuri','kaden',
   'landPrice','landAgent','landOther','selfFund'
 ];
 const SAVE_SELECT_IDS = [
