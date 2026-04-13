@@ -697,6 +697,10 @@
                     <input type="number" id="mainWorkDirect" placeholder="例: 35800000" onchange="applyMainDirect()">
                     <span style="font-size:10px;color:var(--mid)">円</span>
                   </div>
+                  <div class="direct-input-row">
+                    <label>備考：</label>
+                    <input type="text" id="bikoMainWork" placeholder="（任意）" value="" oninput="aBiko.mainWork=this.value;update()" style="border-style:dashed;flex:1">
+                  </div>
                   <div style="font-size:10px;color:var(--mid);margin-top:3px" id="mainWorkDirectStatus"></div>
                 </div>
               </div>
@@ -716,6 +720,10 @@
                   <input type="number" id="subWorkDirect" placeholder="例: 2800000" onchange="applyDirect('subWork','subWorkDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
                 </div>
+                <div class="direct-input-row">
+                  <label>備考：</label>
+                  <input type="text" id="bikoSubWork" placeholder="屋外給排水・電気ガス等" value="屋外給排水・電気ガス等" oninput="aBiko.subWork=this.value;update()" style="border-style:dashed;flex:1">
+                </div>
                 <div class="stepper-hint"><span>現在: <strong id="subWorkDisp">2,500,000円</strong></span><span>10万単位 / 直接入力可</span></div>
               </div>
             </div>
@@ -733,6 +741,10 @@
                   <label>直接入力：</label>
                   <input type="number" id="energyWorkDirect" placeholder="例: 3200000" onchange="applyDirect('energyWork','energyWorkDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
+                </div>
+                <div class="direct-input-row">
+                  <label>備考：</label>
+                  <input type="text" id="bikoEnergyWork" placeholder="（任意）" value="" oninput="aBiko.energyWork=this.value;update()" style="border-style:dashed;flex:1">
                 </div>
                 <div class="stepper-hint"><span>現在: <strong id="energyWorkDisp">3,000,000円</strong></span><span>10万単位 / 直接入力可</span></div>
               </div>
@@ -752,6 +764,10 @@
                   <input type="number" id="solarWorkDirect" placeholder="例: 1500000" onchange="applyDirect('solarWork','solarWorkDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
                 </div>
+                <div class="direct-input-row">
+                  <label>備考：</label>
+                  <input type="text" id="bikoSolarWork" placeholder="（任意）" value="" oninput="aBiko.solarWork=this.value;update()" style="border-style:dashed;flex:1">
+                </div>
                 <div class="stepper-hint"><span>現在: <strong id="solarWorkDisp">0円</strong></span><span>10万単位 / 直接入力可 / 0円なら非表示</span></div>
               </div>
             </div>
@@ -770,6 +786,10 @@
                   <input type="number" id="homeTactWorkDirect" placeholder="例: 500000" onchange="applyDirect('homeTactWork','homeTactWorkDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
                 </div>
+                <div class="direct-input-row">
+                  <label>備考：</label>
+                  <input type="text" id="bikoHomeTactWork" placeholder="（任意）" value="" oninput="aBiko.homeTactWork=this.value;update()" style="border-style:dashed;flex:1">
+                </div>
                 <div class="stepper-hint"><span>現在: <strong id="homeTactWorkDisp">0円</strong></span><span>10万単位 / 直接入力可 / 0円なら非表示</span></div>
               </div>
             </div>
@@ -787,6 +807,10 @@
                   <label>直接入力：</label>
                   <input type="number" id="chikaWorkDirect" placeholder="例: 5000000" onchange="applyDirect('chikaWork','chikaWorkDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
+                </div>
+                <div class="direct-input-row">
+                  <label>備考：</label>
+                  <input type="text" id="bikoChikaWork" placeholder="（任意）" value="" oninput="aBiko.chikaWork=this.value;update()" style="border-style:dashed;flex:1">
                 </div>
                 <div class="stepper-hint"><span>現在: <strong id="chikaWorkDisp">0円</strong></span><span>100万単位 / 直接入力可 / 0円なら非表示</span></div>
               </div>
@@ -867,10 +891,18 @@
                 <input type="number" id="designFeeDirect" placeholder="例: 1500000" oninput="update()">
                 <span style="font-size:10px;color:var(--mid)">円</span>
               </div>
-              <div class="direct-input-row">
+              <div class="direct-input-row" style="margin-bottom:4px">
                 <label>監理費を直接入力：</label>
                 <input type="number" id="superviseFeesDirect" placeholder="例: 300000" oninput="update()">
                 <span style="font-size:10px;color:var(--mid)">円</span>
+              </div>
+              <div class="direct-input-row" style="margin-bottom:4px">
+                <label>設計料　備考：</label>
+                <input type="text" id="bBikoDesign" placeholder="（任意）" value="" oninput="bBiko.design=this.value;update()" style="border-style:dashed;flex:1">
+              </div>
+              <div class="direct-input-row">
+                <label>監理費　備考：</label>
+                <input type="text" id="bBikoSupervise" placeholder="（任意）" value="" oninput="bBiko.supervise=this.value;update()" style="border-style:dashed;flex:1">
               </div>
               <div style="font-size:10px;color:var(--mid);margin-top:4px" id="designDirectStatus"></div>
             </div>
@@ -902,10 +934,14 @@
             <!-- 直接入力 -->
             <div style="padding:6px 8px;background:#f0ece4;border-radius:4px;margin-top:4px">
               <div style="font-size:10px;color:var(--mid);margin-bottom:4px">📌 金額を直接指定（自動計算より優先）</div>
-              <div class="direct-input-row">
+              <div class="direct-input-row" style="margin-bottom:4px">
                 <label>構造計算料を直接入力：</label>
                 <input type="number" id="structCalcDirect" placeholder="例: 500000" oninput="update()">
                 <span style="font-size:10px;color:var(--mid)">円</span>
+              </div>
+              <div class="direct-input-row">
+                <label>備考：</label>
+                <input type="text" id="bBikoStruct" placeholder="（任意）" value="" oninput="bBiko.struct=this.value;update()" style="border-style:dashed;flex:1">
               </div>
               <div style="font-size:10px;color:var(--mid);margin-top:3px" id="structCalcDirectStatus"></div>
             </div>
@@ -915,11 +951,15 @@
             <div class="section-title">調査・測量費</div>
             <div class="check-grid" id="surveyChecks">
               <label class="check-item" id="lbl_敷地調査費"><input type="checkbox" id="chk_敷地調査費" value="35000" onchange="toggleCheck(this)" checked> 敷地調査費<br><span style="font-size:10px;color:#888">35,000円</span></label>
-              <label class="check-item" id="lbl_現況測量費"><input type="checkbox" id="chk_現況測量費" value="50000" onchange="toggleCheck(this)" checked> 現況測量費<br><span style="font-size:10px;color:#888">50,000円</span></label>
-              <label class="check-item" id="lbl_地盤調査料"><input type="checkbox" id="chk_地盤調査料" value="30000" onchange="toggleCheck(this)" checked> 地盤調査料<br><span style="font-size:10px;color:#888">30,000円</span></label>
+              <label class="check-item" id="lbl_現況測量費"><input type="checkbox" id="chk_現況測量費" value="50000" onchange="toggleCheck(this)" checked> 現況測量費<br><span style="font-size:10px;color:#888">50,000円一律</span></label>
+              <label class="check-item" id="lbl_地盤調査料"><input type="checkbox" id="chk_地盤調査料" value="30000" onchange="toggleCheck(this)" checked> 地盤調査料<br><span style="font-size:10px;color:#888">30,000円一律</span></label>
               <label class="check-item" id="lbl_ボーリング調査"><input type="checkbox" id="chk_ボーリング調査" value="250000" onchange="toggleCheck(this)"> ボーリング調査<br><span style="font-size:10px;color:#888">250,000円</span></label>
               <label class="check-item" id="lbl_三成分コーン"><input type="checkbox" id="chk_三成分コーン" value="130000" onchange="toggleCheck(this)"> 三成分コーン貫入試験<br><span style="font-size:10px;color:#888">130,000円</span></label>
               <label class="check-item" id="lbl_家屋調査"><input type="checkbox" id="chk_家屋調査" value="50000" onchange="toggleCheck(this)"> 家屋調査<br><span style="font-size:10px;color:#888">50,000円〜</span></label>
+            </div>
+            <div class="direct-input-row" style="margin-top:6px">
+              <label>備考：</label>
+              <input type="text" id="bBikoSurvey" placeholder="（調査・測量費の備考）" oninput="bBiko.survey=this.value;update()" style="border-style:dashed;flex:1;font-size:11px;padding:5px 8px">
             </div>
           </div>
           <div class="form-section">
@@ -945,6 +985,10 @@
               <label class="check-item" id="lbl_風致地区申請"><input type="checkbox" id="chk_風致地区申請" value="30000" onchange="toggleCheck(this)"> 風致地区申請<br><span style="font-size:10px;color:#888">30,000円</span></label>
               <label class="check-item" id="lbl_埋蔵文化財届出"><input type="checkbox" id="chk_埋蔵文化財届出" value="20000" onchange="toggleCheck(this)"> 埋蔵文化財届出<br><span style="font-size:10px;color:#888">20,000円</span></label>
               <label class="check-item" id="lbl_再資源化諸費用"><input type="checkbox" id="chk_再資源化諸費用" value="10000" onchange="toggleCheck(this)"> 再資源化諸費用<br><span style="font-size:10px;color:#888">10,000円</span></label>
+            </div>
+            <div class="direct-input-row" style="margin-top:6px">
+              <label>備考：</label>
+              <input type="text" id="bBikoShinsei" placeholder="（申請手数料の備考）" oninput="bBiko.shinsei=this.value;update()" style="border-style:dashed;flex:1;font-size:11px;padding:5px 8px">
             </div>
           </div>
           <!-- カスタム追加行（B） -->
@@ -974,12 +1018,7 @@
                   <option value="fixed">確定金額</option>
                 </select>
               </div>
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;display:none">
-                <label style="display:flex;align-items:center;gap:4px;font-size:11px;cursor:pointer">
-                  <input type="checkbox" id="extUndecided" onchange="syncExtStatus()" checked>
-                  調査後確定（未定）
-                </label>
-              </div>
+              <div style="display:none"><input type="checkbox" id="extUndecided" onchange="syncExtStatus()" checked></div>
               <div class="stepper-wrap" id="extWorkWrap" style="opacity:0.4;pointer-events:none">
                 <div class="stepper-row">
                   <button class="step-btn" onclick="stepExtWork(-1000000)">－</button>
@@ -990,6 +1029,10 @@
                   <label>直接入力：</label>
                   <input type="number" id="extWorkDirect" placeholder="例: 4500000" onchange="applyDirect('extWork','extWorkDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
+                </div>
+                <div class="direct-input-row">
+                  <label>備考追記：</label>
+                  <input type="text" id="cBikoExt" placeholder="（任意）" value="" oninput="cBiko.ext=this.value;update()" style="border-style:dashed;flex:1">
                 </div>
                 <div class="stepper-hint"><span>現在: <strong id="extWorkDisp">0円</strong></span><span>100万単位 / 直接入力可</span></div>
               </div>
@@ -1005,9 +1048,7 @@
                   <option value="fixed">確定金額</option>
                 </select>
               </div>
-              <div style="display:none">
-                <input type="checkbox" id="groundUndecided" checked>
-              </div>
+              <div style="display:none"><input type="checkbox" id="groundUndecided" checked></div>
               <div class="stepper-wrap" id="groundWorkWrap" style="opacity:0.4;pointer-events:none">
                 <div class="stepper-row">
                   <button class="step-btn" onclick="step('groundWork',-1000000)">－</button>
@@ -1018,6 +1059,10 @@
                   <label>直接入力：</label>
                   <input type="number" id="groundWorkDirect" placeholder="例: 800000" onchange="applyDirect('groundWork','groundWorkDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
+                </div>
+                <div class="direct-input-row">
+                  <label>備考追記：</label>
+                  <input type="text" id="cBikoGround" placeholder="（任意）" value="" oninput="cBiko.ground=this.value;update()" style="border-style:dashed;flex:1">
                 </div>
                 <div class="stepper-hint"><span>現在: <strong id="groundWorkDisp">0円</strong></span><span>100万単位 / 直接入力可</span></div>
               </div>
@@ -1033,9 +1078,7 @@
                   <option value="fixed">確定金額</option>
                 </select>
               </div>
-              <div style="display:none">
-                <input type="checkbox" id="interiorUndecided" checked>
-              </div>
+              <div style="display:none"><input type="checkbox" id="interiorUndecided" checked></div>
               <div class="stepper-wrap" id="interiorWorkWrap" style="opacity:0.4;pointer-events:none">
                 <div class="stepper-row">
                   <button class="step-btn" onclick="step('interiorWork',-100000)">－</button>
@@ -1047,7 +1090,101 @@
                   <input type="number" id="interiorWorkDirect" placeholder="例: 1200000" onchange="applyDirect('interiorWork','interiorWorkDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
                 </div>
+                <div class="direct-input-row">
+                  <label>備考追記：</label>
+                  <input type="text" id="cBikoInterior" placeholder="（任意）" value="" oninput="cBiko.interior=this.value;update()" style="border-style:dashed;flex:1">
+                </div>
                 <div class="stepper-hint"><span>現在: <strong id="interiorWorkDisp">0円</strong></span><span>10万単位 / 直接入力可</span></div>
+              </div>
+            </div>
+
+            <!-- 給水引込工事 -->
+            <div class="form-row">
+              <label>給水引込工事</label>
+              <div class="status-select-row">
+                <select class="status-select" id="kyusuiStatus" onchange="applyStatusSelect('kyusuiWork','kyusuiUndecided','kyusuiWorkWrap');update()">
+                  <option value="undecided">調査後確定（未定）</option>
+                  <option value="estimate">概算</option>
+                  <option value="fixed">確定金額</option>
+                </select>
+              </div>
+              <div style="display:none"><input type="checkbox" id="kyusuiUndecided" checked></div>
+              <div class="stepper-wrap" id="kyusuiWorkWrap" style="opacity:0.4;pointer-events:none">
+                <div class="stepper-row">
+                  <button class="step-btn" onclick="step('kyusuiWork',-100000)">－</button>
+                  <input type="number" id="kyusuiWork" value="0" step="100000" oninput="update()">
+                  <button class="step-btn" onclick="step('kyusuiWork',100000)">＋</button>
+                </div>
+                <div class="direct-input-row">
+                  <label>直接入力：</label>
+                  <input type="number" id="kyusuiWorkDirect" placeholder="例: 500000" onchange="applyDirect('kyusuiWork','kyusuiWorkDirect')">
+                  <span style="font-size:10px;color:var(--mid)">円</span>
+                </div>
+                <div class="direct-input-row">
+                  <label>備考追記：</label>
+                  <input type="text" id="cBikoKyusui" placeholder="（任意）" value="" oninput="cBiko.kyusui=this.value;update()" style="border-style:dashed;flex:1">
+                </div>
+                <div class="stepper-hint"><span>現在: <strong id="kyusuiWorkDisp">0円</strong></span><span>10万単位 / 直接入力可</span></div>
+              </div>
+            </div>
+
+            <!-- ホームセキュリティ工事 -->
+            <div class="form-row">
+              <label>ホームセキュリティ工事</label>
+              <div class="status-select-row">
+                <select class="status-select" id="securityStatus" onchange="applyStatusSelect('securityWork','securityUndecided','securityWorkWrap');update()">
+                  <option value="undecided">調査後確定（未定）</option>
+                  <option value="estimate">概算</option>
+                  <option value="fixed">確定金額</option>
+                </select>
+              </div>
+              <div style="display:none"><input type="checkbox" id="securityUndecided" checked></div>
+              <div class="stepper-wrap" id="securityWorkWrap" style="opacity:0.4;pointer-events:none">
+                <div class="stepper-row">
+                  <button class="step-btn" onclick="step('securityWork',-100000)">－</button>
+                  <input type="number" id="securityWork" value="0" step="100000" oninput="update()">
+                  <button class="step-btn" onclick="step('securityWork',100000)">＋</button>
+                </div>
+                <div class="direct-input-row">
+                  <label>直接入力：</label>
+                  <input type="number" id="securityWorkDirect" placeholder="例: 300000" onchange="applyDirect('securityWork','securityWorkDirect')">
+                  <span style="font-size:10px;color:var(--mid)">円</span>
+                </div>
+                <div class="direct-input-row">
+                  <label>備考追記：</label>
+                  <input type="text" id="cBikoSecurity" placeholder="（任意）" value="" oninput="cBiko.security=this.value;update()" style="border-style:dashed;flex:1">
+                </div>
+                <div class="stepper-hint"><span>現在: <strong id="securityWorkDisp">0円</strong></span><span>10万単位 / 直接入力可</span></div>
+              </div>
+            </div>
+
+            <!-- カーテン・家具工事 -->
+            <div class="form-row">
+              <label>カーテン・家具工事</label>
+              <div class="status-select-row">
+                <select class="status-select" id="curtainStatus" onchange="applyStatusSelect('curtainWork','curtainUndecided','curtainWorkWrap');update()">
+                  <option value="undecided">調査後確定（未定）</option>
+                  <option value="estimate">概算</option>
+                  <option value="fixed">確定金額</option>
+                </select>
+              </div>
+              <div style="display:none"><input type="checkbox" id="curtainUndecided" checked></div>
+              <div class="stepper-wrap" id="curtainWorkWrap" style="opacity:0.4;pointer-events:none">
+                <div class="stepper-row">
+                  <button class="step-btn" onclick="step('curtainWork',-100000)">－</button>
+                  <input type="number" id="curtainWork" value="0" step="100000" oninput="update()">
+                  <button class="step-btn" onclick="step('curtainWork',100000)">＋</button>
+                </div>
+                <div class="direct-input-row">
+                  <label>直接入力：</label>
+                  <input type="number" id="curtainWorkDirect" placeholder="例: 800000" onchange="applyDirect('curtainWork','curtainWorkDirect')">
+                  <span style="font-size:10px;color:var(--mid)">円</span>
+                </div>
+                <div class="direct-input-row">
+                  <label>備考追記：</label>
+                  <input type="text" id="cBikoCurtain" placeholder="（任意）" value="" oninput="cBiko.curtain=this.value;update()" style="border-style:dashed;flex:1">
+                </div>
+                <div class="stepper-hint"><span>現在: <strong id="curtainWorkDisp">0円</strong></span><span>10万単位 / 直接入力可</span></div>
               </div>
             </div>
 
@@ -1080,9 +1217,13 @@
                   <input type="number" id="fireInsDirect" placeholder="例: 85000" onchange="applyDirect('fireIns','fireInsDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
                 </div>
-                <div class="direct-input-row">
+                <div class="direct-input-row" style="gap:4px">
                   <label>備考：</label>
-                  <input type="text" id="bikoFireIns" placeholder="概算5年" value="概算5年" oninput="dBiko.fireIns=this.value;update()" style="border-style:dashed">
+                  <select id="bikoFireInsType" onchange="updateDBiko('fireIns')" style="font-size:10px;padding:3px 5px;border:1px solid var(--line);border-radius:4px;background:white">
+                    <option value="概算5年">概算</option>
+                    <option value="別途">別途</option>
+                  </select>
+                  <input type="text" id="bikoFireIns" placeholder="備考を入力" value="概算5年" oninput="dBiko.fireIns=this.value;update()" style="border-style:dashed;flex:1">
                 </div>
                 <div class="stepper-hint"><span>現在: <strong id="fireInsDisp">70,000円</strong></span><span>1万単位 / 直接入力可</span></div>
               </div>
@@ -1102,9 +1243,13 @@
                   <input type="number" id="registrationDirect" placeholder="例: 420000" onchange="applyDirect('registration','registrationDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
                 </div>
-                <div class="direct-input-row">
+                <div class="direct-input-row" style="gap:4px">
                   <label>備考：</label>
-                  <input type="text" id="bikoRegistration" placeholder="概算　表示・保存登記" value="概算　表示・保存登記" oninput="dBiko.registration=this.value;update()" style="border-style:dashed">
+                  <select id="bikoRegistrationType" onchange="updateDBiko('registration')" style="font-size:10px;padding:3px 5px;border:1px solid var(--line);border-radius:4px;background:white">
+                    <option value="概算　表示・保存登記">概算</option>
+                    <option value="別途">別途</option>
+                  </select>
+                  <input type="text" id="bikoRegistration" placeholder="備考を入力" value="概算　表示・保存登記" oninput="dBiko.registration=this.value;update()" style="border-style:dashed;flex:1">
                 </div>
                 <div class="stepper-hint"><span>現在: <strong id="registrationDisp">400,000円</strong></span><span>1万単位 / 直接入力可</span></div>
               </div>
@@ -1124,9 +1269,13 @@
                   <input type="number" id="matsuriDirect" placeholder="例: 150000" onchange="applyDirect('matsuri','matsuriDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
                 </div>
-                <div class="direct-input-row">
+                <div class="direct-input-row" style="gap:4px">
                   <label>備考：</label>
-                  <input type="text" id="bikoMatsuri" placeholder="地鎮祭・上棟式等" value="地鎮祭・上棟式等" oninput="dBiko.matsuri=this.value;update()" style="border-style:dashed">
+                  <select id="bikoMatsuriType" onchange="updateDBiko('matsuri')" style="font-size:10px;padding:3px 5px;border:1px solid var(--line);border-radius:4px;background:white">
+                    <option value="地鎮祭・上棟式等">概算</option>
+                    <option value="別途">別途</option>
+                  </select>
+                  <input type="text" id="bikoMatsuri" placeholder="備考を入力" value="地鎮祭・上棟式等" oninput="dBiko.matsuri=this.value;update()" style="border-style:dashed;flex:1">
                 </div>
                 <div class="stepper-hint"><span>現在: <strong id="matsuriDisp">0円</strong></span><span>1万単位 / 直接入力可</span></div>
               </div>
@@ -1510,13 +1659,40 @@
         </div>
 
       </div>
-    </div>
 
   </div><!-- END main-grid -->
 </div>
 
 <script>
 const TAX = 0.1;
+
+// 請負工事の備考メモ
+const aBiko = {
+  mainWork: '',
+  subWork: '屋外給排水・電気ガス等',
+  energyWork: '',
+  solarWork: '',
+  homeTactWork: '',
+  chikaWork: '',
+  yohekiWork: '',
+};
+
+// 請負時諸費用のカスタム行備考（bItemsのカスタム行はcustomRows['B']で管理）
+
+// 契約時諸費用の備考メモ
+const bBiko = {
+  inshi: '非課税',
+  design: '',
+  supervise: '',
+  struct: '',
+  survey: '',    // 調査・測量費グループ備考
+  shinsei: '',   // 申請手数料グループ備考
+};
+
+// その他工事費用の備考追記
+const cBiko = {
+  ext: '', ground: '', interior: '', kyusui: '', security: '', curtain: '',
+};
 
 // 実費精算の備考メモ
 const dBiko = {
@@ -1551,31 +1727,41 @@ function renderCustomRows(section) {
     const isD = section === 'D';
     const status = r.status || 'fixed';
     const amtDisabled = isC && status === 'undecided' ? 'style="opacity:0.4;pointer-events:none"' : '';
-    const statusSelect = isC ? `
-      <select class="status-select" style="flex:1.2;font-size:10px;padding:4px 6px"
-        onchange="customRows['${section}'].find(x=>x.id===${r.id}).status=this.value;renderCustomRows('${section}');update()">
-        <option value="undecided"${status==='undecided'?' selected':''}>調査後確定</option>
+
+    // ステータスセレクト（C: 工事ステータス / D: 備考ステータス）
+    const statusSelect = (isC || isD) ? `
+      <select class="status-select" style="font-size:10px;padding:4px 6px;margin-bottom:4px;width:100%"
+        onchange="customRows['${section}'].find(x=>x.id===${r.id}).status=this.value; customRows['${section}'].find(x=>x.id===${r.id}).biko=this.value==='undecided'?'調査後確定':this.value==='estimate'?'概算':this.value==='betsu'?'別途':(customRows['${section}'].find(x=>x.id===${r.id}).biko||''); renderCustomRows('${section}');update()">
+        <option value="undecided"${status==='undecided'?' selected':''}>調査後確定（未定）</option>
         <option value="estimate"${status==='estimate'?' selected':''}>概算</option>
+        <option value="betsu"${status==='betsu'?' selected':''}>別途</option>
         <option value="fixed"${status==='fixed'?' selected':''}>確定金額</option>
+        <option value="custom"${status==='custom'?' selected':''}>自由入力</option>
       </select>` : '';
-    const bikoInput = isD ? `
-      <input type="text" placeholder="備考（任意）" value="${r.biko||''}"
+
+    // 備考入力（全セクション共通）
+    const bikoInput = `
+      <input type="text" placeholder="備考（任意）" value="${(r.biko||'').replace(/"/g,'&quot;')}"
         oninput="customRows['${section}'].find(x=>x.id===${r.id}).biko=this.value; update()"
-        style="flex:1.5;padding:5px 8px;border:1px dashed var(--line);border-radius:4px;font-family:'Noto Sans JP',sans-serif;font-size:11px;">` : '';
+        style="width:100%;margin-bottom:4px;padding:6px 8px;border:1px dashed var(--line);border-radius:4px;font-family:'Noto Sans JP',sans-serif;font-size:11px;">`;
+
     const amtPlaceholder = isD ? '金額（マイナス可）' : '金額（円）';
     return `
-    <div class="custom-row">
-      <input type="text" placeholder="項目名" value="${r.name}"
-        oninput="customRows['${section}'].find(x=>x.id===${r.id}).name=this.value; update()">
+    <div class="custom-row" style="flex-direction:column;align-items:stretch;gap:4px;padding:10px 12px">
+      <div style="display:flex;gap:6px;align-items:center">
+        <input type="text" placeholder="項目名" value="${(r.name||'').replace(/"/g,'&quot;')}"
+          oninput="customRows['${section}'].find(x=>x.id===${r.id}).name=this.value; update()"
+          style="flex:1;padding:7px 10px;border:1px solid var(--line);border-radius:4px;font-family:'Noto Sans JP',sans-serif;font-size:12px;">
+        <button class="del-btn" onclick="removeCustomRow('${section}',${r.id})" title="削除" style="width:26px;height:26px;font-size:15px;flex-shrink:0">×</button>
+      </div>
       ${statusSelect}
       ${bikoInput}
-      <div ${amtDisabled}>
+      <div ${amtDisabled} style="display:flex;align-items:center;gap:6px">
         <input type="number" placeholder="${amtPlaceholder}" value="${r.amount || ''}"
           oninput="customRows['${section}'].find(x=>x.id===${r.id}).amount=parseFloat(this.value)||0; update()"
-          style="width:100%;padding:5px 8px;border:1px dashed var(--line);border-radius:4px;font-family:'Noto Sans JP',sans-serif;font-size:11px;text-align:right;">
+          style="flex:1;padding:7px 10px;border:1px dashed var(--line);border-radius:4px;font-family:'Noto Sans JP',sans-serif;font-size:12px;text-align:right;">
+        <span style="font-size:11px;color:var(--mid);flex-shrink:0">円</span>
       </div>
-      <span style="font-size:10px;color:var(--mid);flex-shrink:0">円</span>
-      <button class="del-btn" onclick="removeCustomRow('${section}',${r.id})">×</button>
     </div>`;
   }).join('');
 }
@@ -1671,6 +1857,19 @@ function toggleCheck(el) {
   const lbl = el.closest('label');
   if (el.checked) lbl.classList.add('checked');
   else lbl.classList.remove('checked');
+  update();
+}
+
+function updateDBiko(key) {
+  const capKey = key.charAt(0).toUpperCase() + key.slice(1);
+  const typeEl = document.getElementById('biko' + capKey + 'Type');
+  const textEl = document.getElementById('biko' + capKey);
+  if (!typeEl || !textEl) return;
+  // テキスト入力は常時表示（選択値をデフォルトとして反映）
+  if (typeEl.value !== 'custom') {
+    textEl.value = typeEl.value;
+  }
+  dBiko[key] = textEl.value;
   update();
 }
 
@@ -1935,14 +2134,14 @@ function update() {
   const aCustomTotal = getCustomTotal('A');
 
   const aItems = [
-    { name: '主体工事', biko: (!isNaN(mainWorkDirectVal) && mainWorkDirectVal > 0) ? '直接入力' : `${hotelTsubo.toFixed(2)}坪 × ${fmtComma(tsuboPrice)}／坪`, excl: mainWork },
-    { name: '付帯工事', biko: '屋外給排水・電気ガス等', excl: subWork },
-    { name: 'スマートエネルギー機器工事', biko: aircon, excl: energyWork },
-    ...(solarWork > 0    ? [{ name: '太陽光発電工事',  biko: '', excl: solarWork }]    : []),
-    ...(homeTactWork > 0 ? [{ name: 'HOME TACT工事',   biko: '', excl: homeTactWork }] : []),
-    ...(chikaWork > 0    ? [{ name: '地下工事',         biko: '', excl: chikaWork }]    : []),
-    ...(yohekiWork > 0   ? [{ name: '擁壁工事',         biko: '', excl: yohekiWork }]   : []),
-    ...aCustomItems.map(r => ({ name: r.name || '追加工事', biko: '', excl: r.amount })),
+    { name: '主体工事', biko: aBiko.mainWork || ((!isNaN(mainWorkDirectVal) && mainWorkDirectVal > 0) ? '直接入力' : `${hotelTsubo.toFixed(2)}坪 × ${fmtComma(tsuboPrice)}／坪`), excl: mainWork },
+    { name: '付帯工事', biko: aBiko.subWork, excl: subWork },
+    { name: 'スマートエネルギー機器工事', biko: aBiko.energyWork || aircon, excl: energyWork },
+    ...(solarWork > 0    ? [{ name: '太陽光発電工事',  biko: aBiko.solarWork,    excl: solarWork }]    : []),
+    ...(homeTactWork > 0 ? [{ name: 'HOME TACT工事',   biko: aBiko.homeTactWork, excl: homeTactWork }] : []),
+    ...(chikaWork > 0    ? [{ name: '地下工事',         biko: aBiko.chikaWork,    excl: chikaWork }]    : []),
+    ...(yohekiWork > 0   ? [{ name: '擁壁工事',         biko: aBiko.yohekiWork,   excl: yohekiWork }]   : []),
+    ...aCustomItems.map(r => ({ name: r.name || '追加工事', biko: r.biko || '', excl: r.amount })),
     ...(discount > 0 ? [{ name: '値引き', biko: '', excl: -discount, isDiscount: true }] : []),
   ];
 
@@ -1968,10 +2167,10 @@ function update() {
   const floor3val = f3;
 
   const bItems = [
-    { name: '印紙代', biko: '非課税', excl: inshiDai, noTax: true },
-    { name: '設計料', biko: `工事費合計×${designRateLabel}`, excl: designFee },
-    { name: '工事監理費', biko: `工事費合計×0.5%`, excl: superviseFee },
-    { name: '構造計算料', biko: structRcArea > 0 ? `延床×2,500＋RC${structRcArea}㎡×7,000` : `2,500円/㎡（延床${hotelFloor.toFixed(2)}㎡）`, excl: structCalc },
+    { name: '印紙代', biko: bBiko.inshi || '非課税', excl: inshiDai, noTax: true },
+    { name: '設計料', biko: bBiko.design || `工事費合計×${designRateLabel}`, excl: designFee },
+    { name: '工事監理費', biko: bBiko.supervise || `工事費合計×0.5%`, excl: superviseFee },
+    { name: '構造計算料', biko: bBiko.struct || (structRcArea > 0 ? `延床×2,500＋RC${structRcArea}㎡×7,000` : `2,500円/㎡（延床${hotelFloor.toFixed(2)}㎡）`), excl: structCalc },
     { name: '敷地調査費', biko: '35,000円', excl: getChecked('chk_敷地調査費') },
     { name: '現況測量費', biko: '50,000円一律', excl: getChecked('chk_現況測量費') },
     { name: '地盤調査料', biko: '30,000円一律', excl: getChecked('chk_地盤調査料') },
@@ -1998,7 +2197,7 @@ function update() {
     { name: '風致地区申請', biko: '30,000円', excl: getChecked('chk_風致地区申請') },
     { name: '埋蔵文化財届出', biko: '20,000円', excl: getChecked('chk_埋蔵文化財届出') },
     { name: '再資源化に関する諸費用', biko: '延床500㎡以上', excl: getChecked('chk_再資源化諸費用') },
-    ...getCustomItems('B').map(r => ({ name: r.name || '追加諸費用', biko: '', excl: r.amount })),
+    ...getCustomItems('B').map(r => ({ name: r.name || '追加諸費用', biko: r.biko || '', excl: r.amount })),
   ].filter(i => i.excl > 0);
 
   let bSubtotal = bItems.reduce((s, i) => s + (i.excl || 0), 0);
@@ -2039,14 +2238,36 @@ function update() {
   const groundExcl = groundStatus === 'undecided' ? null : v('groundWork');
   const interiorExcl = interiorStatus === 'undecided' ? null : v('interiorWork');
 
+  const kyusuiStatus   = document.getElementById('kyusuiStatus')?.value   || 'undecided';
+  const securityStatus = document.getElementById('securityStatus')?.value || 'undecided';
+  const curtainStatus  = document.getElementById('curtainStatus')?.value  || 'undecided';
+  const kyusuiWork   = v('kyusuiWork');
+  const securityWork = v('securityWork');
+  const curtainWork  = v('curtainWork');
+  const kyusuiBiko   = kyusuiStatus   === 'undecided' ? '調査後確定' : kyusuiStatus   === 'estimate' ? '概算' : '';
+  const securityBiko = securityStatus === 'undecided' ? '調査後確定' : securityStatus === 'estimate' ? '概算' : '';
+  const curtainBiko  = curtainStatus  === 'undecided' ? '調査後確定' : curtainStatus  === 'estimate' ? '概算' : '';
+  const kyusuiExcl   = kyusuiStatus   === 'undecided' ? null : (kyusuiWork   > 0 ? kyusuiWork   : 0);
+  const securityExcl = securityStatus === 'undecided' ? null : (securityWork > 0 ? securityWork : 0);
+  const curtainExcl  = curtainStatus  === 'undecided' ? null : (curtainWork  > 0 ? curtainWork  : 0);
+
+  // Disp更新
+  document.getElementById('kyusuiWorkDisp').textContent   = fmtComma(kyusuiWork);
+  document.getElementById('securityWorkDisp').textContent = fmtComma(securityWork);
+  document.getElementById('curtainWorkDisp').textContent  = fmtComma(curtainWork);
+
   const cCustomItems = getCustomItems('C');
   const cItems = [
-    { name: '外構工事費用', biko: extBiko, excl: extExcl },
-    { name: '地盤改良工事', biko: groundBiko, excl: groundExcl },
-    { name: 'インテリア工事', biko: interiorBiko, excl: interiorExcl },
+    { name: '外構工事費用',   biko: [extBiko, cBiko.ext].filter(Boolean).join('　'),         excl: extExcl },
+    { name: '地盤改良工事',   biko: [groundBiko, cBiko.ground].filter(Boolean).join('　'),   excl: groundExcl },
+    { name: 'インテリア工事', biko: [interiorBiko, cBiko.interior].filter(Boolean).join('　'), excl: interiorExcl },
+    { name: '給水引込工事',   biko: [kyusuiBiko, cBiko.kyusui].filter(Boolean).join('　'),   excl: kyusuiExcl },
+    { name: 'ホームセキュリティ工事', biko: [securityBiko, cBiko.security].filter(Boolean).join('　'), excl: securityExcl },
+    { name: 'カーテン・家具工事',     biko: [curtainBiko, cBiko.curtain].filter(Boolean).join('　'),  excl: curtainExcl },
     ...cCustomItems.map(r => {
       const st = r.status || 'fixed';
-      const biko = st === 'undecided' ? '調査後確定' : st === 'estimate' ? '概算' : '';
+      const autoBiko = st === 'undecided' ? '調査後確定' : st === 'estimate' ? '概算' : st === 'betsu' ? '別途' : '';
+      const biko = (st === 'custom' || st === 'fixed') ? (r.biko || '') : autoBiko;
       const excl = st === 'undecided' ? null : (r.amount > 0 ? r.amount : 0);
       return { name: r.name || '追加工事', biko, excl };
     }),
@@ -2332,6 +2553,7 @@ document.getElementById('tsuboPrice').value = '1100000';
 document.getElementById('subWork').value = '2500000';
 document.getElementById('energyWork').value = '3000000';
 ['solarWork','homeTactWork','chikaWork','yohekiWork','extWork','groundWork','interiorWork',
+ 'kyusuiWork','securityWork','curtainWork',
  'matsuri','kariZumai','kaden','landPrice','landAgent','landOther','selfFund'].forEach(id => {
   const el = document.getElementById(id);
   if (el) el.value = '0';
@@ -2339,7 +2561,7 @@ document.getElementById('energyWork').value = '3000000';
 document.getElementById('fireIns').value = '70000';
 document.getElementById('registration').value = '400000';
 // 調査後確定を初期ON（セレクト連動）
-['extWork','groundWork','interiorWork'].forEach(id => {
+['extWork','groundWork','interiorWork','kyusuiWork','securityWork','curtainWork'].forEach(id => {
   const statusId = id === 'extWork' ? 'extStatus' : id.replace('Work','') + 'Status';
   applyStatusSelect(id, id.replace('Work','') + 'Undecided', id + 'Wrap');
 });
@@ -2353,7 +2575,7 @@ const SAVE_TEXT_IDS = ['customerName','staffName','planDate'];
 const SAVE_NUM_IDS = [
   'siteArea','buildArea','floor1','floor2','floor3','floorB','floorG','floorBal','floorPH',
   'tsuboPrice','subWork','energyWork','solarWork','homeTactWork','chikaWork','yohekiWork',
-  'extWork','groundWork','interiorWork',
+  'extWork','groundWork','interiorWork','kyusuiWork','securityWork','curtainWork',
   'fireIns','registration','matsuri','kariZumai','kaden',
   'landPrice','landAgent','landOther','selfFund'
 ];
