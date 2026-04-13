@@ -989,7 +989,7 @@
               <label class="check-item" id="lbl_雨水流出抑制申請"><input type="checkbox" id="chk_雨水流出抑制申請" value="20000" onchange="toggleCheck(this)"> 雨水流出抑制申請<br><span style="font-size:10px;color:#888">20,000円</span></label>
               <label class="check-item" id="lbl_地区計画届出"><input type="checkbox" id="chk_地区計画届出" value="20000" onchange="toggleCheck(this)"> 地区計画届出<br><span style="font-size:10px;color:#888">20,000円</span></label>
               <label class="check-item" id="lbl_東京ゼロエミ申請"><input type="checkbox" id="chk_東京ゼロエミ申請" value="200000" onchange="toggleCheck(this)"> 東京ゼロエミ住宅<br><span style="font-size:10px;color:#888">200,000円</span></label>
-              <label class="check-item" id="lbl_子育てグリーン申請"><input type="checkbox" id="chk_子育てグリーン申請" value="50000" onchange="toggleCheck(this)"> 子育てグリーン住宅<br><span style="font-size:10px;color:#888">50,000円</span></label>
+              <label class="check-item" id="lbl_みらいエコ申請"><input type="checkbox" id="chk_みらいエコ申請" value="50000" onchange="toggleCheck(this)"> みらいエコ住宅2026<br><span style="font-size:10px;color:#888">50,000円</span></label>
               <label class="check-item" id="lbl_風致地区申請"><input type="checkbox" id="chk_風致地区申請" value="30000" onchange="toggleCheck(this)"> 風致地区申請<br><span style="font-size:10px;color:#888">30,000円</span></label>
               <label class="check-item" id="lbl_埋蔵文化財届出"><input type="checkbox" id="chk_埋蔵文化財届出" value="20000" onchange="toggleCheck(this)"> 埋蔵文化財届出<br><span style="font-size:10px;color:#888">20,000円</span></label>
               <label class="check-item" id="lbl_再資源化諸費用"><input type="checkbox" id="chk_再資源化諸費用" value="10000" onchange="toggleCheck(this)"> 再資源化諸費用<br><span style="font-size:10px;color:#888">10,000円</span></label>
@@ -1228,7 +1228,7 @@
                     <option value="概算5年">概算</option>
                     <option value="別途">別途</option>
                   </select>
-                  <input type="text" id="bikoFireIns" placeholder="備考を入力" value="概算5年" oninput="dBiko.fireIns=this.value;update()" style="border-style:dashed;flex:1">
+                  <input type="text" id="bikoFireIns" placeholder="備考を入力" value="" oninput="dBiko.fireIns=this.value;update()" style="border-style:dashed;flex:1">
                 </div>
                 <div class="stepper-hint"><span>現在: <strong id="fireInsDisp">70,000円</strong></span><span>1万単位 / 直接入力可</span></div>
               </div>
@@ -1254,7 +1254,7 @@
                     <option value="概算　表示・保存登記">概算</option>
                     <option value="別途">別途</option>
                   </select>
-                  <input type="text" id="bikoRegistration" placeholder="備考を入力" value="概算　表示・保存登記" oninput="dBiko.registration=this.value;update()" style="border-style:dashed;flex:1">
+                  <input type="text" id="bikoRegistration" placeholder="備考を入力" value="" oninput="dBiko.registration=this.value;update()" style="border-style:dashed;flex:1">
                 </div>
                 <div class="stepper-hint"><span>現在: <strong id="registrationDisp">400,000円</strong></span><span>1万単位 / 直接入力可</span></div>
               </div>
@@ -1280,7 +1280,7 @@
                     <option value="地鎮祭・上棟式等">概算</option>
                     <option value="別途">別途</option>
                   </select>
-                  <input type="text" id="bikoMatsuri" placeholder="備考を入力" value="地鎮祭・上棟式等" oninput="dBiko.matsuri=this.value;update()" style="border-style:dashed;flex:1">
+                  <input type="text" id="bikoMatsuri" placeholder="備考を入力" value="" oninput="dBiko.matsuri=this.value;update()" style="border-style:dashed;flex:1">
                 </div>
                 <div class="stepper-hint"><span>現在: <strong id="matsuriDisp">0円</strong></span><span>1万単位 / 直接入力可</span></div>
               </div>
@@ -1722,9 +1722,9 @@ function toggleDItem(key) {
 
 // 実費精算の備考メモ
 const dBiko = {
-  fireIns: '概算5年',
-  registration: '概算　表示・保存登記',
-  matsuri: '地鎮祭・上棟式等',
+  fireIns: '',
+  registration: '',
+  matsuri: '',
   kaden: '',
 };
 
@@ -1887,13 +1887,9 @@ function toggleCheck(el) {
 
 function updateDBiko(key) {
   const capKey = key.charAt(0).toUpperCase() + key.slice(1);
-  const typeEl = document.getElementById('biko' + capKey + 'Type');
   const textEl = document.getElementById('biko' + capKey);
-  if (!typeEl || !textEl) return;
-  // テキスト入力は常時表示（選択値をデフォルトとして反映）
-  if (typeEl.value !== 'custom') {
-    textEl.value = typeEl.value;
-  }
+  if (!textEl) return;
+  // テキスト入力内容をそのままdBikoへ反映（セレクトによる自動入力は廃止）
   dBiko[key] = textEl.value;
   update();
 }
@@ -2231,7 +2227,7 @@ function update() {
     { name: '雨水流出抑制申請', biko: '', excl: getChecked('chk_雨水流出抑制申請') },
     { name: '地区計画届出', biko: '', excl: getChecked('chk_地区計画届出') },
     { name: '東京ゼロエミ住宅補助金申請費', biko: '', excl: getChecked('chk_東京ゼロエミ申請') },
-    { name: '子育てグリーン支援住宅申請費', biko: '', excl: getChecked('chk_子育てグリーン申請') },
+    { name: 'みらいエコ住宅2026事業申請費', biko: '', excl: getChecked('chk_みらいエコ申請') },
     { name: '風致地区申請', biko: '', excl: getChecked('chk_風致地区申請') },
     { name: '埋蔵文化財届出', biko: '', excl: getChecked('chk_埋蔵文化財届出') },
     { name: '再資源化に関する諸費用', biko: '', excl: getChecked('chk_再資源化諸費用') },
@@ -2612,29 +2608,52 @@ const SAVE_NUM_IDS = [
   'tsuboPrice','subWork','energyWork','solarWork','homeTactWork','chikaWork','yohekiWork',
   'extWork','groundWork','interiorWork','kyusuiWork','securityWork','curtainWork',
   'fireIns','registration','matsuri','kaden',
-  'landPrice','landAgent','landOther','selfFund'
+  'landPrice','landAgent','landOther','selfFund',
+  'structRcArea','discount','mainTsubo','customRate'
 ];
 const SAVE_SELECT_IDS = [
   'division','listType','buildingType','structure','fireResist','warranty','seismic','aircon','seido',
-  'inshiDai','designRate','loanType','loanYears'
+  'inshiDai','designRate','loanType','loanYears',
+  'extStatus','groundStatus','interiorStatus','kyusuiStatus','securityStatus','curtainStatus'
 ];
 const SAVE_CHECK_IDS_PLAIN = [
   'extUndecided','groundUndecided','interiorUndecided','landOwned',
+  'kyusuiUndecided','securityUndecided','curtainUndecided',
   'chk_敷地調査費','chk_現況測量費','chk_地盤調査料','chk_ボーリング調査','chk_三成分コーン','chk_家屋調査',
   'chk_建築確認申請2F','chk_建築確認申請3F',
   'chk_長期優良住宅申請','chk_低炭素住宅申請',
   'chk_設計住宅性能評価','chk_建設住宅性能評価','chk_省エネ基準適合確認',
   'chk_フラット35申請','chk_フラット35S申請','chk_ZEH申請','chk_BELS申請',
   'chk_狭あい道路申請','chk_緑化計画申請','chk_雨水流出抑制申請','chk_地区計画届出',
-  'chk_東京ゼロエミ申請','chk_子育てグリーン申請','chk_風致地区申請','chk_埋蔵文化財届出','chk_再資源化諸費用'
+  'chk_東京ゼロエミ申請','chk_みらいエコ申請','chk_風致地区申請','chk_埋蔵文化財届出','chk_再資源化諸費用'
+];
+// 備考テキスト入力 全ID
+const SAVE_BIKO_IDS = [
+  'bikoMainWork','bikoSubWork','bikoEnergyWork','bikoSolarWork','bikoHomeTactWork','bikoChikaWork',
+  'bBikoDesign','bBikoSupervise','bBikoStruct','bBikoSurvey','bBikoShinsei',
+  'cBikoExt','cBikoGround','cBikoInterior','cBikoKyusui','cBikoSecurity','cBikoCurtain',
+  'bikoFireIns','bikoRegistration','bikoMatsuri','bikoKaden',
+  'freeNote','notesExtra',
+  'designFeeDirect','superviseFeesDirect','structCalcDirect','mainWorkDirect','loanCustomRate'
 ];
 
 function collectData() {
-  const data = { _savedAt: new Date().toLocaleString('ja-JP'), _version: 1 };
+  const data = { _savedAt: new Date().toLocaleString('ja-JP'), _version: 2 };
   SAVE_TEXT_IDS.forEach(id => { const el = document.getElementById(id); if(el) data[id] = el.value; });
   SAVE_NUM_IDS.forEach(id => { const el = document.getElementById(id); if(el) data[id] = el.value; });
   SAVE_SELECT_IDS.forEach(id => { const el = document.getElementById(id); if(el) data[id] = el.value; });
   SAVE_CHECK_IDS_PLAIN.forEach(id => { const el = document.getElementById(id); if(el) data[id] = el.checked; });
+  SAVE_BIKO_IDS.forEach(id => { const el = document.getElementById(id); if(el) data[id] = el.value; });
+  // bBiko / aBiko / cBiko / dBiko オブジェクトを保存
+  data._aBiko = JSON.parse(JSON.stringify(aBiko));
+  data._bBiko = JSON.parse(JSON.stringify(bBiko));
+  data._cBiko = JSON.parse(JSON.stringify(cBiko));
+  data._dBiko = JSON.parse(JSON.stringify(dBiko));
+  // cHidden / dHidden を保存
+  data._cHidden = JSON.parse(JSON.stringify(cHidden));
+  data._dHidden = JSON.parse(JSON.stringify(dHidden));
+  // カスタム追加行を保存
+  data._customRows = JSON.parse(JSON.stringify(customRows));
   return data;
 }
 
@@ -2650,17 +2669,73 @@ function applyData(data) {
       if(lbl) { el.checked ? lbl.classList.add('checked') : lbl.classList.remove('checked'); }
     }
   });
-  ['extWork','groundWork','interiorWork'].forEach(id => {
-    const chkId = id === 'extWork' ? 'extUndecided' : id.replace('Work','') + 'Undecided';
-    const chk = document.getElementById(chkId);
-    const wrap = document.getElementById(id + 'Wrap');
-    if(chk && wrap) {
-      wrap.style.opacity = chk.checked ? '0.4' : '1';
-      wrap.style.pointerEvents = chk.checked ? 'none' : 'auto';
-    }
+  SAVE_BIKO_IDS.forEach(id => { const el = document.getElementById(id); if(el && data[id] !== undefined) el.value = data[id]; });
+  // bBiko / aBiko / cBiko / dBiko オブジェクトを復元
+  if(data._aBiko) Object.assign(aBiko, data._aBiko);
+  if(data._bBiko) Object.assign(bBiko, data._bBiko);
+  if(data._cBiko) Object.assign(cBiko, data._cBiko);
+  if(data._dBiko) Object.assign(dBiko, data._dBiko);
+  // cHidden / dHidden を復元
+  if(data._cHidden) {
+    Object.assign(cHidden, data._cHidden);
+    Object.keys(cHidden).forEach(key => {
+      const row = document.getElementById('cRow_' + key);
+      if(row) {
+        row.style.opacity = cHidden[key] ? '0.35' : '1';
+        const btn = row.querySelector('.hide-btn');
+        if(btn) { btn.textContent = cHidden[key] ? '↩' : '✕'; }
+      }
+    });
+  }
+  if(data._dHidden) {
+    Object.assign(dHidden, data._dHidden);
+    Object.keys(dHidden).forEach(key => {
+      const row = document.getElementById('dRow_' + key);
+      if(row) {
+        row.style.opacity = dHidden[key] ? '0.35' : '1';
+        const btn = row.querySelector('.hide-btn');
+        if(btn) { btn.textContent = dHidden[key] ? '↩' : '✕'; }
+      }
+    });
+  }
+  // カスタム行を復元
+  if(data._customRows) {
+    Object.assign(customRows, data._customRows);
+    ['A','B','C','D'].forEach(s => renderCustomRows(s));
+  }
+  // ステータスセレクトに応じたWrapの表示切替
+  ['extWork','groundWork','interiorWork','kyusuiWork','securityWork','curtainWork'].forEach(id => {
+    const statusId = id.replace('Work','Status');
+    const undecidedId = id.replace('Work','Undecided');
+    const wrapId = id + 'Wrap';
+    const statusEl = document.getElementById(statusId);
+    if(statusEl) applyStatusSelect(id, undecidedId, wrapId);
   });
   const landOwned = document.getElementById('landOwned');
-  if(landOwned) document.getElementById('landInputArea').style.display = landOwned.checked ? 'none' : 'block';
+  if(landOwned) {
+    const area = document.getElementById('landInputArea');
+    if(area) area.style.display = landOwned.checked ? 'none' : 'block';
+  }
+  // 備考テキストを対応するBikoオブジェクトへ同期
+  const bikoMap = {
+    'bikoMainWork': ['aBiko','mainWork'], 'bikoSubWork': ['aBiko','subWork'],
+    'bikoEnergyWork': ['aBiko','energyWork'], 'bikoSolarWork': ['aBiko','solarWork'],
+    'bikoHomeTactWork': ['aBiko','homeTactWork'], 'bikoChikaWork': ['aBiko','chikaWork'],
+    'bBikoDesign': ['bBiko','design'], 'bBikoSupervise': ['bBiko','supervise'],
+    'bBikoStruct': ['bBiko','struct'], 'bBikoSurvey': ['bBiko','survey'],
+    'bBikoShinsei': ['bBiko','shinsei'],
+    'cBikoExt': ['cBiko','ext'], 'cBikoGround': ['cBiko','ground'],
+    'cBikoInterior': ['cBiko','interior'], 'cBikoKyusui': ['cBiko','kyusui'],
+    'cBikoSecurity': ['cBiko','security'], 'cBikoCurtain': ['cBiko','curtain'],
+    'bikoFireIns': ['dBiko','fireIns'], 'bikoRegistration': ['dBiko','registration'],
+    'bikoMatsuri': ['dBiko','matsuri'], 'bikoKaden': ['dBiko','kaden'],
+  };
+  const bikoObjects = { aBiko, bBiko, cBiko, dBiko };
+  Object.entries(bikoMap).forEach(([elId, [obj, key]]) => {
+    const el = document.getElementById(elId);
+    if(el) bikoObjects[obj][key] = el.value;
+  });
+  syncNotesExtra();
   update();
 }
 
