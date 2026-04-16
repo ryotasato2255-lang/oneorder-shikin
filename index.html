@@ -408,7 +408,7 @@
     header, .action-bar, .input-col, .no-print { display: none !important; }
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 
-    @page { size: A3 landscape; margin: 10mm 18mm 10mm 18mm; }
+    @page { size: A3 landscape; margin: 8mm 22mm 8mm 22mm; }
 
     html, body { font-size: 10px !important; background: white !important; }
     .container { padding: 0 !important; max-width: 100% !important; }
@@ -1051,10 +1051,7 @@
                   <input type="number" id="extWorkDirect" placeholder="例: 4500000" onchange="applyDirect('extWork','extWorkDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
                 </div>
-                <div class="direct-input-row" style="display:none">
-                  <label>備考追記：</label>
-                  <select id="cBikoExtSelect" onchange="const v=this.value;if(v){document.getElementById('cBikoExt').value=v;cBiko.ext=v;}update()" style="font-size:10px;padding:3px 5px;border:1px solid var(--line);border-radius:4px;background:white;color:var(--ink)"><option value="">（選択）</option><option value="概算">概算</option><option value="調査後確定">調査後確定</option><option value="別途">別途</option></select><input type="text" id="cBikoExt" placeholder="または直接入力" value="" oninput="cBiko.ext=this.value;document.getElementById('cBikoExtSelect').value='';update()" style="border-style:dashed;flex:1">
-                </div>
+                
                 <div class="stepper-hint"><span>現在: <strong id="extWorkDisp">0円</strong></span><span>100万単位 / 直接入力可</span></div>
               </div>
             </div>
@@ -1081,10 +1078,7 @@
                   <input type="number" id="groundWorkDirect" placeholder="例: 800000" onchange="applyDirect('groundWork','groundWorkDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
                 </div>
-                <div class="direct-input-row" style="display:none">
-                  <label>備考追記：</label>
-                  <select id="cBikoGroundSelect" onchange="const v=this.value;if(v){document.getElementById('cBikoGround').value=v;cBiko.ground=v;}update()" style="font-size:10px;padding:3px 5px;border:1px solid var(--line);border-radius:4px;background:white;color:var(--ink)"><option value="">（選択）</option><option value="概算">概算</option><option value="調査後確定">調査後確定</option><option value="別途">別途</option></select><input type="text" id="cBikoGround" placeholder="または直接入力" value="" oninput="cBiko.ground=this.value;document.getElementById('cBikoGroundSelect').value='';update()" style="border-style:dashed;flex:1">
-                </div>
+                
                 <div class="stepper-hint"><span>現在: <strong id="groundWorkDisp">0円</strong></span><span>100万単位 / 直接入力可</span></div>
               </div>
             </div>
@@ -1111,10 +1105,7 @@
                   <input type="number" id="interiorWorkDirect" placeholder="例: 1200000" onchange="applyDirect('interiorWork','interiorWorkDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
                 </div>
-                <div class="direct-input-row" style="display:none">
-                  <label>備考追記：</label>
-                  <select id="cBikoInteriorSelect" onchange="const v=this.value;if(v){document.getElementById('cBikoInterior').value=v;cBiko.interior=v;}update()" style="font-size:10px;padding:3px 5px;border:1px solid var(--line);border-radius:4px;background:white;color:var(--ink)"><option value="">（選択）</option><option value="概算">概算</option><option value="調査後確定">調査後確定</option><option value="別途">別途</option></select><input type="text" id="cBikoInterior" placeholder="または直接入力" value="" oninput="cBiko.interior=this.value;document.getElementById('cBikoInteriorSelect').value='';update()" style="border-style:dashed;flex:1">
-                </div>
+                
                 <div class="stepper-hint"><span>現在: <strong id="interiorWorkDisp">0円</strong></span><span>10万単位 / 直接入力可</span></div>
               </div>
             </div>
@@ -1141,10 +1132,7 @@
                   <input type="number" id="kyusuiWorkDirect" placeholder="例: 500000" onchange="applyDirect('kyusuiWork','kyusuiWorkDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
                 </div>
-                <div class="direct-input-row" style="display:none">
-                  <label>備考追記：</label>
-                  <select id="cBikoKyusuiSelect" onchange="const v=this.value;if(v){document.getElementById('cBikoKyusui').value=v;cBiko.kyusui=v;}update()" style="font-size:10px;padding:3px 5px;border:1px solid var(--line);border-radius:4px;background:white;color:var(--ink)"><option value="">（選択）</option><option value="概算">概算</option><option value="調査後確定">調査後確定</option><option value="別途">別途</option></select><input type="text" id="cBikoKyusui" placeholder="または直接入力" value="" oninput="cBiko.kyusui=this.value;document.getElementById('cBikoKyusuiSelect').value='';update()" style="border-style:dashed;flex:1">
-                </div>
+                
                 <div class="stepper-hint"><span>現在: <strong id="kyusuiWorkDisp">0円</strong></span><span>10万単位 / 直接入力可</span></div>
               </div>
             </div>
@@ -1171,10 +1159,7 @@
                   <input type="number" id="securityWorkDirect" placeholder="例: 300000" onchange="applyDirect('securityWork','securityWorkDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
                 </div>
-                <div class="direct-input-row" style="display:none">
-                  <label>備考追記：</label>
-                  <select id="cBikoSecuritySelect" onchange="const v=this.value;if(v){document.getElementById('cBikoSecurity').value=v;cBiko.security=v;}update()" style="font-size:10px;padding:3px 5px;border:1px solid var(--line);border-radius:4px;background:white;color:var(--ink)"><option value="">（選択）</option><option value="概算">概算</option><option value="調査後確定">調査後確定</option><option value="別途">別途</option></select><input type="text" id="cBikoSecurity" placeholder="または直接入力" value="" oninput="cBiko.security=this.value;document.getElementById('cBikoSecuritySelect').value='';update()" style="border-style:dashed;flex:1">
-                </div>
+                
                 <div class="stepper-hint"><span>現在: <strong id="securityWorkDisp">0円</strong></span><span>10万単位 / 直接入力可</span></div>
               </div>
             </div>
@@ -1201,10 +1186,7 @@
                   <input type="number" id="curtainWorkDirect" placeholder="例: 800000" onchange="applyDirect('curtainWork','curtainWorkDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
                 </div>
-                <div class="direct-input-row" style="display:none">
-                  <label>備考追記：</label>
-                  <select id="cBikoCurtainSelect" onchange="const v=this.value;if(v){document.getElementById('cBikoCurtain').value=v;cBiko.curtain=v;}update()" style="font-size:10px;padding:3px 5px;border:1px solid var(--line);border-radius:4px;background:white;color:var(--ink)"><option value="">（選択）</option><option value="概算">概算</option><option value="調査後確定">調査後確定</option><option value="別途">別途</option></select><input type="text" id="cBikoCurtain" placeholder="または直接入力" value="" oninput="cBiko.curtain=this.value;document.getElementById('cBikoCurtainSelect').value='';update()" style="border-style:dashed;flex:1">
-                </div>
+                
                 <div class="stepper-hint"><span>現在: <strong id="curtainWorkDisp">0円</strong></span><span>10万単位 / 直接入力可</span></div>
               </div>
             </div>
@@ -1238,14 +1220,7 @@
                   <input type="number" id="fireInsDirect" placeholder="例: 85000" onchange="applyDirect('fireIns','fireInsDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
                 </div>
-                <div class="direct-input-row" style="gap:4px">
-                  <label>備考：</label>
-                  <select id="bikoFireInsType" onchange="updateDBiko('fireIns')" style="font-size:10px;padding:3px 5px;border:1px solid var(--line);border-radius:4px;background:white">
-                    <option value="概算5年">概算</option>
-                    <option value="別途">別途</option>
-                  </select>
-                  <input type="text" id="bikoFireIns" placeholder="備考を入力" value="" oninput="dBiko.fireIns=this.value;update()" style="border-style:dashed;flex:1">
-                </div>
+
                 <div class="stepper-hint"><span>現在: <strong id="fireInsDisp">70,000円</strong></span><span>1万単位 / 直接入力可</span></div>
               </div>
             </div>
@@ -1264,14 +1239,7 @@
                   <input type="number" id="registrationDirect" placeholder="例: 420000" onchange="applyDirect('registration','registrationDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
                 </div>
-                <div class="direct-input-row" style="gap:4px">
-                  <label>備考：</label>
-                  <select id="bikoRegistrationType" onchange="updateDBiko('registration')" style="font-size:10px;padding:3px 5px;border:1px solid var(--line);border-radius:4px;background:white">
-                    <option value="概算　表示・保存登記">概算</option>
-                    <option value="別途">別途</option>
-                  </select>
-                  <input type="text" id="bikoRegistration" placeholder="備考を入力" value="" oninput="dBiko.registration=this.value;update()" style="border-style:dashed;flex:1">
-                </div>
+
                 <div class="stepper-hint"><span>現在: <strong id="registrationDisp">400,000円</strong></span><span>1万単位 / 直接入力可</span></div>
               </div>
             </div>
@@ -1290,14 +1258,7 @@
                   <input type="number" id="matsuriDirect" placeholder="例: 150000" onchange="applyDirect('matsuri','matsuriDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
                 </div>
-                <div class="direct-input-row" style="gap:4px">
-                  <label>備考：</label>
-                  <select id="bikoMatsuriType" onchange="updateDBiko('matsuri')" style="font-size:10px;padding:3px 5px;border:1px solid var(--line);border-radius:4px;background:white">
-                    <option value="地鎮祭・上棟式等">概算</option>
-                    <option value="別途">別途</option>
-                  </select>
-                  <input type="text" id="bikoMatsuri" placeholder="備考を入力" value="" oninput="dBiko.matsuri=this.value;update()" style="border-style:dashed;flex:1">
-                </div>
+
                 <div class="stepper-hint"><span>現在: <strong id="matsuriDisp">0円</strong></span><span>1万単位 / 直接入力可</span></div>
               </div>
             </div>
@@ -1317,10 +1278,7 @@
                   <input type="number" id="kadenDirect" placeholder="例: 500000" onchange="applyDirect('kaden','kadenDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
                 </div>
-                <div class="direct-input-row">
-                  <label>備考：</label>
-                  <input type="text" id="bikoKaden" placeholder="（任意）" value="" oninput="dBiko.kaden=this.value;update()" style="border-style:dashed">
-                </div>
+
                 <div class="stepper-hint"><span>現在: <strong id="kadenDisp">0円</strong></span><span>1万単位 / 直接入力可</span></div>
               </div>
             </div>
@@ -2756,7 +2714,7 @@ const SAVE_BIKO_IDS = [
   'bikoMainWork','bikoSubWork','bikoEnergyWork','bikoSolarWork','bikoHomeTactWork','bikoChikaWork',
   'bBikoDesign','bBikoSupervise','bBikoStruct','bBikoSurvey','bBikoShinsei',
   'cBikoExt','cBikoGround','cBikoInterior','cBikoKyusui','cBikoSecurity','cBikoCurtain',
-  'bikoFireIns','bikoRegistration','bikoMatsuri','bikoKaden',
+  // bikoFireIns/Registration/Matsuri/Kaden はインライン備考で管理
   'freeNote','notesExtra',
   'designFeeDirect','superviseFeesDirect','structCalcDirect','mainWorkDirect','loanCustomRate'
 ];
@@ -2853,8 +2811,7 @@ function applyData(data) {
     'cBikoExt': ['cBiko','ext'], 'cBikoGround': ['cBiko','ground'],
     'cBikoInterior': ['cBiko','interior'], 'cBikoKyusui': ['cBiko','kyusui'],
     'cBikoSecurity': ['cBiko','security'], 'cBikoCurtain': ['cBiko','curtain'],
-    'bikoFireIns': ['dBiko','fireIns'], 'bikoRegistration': ['dBiko','registration'],
-    'bikoMatsuri': ['dBiko','matsuri'], 'bikoKaden': ['dBiko','kaden'],
+    // D備考はインライン入力で管理
   };
   const bikoObjects = { aBiko, bBiko, cBiko, dBiko };
   Object.entries(bikoMap).forEach(([elId, [obj, key]]) => {
