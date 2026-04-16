@@ -51,8 +51,31 @@
 
   /* === LAYOUT === */
   .container { max-width: 1280px; margin: 0 auto; padding: 24px 20px; }
-  .main-grid { display: grid; grid-template-columns: 320px 1fr; gap: 20px; align-items: start; }
+  .main-grid { display: grid; grid-template-columns: 340px 1fr; gap: 20px; align-items: start; }
   @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
+
+  /* === TAB NAVIGATION === */
+  .tab-nav {
+    display: flex; gap: 2px; background: var(--ink); padding: 8px 10px 0;
+    border-radius: 8px 8px 0 0; flex-wrap: wrap;
+  }
+  .tab-btn {
+    padding: 6px 10px; font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+    border: none; border-radius: 5px 5px 0 0; cursor: pointer; background: rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.7); transition: all 0.15s; white-space: nowrap;
+  }
+  .tab-btn:hover { background: rgba(255,255,255,0.25); color: white; }
+  .tab-btn.active { background: var(--paper); color: var(--ink); font-weight: 700; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  .input-col {
+    position: sticky;
+    top: 16px;
+  }
+  .input-col-inner {
+    background: white; border-radius: 0 0 8px 8px; box-shadow: var(--shadow);
+    max-height: calc(100vh - 160px); overflow-y: auto;
+  }
 
   /* === PANELS === */
   .panel {
@@ -405,7 +428,7 @@
   .contract-total-amount { font-size: 20px; font-weight: 700; color: #e8d5b0; font-family: 'DM Serif Display', serif; }
 
   @media print {
-    header, .action-bar, .input-col, .no-print { display: none !important; }
+    header, .action-bar, .input-col, .no-print, .tab-nav { display: none !important; }
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 
     @page { size: A3 landscape; margin: 8mm 22mm 8mm 22mm; }
@@ -524,9 +547,20 @@
 
     <!-- ===== LEFT INPUT COLUMN ===== -->
     <div class="input-col">
+      <!-- タブナビゲーション -->
+      <div class="tab-nav">
+        <button class="tab-btn active" onclick="switchTab('tab-basic',this)">① 基本</button>
+        <button class="tab-btn" onclick="switchTab('tab-area',this)">② 面積</button>
+        <button class="tab-btn" onclick="switchTab('tab-koujiFee',this)">③ 工事A</button>
+        <button class="tab-btn" onclick="switchTab('tab-shohiFee',this)">④ 諸費用B</button>
+        <button class="tab-btn" onclick="switchTab('tab-other',this)">⑤ その他C/D</button>
+        <button class="tab-btn" onclick="switchTab('tab-land',this)">⑥ 土地/ローン</button>
+      </div>
+      <div class="input-col-inner">
 
+      <div id="tab-basic" class="tab-panel active">
       <!-- 基本情報 -->
-      <div class="panel" style="margin-bottom:14px;">
+      <div class="panel" style="margin-bottom:0;">
         <div class="panel-header"><div class="num">1</div> 基本情報</div>
         <div class="panel-body">
           <div class="form-section">
@@ -628,7 +662,10 @@
       </div>
 
       <!-- 面積 -->
-      <div class="panel" style="margin-bottom:14px;">
+      </div><!-- END tab-basic -->
+
+      <div id="tab-area" class="tab-panel">
+      <div class="panel" style="margin-bottom:0;">
         <div class="panel-header"><div class="num">2</div> 敷地・面積情報</div>
         <div class="panel-body">
           <div class="form-section">
@@ -682,8 +719,11 @@
         </div>
       </div>
 
+      </div><!-- END tab-area -->
+
+      <div id="tab-koujiFee" class="tab-panel">
       <!-- 工事費用 -->
-      <div class="panel" style="margin-bottom:14px;">
+      <div class="panel" style="margin-bottom:0;">
         <div class="panel-header"><div class="num">3</div> 工事費用</div>
         <div class="panel-body">
           <div class="form-section">
@@ -880,7 +920,10 @@
       </div>
 
             <!-- 諸費用チェック -->
-      <div class="panel" style="margin-bottom:14px;">
+      </div><!-- END tab-koujiFee -->
+
+      <div id="tab-shohiFee" class="tab-panel">
+      <div class="panel" style="margin-bottom:0;">
         <div class="panel-header"><div class="num">4</div> 諸費用・申請手数料チェック</div>
         <div class="panel-body">
           <div class="form-section">
@@ -1022,8 +1065,11 @@
       </div>
 
 
+      </div><!-- END tab-shohiFee -->
+
+      <div id="tab-other" class="tab-panel">
       <!-- その他工事費用 -->
-      <div class="panel" style="margin-bottom:14px;">
+      <div class="panel" style="margin-bottom:0;">
         <div class="panel-header"><div class="num">5</div> その他工事費用</div>
         <div class="panel-body">
           <div class="form-section">
@@ -1290,8 +1336,11 @@
         </div>
       </div>
 
+      </div><!-- END tab-other -->
+
+      <div id="tab-land" class="tab-panel">
             <!-- 土地費用 -->
-      <div class="panel" style="margin-bottom:14px;">
+      <div class="panel" style="margin-bottom:0;">
         <div class="panel-header"><div class="num">7</div> 土地費用</div>
         <div class="panel-body">
           <div class="form-section">
@@ -1355,7 +1404,8 @@
         </div>
       </div>
 
-
+      </div><!-- END tab-land -->
+      </div><!-- END input-col-inner -->
     </div><!-- END input-col -->
 
     <!-- ===== RIGHT OUTPUT COLUMN ===== -->
@@ -1878,6 +1928,17 @@ function syncNotesExtra() {
   if (!el || !disp) return;
   const lines = el.value.split('\n').filter(l => l.trim());
   disp.innerHTML = lines.map(l => `<p style="margin-bottom:2px">${l}</p>`).join('');
+}
+
+function switchTab(tabId, btn) {
+  // 全タブパネルを非表示
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  // 全タブボタンを非アクティブ
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  // 選択タブを表示
+  const panel = document.getElementById(tabId);
+  if (panel) panel.classList.add('active');
+  if (btn) btn.classList.add('active');
 }
 
 function setToday() {
