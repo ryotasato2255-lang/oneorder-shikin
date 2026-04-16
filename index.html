@@ -180,6 +180,15 @@
     flex-shrink: 0; margin-left: 4px; vertical-align: middle;
   }
   .hide-btn:hover { background: #c0392b; color: white; }
+
+  /* 出力画面インライン備考セル */
+  .biko-cell-wrap { cursor: pointer; position: relative; min-width: 60px; }
+  .biko-text { display: inline; }
+  .biko-hint { font-size: 9px; color: #bbb; margin-left: 4px; border-bottom: 1px dashed #ccc; }
+  .biko-hint:hover { color: var(--accent2); }
+  .biko-input-wrap { display: none; gap: 3px; align-items: center; }
+  .biko-select { font-size: 10px; padding: 2px 4px; border: 1px solid var(--line); border-radius: 3px; background: white; color: var(--ink); }
+  .biko-input { font-size: 10px; padding: 2px 5px; border: 1px solid var(--accent2); border-radius: 3px; background: white; color: var(--ink); width: 100px; font-family: inherit; }
   .direct-input-row { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
   .direct-input-row input {
     flex: 1; padding: 5px 8px; border: 1px dashed var(--line); border-radius: 4px;
@@ -399,7 +408,7 @@
     header, .action-bar, .input-col, .no-print { display: none !important; }
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 
-    @page { size: A3 landscape; margin: 8mm 8mm 8mm 8mm; }
+    @page { size: A3 landscape; margin: 10mm 18mm 10mm 18mm; }
 
     html, body { font-size: 10px !important; background: white !important; }
     .container { padding: 0 !important; max-width: 100% !important; }
@@ -408,18 +417,18 @@
     .output-col { width: 100% !important; }
 
     /* タイトル */
-    .output-top { padding: 8px 14px 8px 18px !important; border-bottom: 2px solid var(--accent) !important; }
+    .output-top { padding: 6px 12px 6px 16px !important; border-bottom: 2px solid var(--accent) !important; }
     .output-top::before { width: 4px !important; }
-    .plan-title { font-size: 18px !important; margin-bottom: 2px !important; color: var(--ink) !important; }
-    .plan-subtitle { font-size: 10px !important; color: var(--mid) !important; }
-    .plan-meta { margin-top: 5px !important; gap: 10px !important; }
-    .plan-meta-item, .plan-meta-item strong { font-size: 10px !important; }
-    .plan-date { font-size: 10px !important; color: var(--mid) !important; padding-left: 10px !important; }
+    .plan-title { font-size: 16px !important; margin-bottom: 2px !important; color: var(--ink) !important; }
+    .plan-subtitle { font-size: 9px !important; color: var(--mid) !important; }
+    .plan-meta { margin-top: 4px !important; gap: 8px !important; }
+    .plan-meta-item, .plan-meta-item strong { font-size: 9px !important; }
+    .plan-date { font-size: 9px !important; color: var(--mid) !important; padding-left: 8px !important; }
 
     /* 建物仕様＋面積情報ボックス */
-    #specAreaBox > div { padding: 6px 12px !important; }
-    #specAreaBox > div > div:first-child { font-size: 9px !important; }
-    #specInfoGrid > div, #areaInfoGrid > div { font-size: 9.5px !important; }
+    #specAreaBox > div { padding: 5px 10px !important; }
+    #specAreaBox > div > div:first-child { font-size: 8px !important; }
+    #specInfoGrid > div, #areaInfoGrid > div { font-size: 9px !important; }
 
     /* サマリーバー */
     .totals-bar { display: none !important; }
@@ -433,20 +442,22 @@
     .tables-print-wrap {
       display: grid !important;
       grid-template-columns: 1fr 1fr !important;
-      gap: 0 10px !important;
+      gap: 0 8px !important;
       align-items: start !important;
     }
 
     /* テーブル共通 */
-    .table-section { padding: 0 0 4px !important; break-inside: avoid; }
-    .table-section-title { padding: 5px 10px !important; font-size: 11px !important; }
-    thead th { padding: 4px 8px !important; font-size: 10px !important; }
-    tbody td { padding: 4px 8px !important; font-size: 11px !important; line-height: 1.5 !important; }
-    tbody td.備考 { max-width: 140px !important; font-size: 10px !important; }
-    .subtotal-row td { padding: 4px 8px !important; font-size: 11px !important; }
-    .tax-row td { padding: 3px 8px !important; font-size: 10px !important; }
-    .total-row td { padding: 5px 8px !important; font-size: 13px !important; }
-    .total-row td.right { font-size: 15px !important; font-weight: 700 !important; }
+    .table-section { padding: 0 0 3px !important; break-inside: avoid; }
+    .table-section-title { padding: 4px 8px !important; font-size: 10px !important; }
+    thead th { padding: 3px 6px !important; font-size: 9px !important; }
+    tbody td { padding: 3px 6px !important; font-size: 10px !important; line-height: 1.4 !important; }
+    tbody td.備考 { max-width: 120px !important; font-size: 9.5px !important; }
+    /* 備考インライン入力を印刷時はテキストのみ表示 */
+    tbody td.備考 input { border: none !important; background: transparent !important; padding: 0 !important; font-size: 9.5px !important; width: 100% !important; color: var(--mid) !important; }
+    .subtotal-row td { padding: 3px 6px !important; font-size: 10px !important; }
+    .tax-row td { padding: 2px 6px !important; font-size: 9px !important; }
+    .total-row td { padding: 4px 6px !important; font-size: 12px !important; }
+    .total-row td.right { font-size: 13px !important; font-weight: 700 !important; }
 
     /* 請負契約合計ボックス */
     .contract-total-box { padding: 8px 12px !important; margin-top: 4px !important; }
@@ -476,6 +487,11 @@
     .notes-box > div { font-size: 10px !important; margin-bottom: 3px !important; }
     #notesExtraDisp { display: block !important; }
     #notesExtra { display: none !important; }
+    /* 印刷時：備考セルは入力UI非表示、テキストのみ表示 */
+    .biko-hint { display: none !important; }
+    .biko-input-wrap { display: none !important; }
+    .biko-cell-wrap { cursor: default; }
+    .biko-text { display: inline !important; }
 
     /* ローンシミュレーター */
     .loan-no-print { display: none !important; }
@@ -1035,7 +1051,7 @@
                   <input type="number" id="extWorkDirect" placeholder="例: 4500000" onchange="applyDirect('extWork','extWorkDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
                 </div>
-                <div class="direct-input-row">
+                <div class="direct-input-row" style="display:none">
                   <label>備考追記：</label>
                   <select id="cBikoExtSelect" onchange="const v=this.value;if(v){document.getElementById('cBikoExt').value=v;cBiko.ext=v;}update()" style="font-size:10px;padding:3px 5px;border:1px solid var(--line);border-radius:4px;background:white;color:var(--ink)"><option value="">（選択）</option><option value="概算">概算</option><option value="調査後確定">調査後確定</option><option value="別途">別途</option></select><input type="text" id="cBikoExt" placeholder="または直接入力" value="" oninput="cBiko.ext=this.value;document.getElementById('cBikoExtSelect').value='';update()" style="border-style:dashed;flex:1">
                 </div>
@@ -1065,7 +1081,7 @@
                   <input type="number" id="groundWorkDirect" placeholder="例: 800000" onchange="applyDirect('groundWork','groundWorkDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
                 </div>
-                <div class="direct-input-row">
+                <div class="direct-input-row" style="display:none">
                   <label>備考追記：</label>
                   <select id="cBikoGroundSelect" onchange="const v=this.value;if(v){document.getElementById('cBikoGround').value=v;cBiko.ground=v;}update()" style="font-size:10px;padding:3px 5px;border:1px solid var(--line);border-radius:4px;background:white;color:var(--ink)"><option value="">（選択）</option><option value="概算">概算</option><option value="調査後確定">調査後確定</option><option value="別途">別途</option></select><input type="text" id="cBikoGround" placeholder="または直接入力" value="" oninput="cBiko.ground=this.value;document.getElementById('cBikoGroundSelect').value='';update()" style="border-style:dashed;flex:1">
                 </div>
@@ -1095,7 +1111,7 @@
                   <input type="number" id="interiorWorkDirect" placeholder="例: 1200000" onchange="applyDirect('interiorWork','interiorWorkDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
                 </div>
-                <div class="direct-input-row">
+                <div class="direct-input-row" style="display:none">
                   <label>備考追記：</label>
                   <select id="cBikoInteriorSelect" onchange="const v=this.value;if(v){document.getElementById('cBikoInterior').value=v;cBiko.interior=v;}update()" style="font-size:10px;padding:3px 5px;border:1px solid var(--line);border-radius:4px;background:white;color:var(--ink)"><option value="">（選択）</option><option value="概算">概算</option><option value="調査後確定">調査後確定</option><option value="別途">別途</option></select><input type="text" id="cBikoInterior" placeholder="または直接入力" value="" oninput="cBiko.interior=this.value;document.getElementById('cBikoInteriorSelect').value='';update()" style="border-style:dashed;flex:1">
                 </div>
@@ -1125,7 +1141,7 @@
                   <input type="number" id="kyusuiWorkDirect" placeholder="例: 500000" onchange="applyDirect('kyusuiWork','kyusuiWorkDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
                 </div>
-                <div class="direct-input-row">
+                <div class="direct-input-row" style="display:none">
                   <label>備考追記：</label>
                   <select id="cBikoKyusuiSelect" onchange="const v=this.value;if(v){document.getElementById('cBikoKyusui').value=v;cBiko.kyusui=v;}update()" style="font-size:10px;padding:3px 5px;border:1px solid var(--line);border-radius:4px;background:white;color:var(--ink)"><option value="">（選択）</option><option value="概算">概算</option><option value="調査後確定">調査後確定</option><option value="別途">別途</option></select><input type="text" id="cBikoKyusui" placeholder="または直接入力" value="" oninput="cBiko.kyusui=this.value;document.getElementById('cBikoKyusuiSelect').value='';update()" style="border-style:dashed;flex:1">
                 </div>
@@ -1155,7 +1171,7 @@
                   <input type="number" id="securityWorkDirect" placeholder="例: 300000" onchange="applyDirect('securityWork','securityWorkDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
                 </div>
-                <div class="direct-input-row">
+                <div class="direct-input-row" style="display:none">
                   <label>備考追記：</label>
                   <select id="cBikoSecuritySelect" onchange="const v=this.value;if(v){document.getElementById('cBikoSecurity').value=v;cBiko.security=v;}update()" style="font-size:10px;padding:3px 5px;border:1px solid var(--line);border-radius:4px;background:white;color:var(--ink)"><option value="">（選択）</option><option value="概算">概算</option><option value="調査後確定">調査後確定</option><option value="別途">別途</option></select><input type="text" id="cBikoSecurity" placeholder="または直接入力" value="" oninput="cBiko.security=this.value;document.getElementById('cBikoSecuritySelect').value='';update()" style="border-style:dashed;flex:1">
                 </div>
@@ -1185,7 +1201,7 @@
                   <input type="number" id="curtainWorkDirect" placeholder="例: 800000" onchange="applyDirect('curtainWork','curtainWorkDirect')">
                   <span style="font-size:10px;color:var(--mid)">円</span>
                 </div>
-                <div class="direct-input-row">
+                <div class="direct-input-row" style="display:none">
                   <label>備考追記：</label>
                   <select id="cBikoCurtainSelect" onchange="const v=this.value;if(v){document.getElementById('cBikoCurtain').value=v;cBiko.curtain=v;}update()" style="font-size:10px;padding:3px 5px;border:1px solid var(--line);border-radius:4px;background:white;color:var(--ink)"><option value="">（選択）</option><option value="概算">概算</option><option value="調査後確定">調査後確定</option><option value="別途">別途</option></select><input type="text" id="cBikoCurtain" placeholder="または直接入力" value="" oninput="cBiko.curtain=this.value;document.getElementById('cBikoCurtainSelect').value='';update()" style="border-style:dashed;flex:1">
                 </div>
@@ -1945,18 +1961,111 @@ function showTsubo(badgeId, valId, sqm) {
   }
 }
 
-function row(name, biko, excl, tax, incl) {
+// 備考インライン入力の状態管理（行キー → テキスト）
+const inlineBiko = {};
+
+function row(name, biko, excl, tax, incl, bikoKey) {
   const showTax = (tax !== null && tax !== 0 && excl !== null);
   const isNeg = (excl !== null && excl < 0) || (incl !== null && incl < 0);
   const redStyle = isNeg ? ' style="color:#c0392b;font-weight:600"' : '';
+  // bikoKeyがある場合はインライン入力セルを表示
+  let bikoCell = '';
+  if (bikoKey) {
+    // inlineBiko[bikoKey]が未設定なら bikoを初期値として使用
+    if (inlineBiko[bikoKey] === undefined) inlineBiko[bikoKey] = biko || '';
+    const val = inlineBiko[bikoKey];
+    bikoCell = `<td class="備考"><div class="biko-cell-wrap">
+      <span class="biko-text">${val || ''}</span>
+      <span class="biko-hint">クリックで編集</span>
+      <div class="biko-input-wrap" style="display:none">
+        <select class="biko-select" onchange="setBikoFromSelect('${bikoKey}',this)">
+          <option value="">—</option>
+          <option value="概算"${val==='概算'?' selected':''}>概算</option>
+          <option value="調査後確定"${val==='調査後確定'?' selected':''}>調査後確定</option>
+          <option value="別途"${val==='別途'?' selected':''}>別途</option>
+        </select>
+        <input type="text" class="biko-input" value="${val||''}" placeholder="直接入力...">
+      </div>
+    </div></td>`;
+  } else {
+    bikoCell = `<td class="備考"${redStyle}>${biko || ''}</td>`;
+  }
   return `<tr${isNeg ? ' style="background:#fff5f5"' : ''}>
     <td class="item-name"${redStyle}>${name}</td>
-    <td class="備考"${redStyle}>${biko || ''}</td>
+    ${bikoCell}
     <td class="right"${redStyle}>${fmt(excl)}</td>
     <td class="right"${redStyle}>${showTax ? fmt(tax) : '<span class="zero">—</span>'}</td>
     <td class="right"${redStyle}>${fmt(incl)}</td>
   </tr>`;
 }
+
+function setBikoFromSelect(key, selectEl) {
+  const val = selectEl.value;
+  if (!val) return;
+  inlineBiko[key] = val;
+  // 同じセルのinputにも反映
+  const wrap = selectEl.closest('.biko-input-wrap');
+  if (wrap) wrap.querySelector('.biko-input').value = val;
+  // テキスト表示を更新
+  const textEl = selectEl.closest('.biko-cell-wrap')?.querySelector('.biko-text');
+  if (textEl) textEl.textContent = val;
+}
+
+// 備考セルのクリック開閉
+document.addEventListener('click', function(e) {
+  const cell = e.target.closest('.biko-cell-wrap');
+  if (!cell) {
+    // 外側クリックで全クローズ
+    document.querySelectorAll('.biko-input-wrap').forEach(el => {
+      el.style.display = 'none';
+      const parent = el.closest('.biko-cell-wrap');
+      if (parent) { parent.querySelector('.biko-text').style.display = ''; parent.querySelector('.biko-hint').style.display = ''; }
+    });
+    return;
+  }
+  const wrap = cell.querySelector('.biko-input-wrap');
+  if (!wrap) return;
+  const isOpen = wrap.style.display !== 'none';
+  if (!isOpen) {
+    wrap.style.display = 'flex';
+    cell.querySelector('.biko-text').style.display = 'none';
+    cell.querySelector('.biko-hint').style.display = 'none';
+    const inputEl = wrap.querySelector('.biko-input');
+    inputEl.focus();
+    inputEl.select();
+  }
+});
+
+// 備考inputのoninput（直接入力で状態更新＋テキスト同期）
+document.addEventListener('input', function(e) {
+  if (!e.target.classList.contains('biko-input')) return;
+  const cell = e.target.closest('.biko-cell-wrap');
+  if (!cell) return;
+  const wrap = cell.querySelector('.biko-input-wrap');
+  // キーを特定するため、行のdata属性から取得
+  const tr = e.target.closest('tr');
+  if (!tr || !tr.dataset.bikoKey) return;
+  inlineBiko[tr.dataset.bikoKey] = e.target.value;
+  // セレクトをリセット
+  const sel = wrap.querySelector('.biko-select');
+  if (sel) sel.value = '';
+});
+
+// Enterキーで確定
+document.addEventListener('keydown', function(e) {
+  if (e.key !== 'Enter' || !e.target.classList.contains('biko-input')) return;
+  const cell = e.target.closest('.biko-cell-wrap');
+  if (!cell) return;
+  const wrap = cell.querySelector('.biko-input-wrap');
+  const val = e.target.value;
+  const textEl = cell.querySelector('.biko-text');
+  if (textEl) textEl.textContent = val;
+  cell.querySelector('.biko-hint').style.display = '';
+  textEl.style.display = '';
+  wrap.style.display = 'none';
+  const tr = e.target.closest('tr');
+  if (tr && tr.dataset.bikoKey) inlineBiko[tr.dataset.bikoKey] = val;
+});
 function subRow(label, val) {
   return `<tr class="subtotal-row"><td colspan="2"><strong>${label}</strong></td><td></td><td></td><td class="right"><strong>${fmt(val)}</strong></td></tr>`;
 }
@@ -2189,11 +2298,13 @@ function update() {
   let aTax = Math.round(aSubtotal * TAX);
   let aTotal = aSubtotal + aTax;
 
-  let htmA = aItems.map(i => {
+  let htmA = aItems.map((i,idx) => {
     if (i.isDiscount) {
       return `<tr style="background:#fff5f5"><td class="item-name" style="color:#c0392b">値引き</td><td class="備考"></td><td class="right" style="color:#c0392b">－${fmt(i.excl * -1)}</td><td class="right">—</td><td class="right" style="color:#c0392b;font-weight:700">－${fmt(i.excl * -1)}</td></tr>`;
     }
-    return row(i.name, i.biko, i.excl, Math.round(i.excl * TAX), i.excl + Math.round(i.excl * TAX));
+    const bkey = `A_${idx}_${i.name}`;
+    const tr = row(i.name, i.biko, i.excl, Math.round(i.excl * TAX), i.excl + Math.round(i.excl * TAX), bkey);
+    return tr.replace('<tr', `<tr data-biko-key="${bkey}"`);
   }).join('');
   htmA += subRow('　　小　計（請負金額）', aSubtotal);
   htmA += taxRow('　　消費税', aTax);
@@ -2245,10 +2356,12 @@ function update() {
   let bTax = Math.round(bTaxable * TAX);
   let bTotal = bSubtotal + bTax;
 
-  let htmB = bItems.map(i => {
+  let htmB = bItems.map((i,idx) => {
+    const bkey = `B_${idx}_${i.name}`;
     const t = i.noTax ? 0 : Math.round(i.excl * TAX);
     const total = i.excl + (i.noTax ? 0 : t);
-    return row(i.name, i.biko, i.excl, i.noTax ? null : t, total);
+    const tr = row(i.name, i.biko, i.excl, i.noTax ? null : t, total, bkey);
+    return tr.replace('<tr', `<tr data-biko-key="${bkey}"`);
   }).join('');
   htmB += subRow('　　小　計', bSubtotal);
   htmB += taxRow('　　消費税（印紙代除く）', bTax);
@@ -2317,10 +2430,12 @@ function update() {
   const cTax = Math.round(cSubtotalNum * TAX);
   const cTotal = cSubtotalNum + cTax;
 
-  let htmC = cItems.map(i => {
-    if (i.excl === null) return row(i.name, i.biko, null, null, null);
-    if (i.excl === 0) return row(i.name, i.biko, null, null, null); // 0円→「—」
-    return row(i.name, i.biko, i.excl, Math.round(i.excl * TAX), i.excl + Math.round(i.excl * TAX));
+  let htmC = cItems.map((i,idx) => {
+    const bkey = `C_${idx}_${i.name}`;
+    if (i.excl === null) { const tr = row(i.name, i.biko, null, null, null, bkey); return tr.replace('<tr', `<tr data-biko-key="${bkey}"`); }
+    if (i.excl === 0)    { const tr = row(i.name, i.biko, null, null, null, bkey); return tr.replace('<tr', `<tr data-biko-key="${bkey}"`); }
+    const tr = row(i.name, i.biko, i.excl, Math.round(i.excl * TAX), i.excl + Math.round(i.excl * TAX), bkey);
+    return tr.replace('<tr', `<tr data-biko-key="${bkey}"`);
   }).join('');
   htmC += subRow('　小　計', cSubtotalNum);
   htmC += taxRow('　消費税', cTax);
@@ -2343,13 +2458,11 @@ function update() {
     ...dCustomItems.map(r => ({ name: r.name || '追加項目', biko: r.biko || '', excl: r.amount !== 0 ? r.amount : null })),
   ];
   const dTotal = dItems.filter(i => i.excl !== null).reduce((s, i) => s + i.excl, 0);
-  let htmD = dItems.map(i => {
-    if (i.excl === null) return row(i.name, i.biko, null, null, null);
-    if (i.excl < 0) {
-      // マイナス項目：赤字で表示
-      return `<tr style="background:#fff5f5"><td class="item-name" style="color:#c0392b">${i.name}</td><td class="備考" style="color:#c0392b">${i.biko||''}</td><td class="right" style="color:#c0392b">－${fmt(Math.abs(i.excl))}</td><td class="right">—</td><td class="right" style="color:#c0392b;font-weight:700">－${fmt(Math.abs(i.excl))}</td></tr>`;
-    }
-    return row(i.name, i.biko, i.excl, null, i.excl);
+  let htmD = dItems.map((i,idx) => {
+    const bkey = `D_${idx}_${i.name}`;
+    if (i.excl === null) { const tr = row(i.name, i.biko, null, null, null, bkey); return tr.replace('<tr', `<tr data-biko-key="${bkey}"`); }
+    const tr = row(i.name, i.biko, i.excl, null, i.excl, bkey);
+    return tr.replace('<tr', `<tr data-biko-key="${bkey}"`);
   }).join('');
   htmD += totalRow('(D) 合　計', dTotal);
   document.getElementById('tableD').innerHTML = htmD;
@@ -2381,7 +2494,11 @@ function update() {
       { name: 'その他土地関連費用', biko: '印紙・登記等', excl: landOther > 0 ? landOther : null },
     ];
     eTotal = eItems.filter(i => i.excl !== null).reduce((s, i) => s + i.excl, 0);
-    let htmE = eItems.map(i => row(i.name, i.biko, i.excl, null, i.excl)).join('');
+    let htmE = eItems.map((i,idx) => {
+      const bkey = `E_${idx}_${i.name}`;
+      const tr = row(i.name, i.biko, i.excl, null, i.excl, bkey);
+      return tr.replace('<tr', `<tr data-biko-key="${bkey}"`);
+    }).join('');
     htmE += totalRow('(E) 合　計', eTotal);
     document.getElementById('tableE').innerHTML = htmE;
   }
@@ -2661,6 +2778,8 @@ function collectData() {
   data._dHidden = JSON.parse(JSON.stringify(dHidden));
   // カスタム追加行を保存
   data._customRows = JSON.parse(JSON.stringify(customRows));
+  // inlineBiko（出力画面の備考）を保存
+  data._inlineBiko = JSON.parse(JSON.stringify(inlineBiko));
   return data;
 }
 
@@ -2742,6 +2861,8 @@ function applyData(data) {
     const el = document.getElementById(elId);
     if(el) bikoObjects[obj][key] = el.value;
   });
+  // inlineBiko を復元（update()前に設定しておく）
+  if (data._inlineBiko) Object.assign(inlineBiko, data._inlineBiko);
   syncNotesExtra();
   update();
 }
