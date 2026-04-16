@@ -1037,7 +1037,7 @@
                 </div>
                 <div class="direct-input-row">
                   <label>備考追記：</label>
-                  <input type="text" id="cBikoExt" placeholder="（任意）" value="" oninput="cBiko.ext=this.value;update()" style="border-style:dashed;flex:1">
+                  <select id="cBikoExtSelect" onchange="const v=this.value;if(v){document.getElementById('cBikoExt').value=v;cBiko.ext=v;}update()" style="font-size:10px;padding:3px 5px;border:1px solid var(--line);border-radius:4px;background:white;color:var(--ink)"><option value="">（選択）</option><option value="概算">概算</option><option value="調査後確定">調査後確定</option><option value="別途">別途</option></select><input type="text" id="cBikoExt" placeholder="または直接入力" value="" oninput="cBiko.ext=this.value;document.getElementById('cBikoExtSelect').value='';update()" style="border-style:dashed;flex:1">
                 </div>
                 <div class="stepper-hint"><span>現在: <strong id="extWorkDisp">0円</strong></span><span>100万単位 / 直接入力可</span></div>
               </div>
@@ -1067,7 +1067,7 @@
                 </div>
                 <div class="direct-input-row">
                   <label>備考追記：</label>
-                  <input type="text" id="cBikoGround" placeholder="（任意）" value="" oninput="cBiko.ground=this.value;update()" style="border-style:dashed;flex:1">
+                  <select id="cBikoGroundSelect" onchange="const v=this.value;if(v){document.getElementById('cBikoGround').value=v;cBiko.ground=v;}update()" style="font-size:10px;padding:3px 5px;border:1px solid var(--line);border-radius:4px;background:white;color:var(--ink)"><option value="">（選択）</option><option value="概算">概算</option><option value="調査後確定">調査後確定</option><option value="別途">別途</option></select><input type="text" id="cBikoGround" placeholder="または直接入力" value="" oninput="cBiko.ground=this.value;document.getElementById('cBikoGroundSelect').value='';update()" style="border-style:dashed;flex:1">
                 </div>
                 <div class="stepper-hint"><span>現在: <strong id="groundWorkDisp">0円</strong></span><span>100万単位 / 直接入力可</span></div>
               </div>
@@ -1097,7 +1097,7 @@
                 </div>
                 <div class="direct-input-row">
                   <label>備考追記：</label>
-                  <input type="text" id="cBikoInterior" placeholder="（任意）" value="" oninput="cBiko.interior=this.value;update()" style="border-style:dashed;flex:1">
+                  <select id="cBikoInteriorSelect" onchange="const v=this.value;if(v){document.getElementById('cBikoInterior').value=v;cBiko.interior=v;}update()" style="font-size:10px;padding:3px 5px;border:1px solid var(--line);border-radius:4px;background:white;color:var(--ink)"><option value="">（選択）</option><option value="概算">概算</option><option value="調査後確定">調査後確定</option><option value="別途">別途</option></select><input type="text" id="cBikoInterior" placeholder="または直接入力" value="" oninput="cBiko.interior=this.value;document.getElementById('cBikoInteriorSelect').value='';update()" style="border-style:dashed;flex:1">
                 </div>
                 <div class="stepper-hint"><span>現在: <strong id="interiorWorkDisp">0円</strong></span><span>10万単位 / 直接入力可</span></div>
               </div>
@@ -1127,7 +1127,7 @@
                 </div>
                 <div class="direct-input-row">
                   <label>備考追記：</label>
-                  <input type="text" id="cBikoKyusui" placeholder="（任意）" value="" oninput="cBiko.kyusui=this.value;update()" style="border-style:dashed;flex:1">
+                  <select id="cBikoKyusuiSelect" onchange="const v=this.value;if(v){document.getElementById('cBikoKyusui').value=v;cBiko.kyusui=v;}update()" style="font-size:10px;padding:3px 5px;border:1px solid var(--line);border-radius:4px;background:white;color:var(--ink)"><option value="">（選択）</option><option value="概算">概算</option><option value="調査後確定">調査後確定</option><option value="別途">別途</option></select><input type="text" id="cBikoKyusui" placeholder="または直接入力" value="" oninput="cBiko.kyusui=this.value;document.getElementById('cBikoKyusuiSelect').value='';update()" style="border-style:dashed;flex:1">
                 </div>
                 <div class="stepper-hint"><span>現在: <strong id="kyusuiWorkDisp">0円</strong></span><span>10万単位 / 直接入力可</span></div>
               </div>
@@ -1157,7 +1157,7 @@
                 </div>
                 <div class="direct-input-row">
                   <label>備考追記：</label>
-                  <input type="text" id="cBikoSecurity" placeholder="（任意）" value="" oninput="cBiko.security=this.value;update()" style="border-style:dashed;flex:1">
+                  <select id="cBikoSecuritySelect" onchange="const v=this.value;if(v){document.getElementById('cBikoSecurity').value=v;cBiko.security=v;}update()" style="font-size:10px;padding:3px 5px;border:1px solid var(--line);border-radius:4px;background:white;color:var(--ink)"><option value="">（選択）</option><option value="概算">概算</option><option value="調査後確定">調査後確定</option><option value="別途">別途</option></select><input type="text" id="cBikoSecurity" placeholder="または直接入力" value="" oninput="cBiko.security=this.value;document.getElementById('cBikoSecuritySelect').value='';update()" style="border-style:dashed;flex:1">
                 </div>
                 <div class="stepper-hint"><span>現在: <strong id="securityWorkDisp">0円</strong></span><span>10万単位 / 直接入力可</span></div>
               </div>
@@ -1187,7 +1187,7 @@
                 </div>
                 <div class="direct-input-row">
                   <label>備考追記：</label>
-                  <input type="text" id="cBikoCurtain" placeholder="（任意）" value="" oninput="cBiko.curtain=this.value;update()" style="border-style:dashed;flex:1">
+                  <select id="cBikoCurtainSelect" onchange="const v=this.value;if(v){document.getElementById('cBikoCurtain').value=v;cBiko.curtain=v;}update()" style="font-size:10px;padding:3px 5px;border:1px solid var(--line);border-radius:4px;background:white;color:var(--ink)"><option value="">（選択）</option><option value="概算">概算</option><option value="調査後確定">調査後確定</option><option value="別途">別途</option></select><input type="text" id="cBikoCurtain" placeholder="または直接入力" value="" oninput="cBiko.curtain=this.value;document.getElementById('cBikoCurtainSelect').value='';update()" style="border-style:dashed;flex:1">
                 </div>
                 <div class="stepper-hint"><span>現在: <strong id="curtainWorkDisp">0円</strong></span><span>10万単位 / 直接入力可</span></div>
               </div>
@@ -1401,24 +1401,28 @@
 
         <!-- 建物仕様＋面積情報（印刷用） -->
         <div id="specAreaBox" style="display:flex;gap:0;border-bottom:1px solid var(--line)">
-          <!-- 左半分：建物仕様＋面積情報 -->
-          <div style="flex:1;border-right:1px solid var(--line);display:flex;flex-direction:column">
-            <!-- 建物仕様 -->
-            <div style="flex:1;padding:6px 12px;border-bottom:1px solid var(--line);background:#f9f6f0">
-              <div style="font-size:9px;font-weight:700;color:var(--mid);letter-spacing:1px;margin-bottom:4px">◆ 建物仕様</div>
-              <div id="specInfoGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:2px 10px;font-size:11px"></div>
-            </div>
-            <!-- 面積情報 -->
-            <div style="flex:1;padding:6px 12px;background:#f9f6f0">
-              <div style="font-size:9px;font-weight:700;color:var(--mid);letter-spacing:1px;margin-bottom:4px">◆ 敷地・面積情報</div>
-              <div id="areaInfoGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:2px 10px;font-size:11px"></div>
+          <!-- 左3/5：建物仕様＋面積情報を1段横並び -->
+          <div style="flex:3;border-right:1px solid var(--line);background:#f9f6f0;padding:6px 12px">
+            <div style="display:flex;gap:16px;align-items:flex-start">
+              <!-- 建物仕様 -->
+              <div style="flex:1">
+                <div style="font-size:8px;font-weight:700;color:var(--mid);letter-spacing:1px;margin-bottom:3px">◆ 建物仕様</div>
+                <div id="specInfoGrid" style="display:grid;grid-template-columns:auto 1fr;gap:1px 8px;font-size:9.5px"></div>
+              </div>
+              <!-- 縦線 -->
+              <div style="width:1px;background:var(--line);align-self:stretch;flex-shrink:0"></div>
+              <!-- 面積情報 -->
+              <div style="flex:1">
+                <div style="font-size:8px;font-weight:700;color:var(--mid);letter-spacing:1px;margin-bottom:3px">◆ 敷地・面積情報</div>
+                <div id="areaInfoGrid" style="display:grid;grid-template-columns:auto 1fr;gap:1px 8px;font-size:9.5px"></div>
+              </div>
             </div>
           </div>
-          <!-- 右半分：自由記入欄 -->
-          <div style="flex:1;padding:8px 14px;background:#fffef8;display:flex;flex-direction:column">
-            <div style="font-size:9px;font-weight:700;color:var(--mid);letter-spacing:1px;margin-bottom:5px">◆ メモ・経緯</div>
-            <textarea id="freeNote" placeholder="例：04/10 金額　○○円　ご提示　→　承認待ち" oninput="update()" style="flex:1;width:100%;border:1px dashed var(--line);border-radius:4px;padding:6px 8px;font-family:'Noto Sans JP',sans-serif;font-size:11px;color:var(--ink);background:transparent;resize:none;outline:none;line-height:1.6;min-height:80px" class="no-print-hide"></textarea>
-            <div id="freeNoteDisp" style="font-size:11px;color:var(--ink);line-height:1.7;white-space:pre-wrap;display:none"></div>
+          <!-- 右2/5：自由記入欄 -->
+          <div style="flex:2;padding:6px 12px;background:#fffef8;display:flex;flex-direction:column">
+            <div style="font-size:8px;font-weight:700;color:var(--mid);letter-spacing:1px;margin-bottom:4px">◆ メモ・経緯</div>
+            <textarea id="freeNote" placeholder="例：04/10 金額　○○円　ご提示　→　承認待ち" oninput="update()" style="flex:1;width:100%;border:1px dashed var(--line);border-radius:4px;padding:4px 7px;font-family:'Noto Sans JP',sans-serif;font-size:10px;color:var(--ink);background:transparent;resize:none;outline:none;line-height:1.5;min-height:60px" class="no-print-hide"></textarea>
+            <div id="freeNoteDisp" style="font-size:10px;color:var(--ink);line-height:1.6;white-space:pre-wrap;display:none"></div>
           </div>
         </div>
 
@@ -1943,12 +1947,14 @@ function showTsubo(badgeId, valId, sqm) {
 
 function row(name, biko, excl, tax, incl) {
   const showTax = (tax !== null && tax !== 0 && excl !== null);
-  return `<tr>
-    <td class="item-name">${name}</td>
-    <td class="備考">${biko || ''}</td>
-    <td class="right">${fmt(excl)}</td>
-    <td class="right">${showTax ? fmt(tax) : '<span class="zero">—</span>'}</td>
-    <td class="right">${fmt(incl)}</td>
+  const isNeg = (excl !== null && excl < 0) || (incl !== null && incl < 0);
+  const redStyle = isNeg ? ' style="color:#c0392b;font-weight:600"' : '';
+  return `<tr${isNeg ? ' style="background:#fff5f5"' : ''}>
+    <td class="item-name"${redStyle}>${name}</td>
+    <td class="備考"${redStyle}>${biko || ''}</td>
+    <td class="right"${redStyle}>${fmt(excl)}</td>
+    <td class="right"${redStyle}>${showTax ? fmt(tax) : '<span class="zero">—</span>'}</td>
+    <td class="right"${redStyle}>${fmt(incl)}</td>
   </tr>`;
 }
 function subRow(label, val) {
@@ -2614,7 +2620,8 @@ const SAVE_NUM_IDS = [
 const SAVE_SELECT_IDS = [
   'division','listType','buildingType','structure','fireResist','warranty','seismic','aircon','seido',
   'inshiDai','designRate','loanType','loanYears',
-  'extStatus','groundStatus','interiorStatus','kyusuiStatus','securityStatus','curtainStatus'
+  'extStatus','groundStatus','interiorStatus','kyusuiStatus','securityStatus','curtainStatus',
+  'cBikoExtSelect','cBikoGroundSelect','cBikoInteriorSelect','cBikoKyusuiSelect','cBikoSecuritySelect','cBikoCurtainSelect'
 ];
 const SAVE_CHECK_IDS_PLAIN = [
   'extUndecided','groundUndecided','interiorUndecided','landOwned',
