@@ -811,7 +811,7 @@
                 </div>
                 <div class="direct-input-row">
                   <label>備考：</label>
-                  <input type="text" id="bikoEnergyWork" placeholder="（任意）" value="" oninput="aBiko.energyWork=this.value;update()" style="border-style:dashed;flex:1">
+                  <input type="text" id="bikoEnergyWork" placeholder="全館空調「エアロテック」" value="全館空調「エアロテック」" oninput="aBiko.energyWork=this.value;update()" style="border-style:dashed;flex:1">
                 </div>
                 <div class="stepper-hint"><span>現在: <strong id="energyWorkDisp">3,000,000円</strong></span><span>10万単位 / 直接入力可</span></div>
               </div>
@@ -1697,7 +1697,7 @@ const TAX = 0.1;
 const aBiko = {
   mainWork: '',
   subWork: '屋外給排水・電気ガス等',
-  energyWork: '',
+  energyWork: '全館空調「エアロテック」',
   solarWork: '',
   homeTactWork: '',
   chikaWork: '',
@@ -2302,9 +2302,9 @@ function update() {
   const aCustomTotal = getCustomTotal('A');
 
   const aItems = [
-    { name: '主体工事', biko: aBiko.mainWork || ((!isNaN(mainWorkDirectVal) && mainWorkDirectVal > 0) ? '直接入力' : `${hotelTsubo.toFixed(2)}坪 × ${fmtComma(tsuboPrice)}／坪`), excl: mainWork },
+    { name: '主体工事', biko: aBiko.mainWork !== undefined && aBiko.mainWork !== null ? (aBiko.mainWork || ((!isNaN(mainWorkDirectVal) && mainWorkDirectVal > 0) ? '直接入力' : `${hotelTsubo.toFixed(2)}坪 × ${fmtComma(tsuboPrice)}／坪`)) : '', excl: mainWork },
     { name: '付帯工事', biko: aBiko.subWork, excl: subWork },
-    { name: 'スマートエネルギー機器工事', biko: aBiko.energyWork || aircon, excl: energyWork },
+    { name: 'スマートエネルギー機器工事', biko: aBiko.energyWork !== undefined ? aBiko.energyWork : aircon, excl: energyWork },
     ...(solarWork > 0    ? [{ name: '太陽光発電工事',  biko: aBiko.solarWork,    excl: solarWork }]    : []),
     ...(homeTactWork > 0 ? [{ name: 'HOME TACT工事',   biko: aBiko.homeTactWork, excl: homeTactWork }] : []),
     ...(chikaWork > 0    ? [{ name: '地下工事',         biko: aBiko.chikaWork,    excl: chikaWork }]    : []),
