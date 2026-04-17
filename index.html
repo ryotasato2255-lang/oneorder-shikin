@@ -2302,7 +2302,7 @@ function update() {
   const aCustomTotal = getCustomTotal('A');
 
   const aItems = [
-    { name: '主体工事', biko: aBiko.mainWork !== undefined && aBiko.mainWork !== null ? (aBiko.mainWork || ((!isNaN(mainWorkDirectVal) && mainWorkDirectVal > 0) ? '直接入力' : `${hotelTsubo.toFixed(2)}坪 × ${fmtComma(tsuboPrice)}／坪`)) : '', excl: mainWork },
+    { name: '主体工事', biko: aBiko.mainWork || '', excl: mainWork },
     { name: '付帯工事', biko: aBiko.subWork, excl: subWork },
     { name: 'スマートエネルギー機器工事', biko: aBiko.energyWork !== undefined ? aBiko.energyWork : aircon, excl: energyWork },
     ...(solarWork > 0    ? [{ name: '太陽光発電工事',  biko: aBiko.solarWork,    excl: solarWork }]    : []),
@@ -2869,7 +2869,7 @@ function applyData(data) {
     'bBikoDesign': ['bBiko','design'], 'bBikoSupervise': ['bBiko','supervise'],
     'bBikoStruct': ['bBiko','struct'], 'bBikoSurvey': ['bBiko','survey'],
     'bBikoShinsei': ['bBiko','shinsei'],
-    'cBikoExt': ['cBiko','ext'], 'cBikoGround': ['cBiko','ground'],
+    'cBikoExt': ['cBiko','exta'], 'cBikoGround': ['cBiko','ground'],
     'cBikoInterior': ['cBiko','interior'], 'cBikoKyusui': ['cBiko','kyusui'],
     'cBikoSecurity': ['cBiko','security'], 'cBikoCurtain': ['cBiko','curtain'],
     // D備考はインライン入力で管理
