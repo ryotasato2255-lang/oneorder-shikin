@@ -1982,6 +1982,8 @@ function showTsubo(badgeId, valId, sqm) {
 
 // 備考インライン入力の状態管理（行キー → テキスト）
 const inlineBiko = {};
+// ユーザーが実際に編集したキーを記録
+const inlineBikoEdited = new Set();
 
 function row(name, biko, excl, tax, incl, bikoKey) {
   const showTax = (tax !== null && tax !== 0 && excl !== null);
@@ -1990,8 +1992,10 @@ function row(name, biko, excl, tax, incl, bikoKey) {
   // bikoKeyがある場合はインライン入力セルを表示
   let bikoCell = '';
   if (bikoKey) {
-    // inlineBiko[bikoKey]が未設定なら bikoを初期値として使用
-    if (inlineBiko[bikoKey] === undefined) inlineBiko[bikoKey] = biko || '';
+    // ユーザーが編集していなければ常に最新のbiko値を使う
+    if (!inlineBikoEdited.has(bikoKey)) {
+      inlineBiko[bikoKey] = biko || '';
+    }
     const val = inlineBiko[bikoKey];
     bikoCell = `<td class="備考"><div class="biko-cell-wrap">
       <span class="biko-text">${val || ''}</span>
@@ -2022,10 +2026,9 @@ function setBikoFromSelect(key, selectEl) {
   const val = selectEl.value;
   if (!val) return;
   inlineBiko[key] = val;
-  // 同じセルのinputにも反映
+  inlineBikoEdited.add(key);  // ユーザー編集済みとしてマーク
   const wrap = selectEl.closest('.biko-input-wrap');
   if (wrap) wrap.querySelector('.biko-input').value = val;
-  // テキスト表示を更新
   const textEl = selectEl.closest('.biko-cell-wrap')?.querySelector('.biko-text');
   if (textEl) textEl.textContent = val;
 }
@@ -2058,14 +2061,14 @@ document.addEventListener('click', function(e) {
 // 備考inputのoninput（直接入力で状態更新＋テキスト同期）
 document.addEventListener('input', function(e) {
   if (!e.target.classList.contains('biko-input')) return;
+  const tr = e.target.closest('tr');
+  if (!tr || !tr.dataset.bikoKey) return;
+  const key = tr.dataset.bikoKey;
+  inlineBiko[key] = e.target.value;
+  inlineBikoEdited.add(key);  // ユーザー編集済みとしてマーク
   const cell = e.target.closest('.biko-cell-wrap');
   if (!cell) return;
   const wrap = cell.querySelector('.biko-input-wrap');
-  // キーを特定するため、行のdata属性から取得
-  const tr = e.target.closest('tr');
-  if (!tr || !tr.dataset.bikoKey) return;
-  inlineBiko[tr.dataset.bikoKey] = e.target.value;
-  // セレクトをリセット
   const sel = wrap.querySelector('.biko-select');
   if (sel) sel.value = '';
 });
@@ -2880,7 +2883,11 @@ function applyData(data) {
     if(el) bikoObjects[obj][key] = el.value;
   });
   // inlineBiko を復元（update()前に設定しておく）
-  if (data._inlineBiko) Object.assign(inlineBiko, data._inlineBiko);
+  if (data._inlineBiko) {
+    Object.assign(inlineBiko, data._inlineBiko);
+    // 保存された全キーをユーザー編集済みとしてマーク
+    Object.keys(data._inlineBiko).forEach(k => inlineBikoEdited.add(k));
+  }
   syncNotesExtra();
   update();
 }
